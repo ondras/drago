@@ -35,8 +35,6 @@ SBS.prototype.init = function() {
 	this._palette = [];
 
 	OZ.Request("palette", this.responsePalette.bind(this));
-	
-//	this._palette = this._generatePalette();
 }
 
 SBS.prototype.responsePalette = function(data) {
@@ -61,7 +59,7 @@ SBS.prototype.responsePalette = function(data) {
 		ctx.fillRect(x*cell, y*cell, cell, cell);
 	}
 
-	OZ.Request("data/d.SBS", this.response.bind(this));
+	OZ.Request("data/1_ASSORT.SBS", this.response.bind(this));
 }
 
 SBS.prototype.response = function(data) {
@@ -115,27 +113,6 @@ SBS.prototype.getString = function(count) {
 	return str;
 }
 
-SBS.prototype._generatePalette = function() {
-	var p = [];
-	for (var i=0;i<20;i++) { p.push("f0f"); }
-	
-	for (var r=0;r<6;r++) {
-	for (var g=0;g<6;g++) {
-	for (var b=0;b<6;b++) {
-		var rr = (r*3).toString(16);
-		var gg = (g*3).toString(16);
-		var bb = (b*3).toString(16);
-		p.push(rr+rr+gg+gg+bb+bb);
-	}
-	}
-	}
-
-	for (var i=0;i<20;i++) { p.push("f0f"); }
-	
-	return p;
-}
-
-
 SBS.Record = function(data, palette, name, offset) {
 	this._data = data;
 	this._name = name;
@@ -151,7 +128,7 @@ SBS.Record.prototype.parse = function() {
 	this._data.rewind(this._offset);
 	var width = this._data.getBytes(2);
 	var height = this._data.getBytes(2);
-	this._data.advance(4);
+	var tmp = this._data.getBytes(4);
 	var cell = 1;
 	
 	var canvas = OZ.DOM.elm("canvas", {width:cell*width, height:cell*height});
@@ -163,6 +140,8 @@ SBS.Record.prototype.parse = function() {
 	var stats = {};
 	var min = Infinity;
 	var max = -Infinity;
+	
+	var paddings = [];
 
 	for (var j=0;j<height;j++) {
 		for (var i=0;i<width;i++) {
@@ -180,8 +159,11 @@ SBS.Record.prototype.parse = function() {
 			ctx.fillRect(i*cell, (height-j-1)*cell, cell, cell);
 			
 		}
-		this._data.advance(padding);
+		var tmp = this._data.getBytes(padding);
+		paddings.push(tmp);
 	}
+	
+//	console.log(this._name, paddings);
 /*	
 	this._div.appendChild(OZ.DOM.elm("br"));
 	this._div.appendChild(OZ.DOM.text("MAX: " + max + ", MIN: " + min));
