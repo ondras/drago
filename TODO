@@ -1,0 +1,15 @@
+Nutne pro beh:
+.MAP, .STR
+
+Dalsi soubory:
+! * .TOW - asi soupis nemovitosti
+! * .PIT - skoro same nuly
+! * .CAR - divne nazvy; mesta ale i Fuckopolis
+ * .EDT - plno nemeckych retezcu
+ * .CVC - 256 (16x16?) ctveric [255,255,255,0]
+
+Zbyva rozlustit (nejsou treba!):
+ * .001 - zrejme dvojice bajtu; je jich tam 1716; vizualne nic moc
+ * .C88 - zrejme dvojice bajtu; je jich tam 7072
+ * .OIT - bloky 16x8 bajtu; je jich tam 80
+ * .EIT - zrejme ctverice bajtu, jsou rostouci
