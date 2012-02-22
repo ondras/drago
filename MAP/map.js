@@ -31,8 +31,7 @@ var Drago = OZ.Class();
 Drago.prototype.init = function() {
 	this._images = [];
 	this._remain = 0;
-	this._data1 = [];
-	this._data2 = [];
+	this._data = [];
 	
 	for (var i=0;i<18;i++) { 
 		this._remain++;
@@ -44,54 +43,51 @@ Drago.prototype.init = function() {
 		this._images.push(img); 
 		img.src = name;
 	}
-	
-	this._canvas = OZ.DOM.elm("canvas");
-	this._ctx = this._canvas.getContext("2d");
-	document.body.appendChild(this._canvas);
-	
 }
 
 Drago.prototype._load = function() {
 	this._remain--;
 	if (this._remain) { return; }
 
-	var r = OZ.Request("EUROPE.MAP", this._response.bind(this));
+	OZ.Request("EUROPE.MAP", this._response.bind(this));
 }
 
 Drago.prototype._response = function(data) {
 	var input = [];
 	for (var i=0;i<data.length;i++) { input.push(data.charCodeAt(i) & 0xFF); }
 
-	var size = 256;
-	var bpc = 2;
-	var half = size*size*bpc;
-	
-	var N = size;
-	var px = 16;
-	this._canvas.width = px * N;
-	this._canvas.height = px * N;
+	var bpt = 2;
+	var N = 256;
+	var offsets = [0, N*N*bpt];
 	
 	for (var i=0;i<N;i++) {
-		this._data1.push([]);
-		this._data2.push([]);
+		this._data.push([]);
 		for (var j=0;j<N;j++) {
-			var obj1 = {};
-			var obj2 = {};
-			this._data1[i].push(obj1);
-			this._data2[i].push(obj2);
-			var offset = (j * size + i) * bpc;
-			this._draw(input, i, j, offset, obj1);
-			this._draw(input, i, j, offset + half, obj2);
+			var obj = {
+				images: [],
+				top: [],
+				mirror: [],
+				locked: []
+			};
+			this._data[i].push(obj);
 			
-			
-/*
-			var div1 = this._div(input, i, j, offset);
-			var div2 = this._div(input, i, j, offset + half);
-			document.body.appendChild(div1);
-			document.body.appendChild(div2);
-*/
+			for (var k=0;k<offsets.length;k++) {
+				var offset = (j * N + i) * bpt + offsets[k];
+				var byte1 = input[offset];
+				var byte2 = input[offset+1];
+				var image = byte1 + 256*(byte2 & 0xF);
+				obj.images.push(image);
+				obj.top.push(1 * !!(byte2 & 0x80));
+				obj.mirror.push(1 * !!(byte2 & 0x40));
+				obj.locked.push(1 * !!(byte2 & 0x10));
+			}
 		}
-	}	
+	}
+	
+	this._canvas = OZ.DOM.elm("canvas");
+	this._ctx = this._canvas.getContext("2d");
+	this._draw();
+	document.body.appendChild(this._canvas);
 	
 	this._debug = OZ.DOM.elm("div", {position:"fixed", top:"0px", right:"0px", fontFamily:"monospace", backgroundColor:"white", border:"1px solid black", padding:"5px"});
 	this._cursor = OZ.DOM.elm("div", {position:"absolute", width:"16px", height:"16px", border:"2px solid red"});
@@ -117,19 +113,14 @@ Drago.prototype._response = function(data) {
 	}
 	*/
 	
-	for (var i=0;i<this._data1.length;i++) {
-		for (var j=0;j<this._data1[i].length;j++) {
-			var obj1 = this._data1[i][j];
-			var obj2 = this._data2[i][j];
-			
-			var pos1 = obj1.byte1 + 256*(obj1.byte2 & 0xF);
-			var pos2 = obj2.byte1 + 256*(obj2.byte2 & 0xF);
-			
-			if (pos1 in ANIMATIONS) {
+	for (var i=0;i<this._data.length;i++) {
+		for (var j=0;j<this._data[i].length;j++) {
+			var obj = this._data[i][j];
+			if (obj.images[0] in ANIMATIONS) {
 				this._ctx.fillStyle = "red";
 				this._ctx.fillRect(i*16, j*16, 8, 8);
 			}
-			if (pos2 in ANIMATIONS) {
+			if (obj.images[1] in ANIMATIONS) {
 				this._ctx.fillStyle = "black";
 				this._ctx.fillRect(i*16+8, j*16+8, 8, 8);
 			}
@@ -138,81 +129,31 @@ Drago.prototype._response = function(data) {
 	
 }
 
-Drago.prototype._draw = function(input, x, y, offset, obj) {
-	var byte1 = input[offset];
-	var byte2 = input[offset+1];
-	var px = 16;
-	var index = byte1 + 256*(byte2 & 0xF);
-	
-	obj.byte1 = byte1;
-	obj.byte2 = byte2;
-
-	if (byte2 & 128) { 
-//		console.log("bit 128", x, y); 
-		var tmp = OZ.DOM.elm("div", {position:"absolute", border:"2px solid black", left:(16*x-2)+"px", top:(16*y-2)+"px", width:"16px", height:"16px"});
-		document.body.appendChild(tmp);
-	}
-	if (byte2 & 32) { 
-		debugger;
-		console.log("bit 32", x, y); 
-		var tmp = OZ.DOM.elm("div", {position:"absolute", border:"2px solid #3f3", left:(16*x-2)+"px", top:(16*y-2)+"px", width:"16px", height:"16px"});
-		document.body.appendChild(tmp);
-	}
-	if (byte2 & 16) { 
-		//console.log("bit 16", x, y); 
-		var tmp = OZ.DOM.elm("div", {position:"absolute", border:"2px solid #ff3", left:(16*x-1)+"px", top:(16*y-1)+"px", width:"16px", height:"16px"});
-		document.body.appendChild(tmp);
-	}
-
+Drago.prototype._draw = function() {
 	var cellsPerImage = 192;
-	var image = this._images[Math.floor(index / cellsPerImage)];
-	
-	var imageOffset = index % cellsPerImage;
-	
-	this._ctx.save();
-	if (input[offset+1] & 64) { 
-		this._ctx.translate((2*x + 1)*px, 0);
-		this._ctx.scale(-1, 1); 
+	var px = 16;
+
+	this._canvas.width = this._data.length * px;
+	this._canvas.height = this._data[0].length * px;
+	for (var i=0;i<this._data.length;i++) {
+		for (var j=0;j<this._data[i].length;j++) {
+			var obj = this._data[i][j];
+			for (var k=0;k<obj.images.length;k++) {
+				var index = obj.images[k];
+				if (index == 31) { continue; }
+				var image = this._images[Math.floor(index / cellsPerImage)];
+				var imageOffset = index % cellsPerImage;
+				this._ctx.save();
+				if (obj.mirror[k]) { 
+					this._ctx.translate((2*i + 1)*px, 0);
+					this._ctx.scale(-1, 1); 
+				}
+				this._ctx.drawImage(image, 0, imageOffset*px, px, px, i*px, j*px, px, px);
+				this._ctx.restore();
+			}
+		}
 	}
-	
-	this._ctx.drawImage(image, 0, imageOffset*px, px, px, x*px, y*px, px, px);
-	this._ctx.restore();
-}
 
-Drago.prototype._div = function(input, x, y, offset) {
-	var px = 16;
-	var div = OZ.DOM.elm("div", {width:px+"px",height:px+"px",position:"absolute",backgroundRepeat:"no-repeat",fontSize:"80%",color:"yellow"});
-	div.id = x+"_"+y;
-	div.style.left = (x*px) + "px";
-	div.style.top = (y*px) + "px";
-	var index = input[offset] + 256*(input[offset+1] & 0xF);
-	
-	if (x == 9 && (y == 2 || y == 3)) { console.log(x, y, input[offset], input[offset+1]); }
-
-	if (input[offset+1] & 128) { console.log("bit 128", div); }
-	if (input[offset+1] & 32) { console.log("bit 32", div); }
-	if (input[offset+1] & 16) { console.log("bit 16", div); }
-	
-	if (input[offset+1] & 64) { div.style.MozTransform = "scaleX(-1)"; }
-
-	this._background(div, index);
-
-	return div;
-}
-
-Drago.prototype._background = function(elm, index) {
-	var px = 16;
-	var cellsPerImage = 192;
-	
-	var image = Math.floor(index / cellsPerImage) + "";
-	dir = "1";
-	
-	if (image.length < 2) { image = "0" + image; }
-	image = dir + "/PART00" + image + ".gif";
-	elm.style.backgroundImage = "url(" + image + ")";
-	
-	var imageOffset = index % cellsPerImage;
-	elm.style.backgroundPosition = "0px -" + (imageOffset*px) + "px";
 }
 
 Drago.prototype._move = function(e) {
@@ -225,29 +166,20 @@ Drago.prototype._move = function(e) {
 	this._cursor.style.left = (16*pos[0]-2) + "px";
 	this._cursor.style.top = (16*pos[1]-2) + "px";
 	
-	var obj1 = this._data1[pos[0]][pos[1]];
-	var obj2 = this._data2[pos[0]][pos[1]];
-	
-	var str = "Pos: " + pos + "<br/>";
-	str += "Layer 1: " + (obj1.byte1 + 256 * (obj1.byte2 & 0xF)).toString().lpad(4) + "<br/>";
-	str += "Layer 2: " + (obj2.byte1 + 256 * (obj2.byte2 & 0xF)).toString().lpad(4) + "<br/>";
-	this._debug.innerHTML = str;
-	
 	var cellsPerImage = 192;
+	this._debug.innerHTML = "Pos: " + pos + "<br/>";
 
-	var index = obj1.byte1 + 256*(obj1.byte2 & 0xF);
-	var image = this._images[Math.floor(index / cellsPerImage)];
-	var imageOffset = index % cellsPerImage;
-	var canvas = OZ.DOM.elm("canvas", {width:16, height:16});
-	canvas.getContext("2d").drawImage(image, 0, imageOffset*16, 16, 16, 0, 0, 16, 16);
-	var br = this._debug.getElementsByTagName("br")[1];
-	br.parentNode.insertBefore(canvas, br);
+	var obj = this._data[pos[0]][pos[1]];
+	for (var i=0;i<obj.images.length;i++) {
+		var index = obj.images[i];
+		this._debug.appendChild(OZ.DOM.text(index.toString().lpad(4)));
 
-	var index = obj2.byte1 + 256*(obj2.byte2 & 0xF);
-	var image = this._images[Math.floor(index / cellsPerImage)];
-	var imageOffset = index % cellsPerImage;
-	var canvas = OZ.DOM.elm("canvas", {width:16, height:16});
-	canvas.getContext("2d").drawImage(image, 0, imageOffset*16, 16, 16, 0, 0, 16, 16);
-	var br = this._debug.getElementsByTagName("br")[2];
-	br.parentNode.insertBefore(canvas, br);
+		var image = this._images[Math.floor(index / cellsPerImage)];
+		var imageOffset = index % cellsPerImage;
+		var canvas = OZ.DOM.elm("canvas", {width:16, height:16});
+		canvas.getContext("2d").drawImage(image, 0, imageOffset*16, 16, 16, 0, 0, 16, 16);
+
+		this._debug.appendChild(canvas);
+		this._debug.appendChild(OZ.DOM.elm("br"));
+	}
 }
