@@ -99,6 +99,43 @@ Drago.prototype._response = function(data) {
 	document.body.appendChild(this._cursor);
 	
 	OZ.Event.add(document.body, "mousemove", this._move.bind(this));
+	
+	
+	/*
+	for (var i=0;i<GRAPH.length;i++) {
+		var node = GRAPH[i];
+		var x = 16*node.x;
+		var y = 16*node.y;
+		
+		if (node.locked) {
+			this._ctx.fillStyle = "yellow";
+		} else {
+			this._ctx.fillStyle = "green";
+		}
+		
+		this._ctx.fillRect(x, y, 16, 16);
+	}
+	*/
+	
+	for (var i=0;i<this._data1.length;i++) {
+		for (var j=0;j<this._data1[i].length;j++) {
+			var obj1 = this._data1[i][j];
+			var obj2 = this._data2[i][j];
+			
+			var pos1 = obj1.byte1 + 256*(obj1.byte2 & 0xF);
+			var pos2 = obj2.byte1 + 256*(obj2.byte2 & 0xF);
+			
+			if (pos1 in ANIMATIONS) {
+				this._ctx.fillStyle = "red";
+				this._ctx.fillRect(i*16, j*16, 8, 8);
+			}
+			if (pos2 in ANIMATIONS) {
+				this._ctx.fillStyle = "black";
+				this._ctx.fillRect(i*16+8, j*16+8, 8, 8);
+			}
+		}
+	}
+	
 }
 
 Drago.prototype._draw = function(input, x, y, offset, obj) {
@@ -192,8 +229,8 @@ Drago.prototype._move = function(e) {
 	var obj2 = this._data2[pos[0]][pos[1]];
 	
 	var str = "Pos: " + pos + "<br/>";
-	str += "Layer 1: " + obj1.byte1.toString(2).lpad(8) + " " + obj1.byte2.toString(2).lpad(8) + "<br/>";
-	str += "Layer 2: " + obj2.byte1.toString(2).lpad(8) + " " + obj2.byte2.toString(2).lpad(8) + "<br/>";
+	str += "Layer 1: " + (obj1.byte1 + 256 * (obj1.byte2 & 0xF)).toString().lpad(4) + "<br/>";
+	str += "Layer 2: " + (obj2.byte1 + 256 * (obj2.byte2 & 0xF)).toString().lpad(4) + "<br/>";
 	this._debug.innerHTML = str;
 	
 	var cellsPerImage = 192;

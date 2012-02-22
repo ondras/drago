@@ -12,6 +12,10 @@ File.prototype.getLength = function() {
 	return this._data.length;
 }
 
+File.prototype.getIndex = function() {
+	return this._index;
+}
+
 File.prototype.hasData = function() {
 	return (this._index < this._data.length);
 }
