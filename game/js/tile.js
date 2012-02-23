@@ -1,7 +1,8 @@
-Game.TopTile = OZ.Class().extend(HAF.Actor);
+Game.Tile = OZ.Class().extend(HAF.Actor);
 
-Game.TopTile.prototype.init = function(game, position, image) {
+Game.Tile.prototype.init = function(game, position, image) {
 	this._game = game;
+	this._layer = Game.LAYER_TOP;
 	this._offset = null;
 	this._dirty = false;
 	this._visible = false;
@@ -13,13 +14,13 @@ Game.TopTile.prototype.init = function(game, position, image) {
 	OZ.Event.add(null, "port-change", this._portChange.bind(this));
 }
 
-Game.TopTile.prototype.tick = function(dt) {
-	var dirty = this._dirty;
+Game.Tile.prototype.tick = function(dt) {
+	var changed = this._dirty;
 	this._dirty = false;
-	return dirty;
+	return changed;
 }
 
-Game.TopTile.prototype.draw = function(context) {
+Game.Tile.prototype.draw = function(context) {
 	var position = [
 		this._position[0]-this._offset[0], 
 		this._position[1]-this._offset[1]
@@ -27,7 +28,7 @@ Game.TopTile.prototype.draw = function(context) {
 	context.drawImage(this._image, position[0], position[1]);
 }
 
-Game.TopTile.prototype._portChange = function(e) {
+Game.Tile.prototype._portChange = function(e) {
 	this._offset = e.target.getOffset();
 	var size = e.target.getSize();
 	
@@ -35,15 +36,15 @@ Game.TopTile.prototype._portChange = function(e) {
 	if (visible || this._visible) { this._dirty = true; }
 	
 	if (visible && !this._visible) {
-		this._game.getEngine().addActor(this, Game.LAYER_TOP);
+		this._game.getEngine().addActor(this, this._layer);
 	} else if (!visible && this._visible) {
-		this._game.getEngine().removeActor(this, Game.LAYER_TOP);
+		this._game.getEngine().removeActor(this, this._layer);
 	}
 	
 	this._visible = visible;
 }
 
-Game.TopTile.prototype._isVisible = function(size) {
+Game.Tile.prototype._isVisible = function(size) {
 	var result = true;
 	for (var i=0;i<2;i++) {
 		if (this._position[i] > this._offset[i]+size[i]) { result = false; }

@@ -51,12 +51,23 @@ Game.Background.prototype._build = function(tiles, map) {
 				var index = obj.images[k];
 				if (index == 31) { continue; } /* transparent */
 				
-				if (obj.top[k]) {
-					var canvas = tiles.create(index, obj.mirror[j]);
-					new Game.TopTile(this._game, [i*tile, j*tile], canvas);
-				} else {
-					tiles.render(index, context, [i*tile, j*tile], obj.mirror[k]);
+				var position = [i*tile, j*tile];
+				
+				if (index in ANIMATIONS) {
+					var anim = ANIMATIONS[index];
+					var sprite = tiles.createAnimation(index, anim);
+					new Game.Animation(this._game, position, sprite, anim);
+					continue;
 				}
+
+
+				if (obj.top[k]) {
+					var canvas = tiles.createTile(index, obj.mirror[k]);
+					new Game.Tile(this._game, position, canvas);
+				} else {
+					tiles.render(index, context, position, obj.mirror[k]);
+				}
+				
 				
 			}
 		}

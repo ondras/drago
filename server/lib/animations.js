@@ -47,14 +47,14 @@ var Animation = function(data) {
 	
 	for (var i=0;i<7;i++) { this._tmp2.push(data.getByte()); }
 	
-	this._frames = 0;
+	this._frames = [];
 	while (1) {
 		var tile = data.getBytes(2);
 		if (!tile) {
 			data.getByte();
 			break;
 		}
-		this._frames++;
+		this._frames.push(tile);
 	}
 }
 

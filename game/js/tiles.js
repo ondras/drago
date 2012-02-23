@@ -4,7 +4,10 @@ Game.Tiles = OZ.Class();
 Game.Tiles.prototype.init = function(type) {
 	this._images = [];
 	this._remain = 0;
-	this._cache = {};
+	this._cache = {
+		tiles: {},
+		animations: {}
+	};
 
 	for (var i=0;i<18;i++) { 
 		this._remain++;
@@ -39,16 +42,47 @@ Game.Tiles.prototype.render = function(index, context, offset, mirror) {
 	if (mirror) { context.restore(); }
 }
 
-Game.Tiles.prototype.create = function(index, mirror) {
+Game.Tiles.prototype.createTile = function(index, mirror) {
 	var key = index + "-" + (mirror ? 1 : 0);
 	var tile = 16;
-	if (!(key in this._cache)) {
+	if (!(key in this._cache.tiles)) {
 		var canvas = OZ.DOM.elm("canvas", {width:tile, height:tile});
 		var context = canvas.getContext("2d");
 		this.render(index, context, [0, 0], mirror);
-		this._cache[key] = canvas;
+		this._cache.tiles[key] = canvas;
 	}
-	return this._cache[key];
+	return this._cache.tiles[key];
+}
+
+Game.Tiles.prototype.createAnimation = function(id, conf) {
+	var tile = 16;
+	if (!(id in this._cache.animations)) {
+		var width = conf.width;
+		var height = conf.height;
+		var canvas = OZ.DOM.elm("canvas", {width:width*tile, height:height*tile*conf.frames.length});
+		var context = canvas.getContext("2d");
+		
+		for (var i=0;i<conf.frames.length;i++) {
+			var frame = conf.frames[i];
+			var topOffset = i*height;
+			
+			var count = 0;
+			
+			for (var y=0;y<height;y++) {
+				for (var x=0;x<width;x++) {
+					var left = x*tile;
+					var top = (y + topOffset)*tile;
+					this.render(frame+count, context, [left, top], false);
+					count++;
+				}
+			}
+			
+		} /* for all frames */		
+		this._cache.animations[id] = canvas;
+		window.a = canvas;
+	}
+
+	return this._cache.animations[id];
 }
 
 Game.Tiles.prototype._load = function(e) {
