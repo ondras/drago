@@ -1,8 +1,10 @@
 Game.Tiles = OZ.Class();
 
+
 Game.Tiles.prototype.init = function(type) {
 	this._images = [];
 	this._remain = 0;
+	this._cache = {};
 
 	for (var i=0;i<18;i++) { 
 		this._remain++;
@@ -35,6 +37,18 @@ Game.Tiles.prototype.render = function(index, context, offset, mirror) {
 	);
 	
 	if (mirror) { context.restore(); }
+}
+
+Game.Tiles.prototype.create = function(index, mirror) {
+	var key = index + "-" + (mirror ? 1 : 0);
+	var tile = 16;
+	if (!(key in this._cache)) {
+		var canvas = OZ.DOM.elm("canvas", {width:tile, height:tile});
+		var context = canvas.getContext("2d");
+		this.render(index, context, [0, 0], mirror);
+		this._cache[key] = canvas;
+	}
+	return this._cache[key];
 }
 
 Game.Tiles.prototype._load = function(e) {

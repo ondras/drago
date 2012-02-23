@@ -52,7 +52,8 @@ Game.Background.prototype._build = function(tiles, map) {
 				if (index == 31) { continue; } /* transparent */
 				
 				if (obj.top[k]) {
-					var toptile = new Game.TopTile(this._game, [i*tile, j*tile], tiles, index, obj.mirror[j]);
+					var canvas = tiles.create(index, obj.mirror[j]);
+					new Game.TopTile(this._game, [i*tile, j*tile], canvas);
 				} else {
 					tiles.render(index, context, [i*tile, j*tile], obj.mirror[k]);
 				}

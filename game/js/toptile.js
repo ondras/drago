@@ -1,7 +1,6 @@
 Game.TopTile = OZ.Class().extend(HAF.Actor);
-Game.TopTile._cache = null;
 
-Game.TopTile.prototype.init = function(game, position, tiles, index, mirror) {
+Game.TopTile.prototype.init = function(game, position, image) {
 	this._game = game;
 	this._offset = null;
 	this._dirty = false;
@@ -9,9 +8,7 @@ Game.TopTile.prototype.init = function(game, position, tiles, index, mirror) {
 	this._size = [16, 16];
 	
 	this._position = position;
-	this._tiles = tiles;
-	this._index = index;
-	this._mirror = mirror;
+	this._image = image;
 
 	OZ.Event.add(null, "port-change", this._portChange.bind(this));
 }
@@ -27,7 +24,7 @@ Game.TopTile.prototype.draw = function(context) {
 		this._position[0]-this._offset[0], 
 		this._position[1]-this._offset[1]
 	];
-	this._tiles.render(this._index, context, position, this._mirror);
+	context.drawImage(this._image, position[0], position[1]);
 }
 
 Game.TopTile.prototype._portChange = function(e) {
