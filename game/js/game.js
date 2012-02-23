@@ -5,10 +5,10 @@ Game.LAYER_TOP	= "top";
 Game.prototype.init = function() {
 	this._port = null;
 	this._engine = new HAF.Engine();
-	this._engine.addLayer(Game.LAYER_BG, {clear:HAF.CLEAR_ALL, dirty:HAF.DIRTY_ALL});
+	this._engine.addLayer(Game.LAYER_BG, {clear:HAF.CLEAR_NONE, dirty:HAF.DIRTY_CHANGED});
 	
 	/* FIXME misto k vylepseni; staci asi mazat changed a chytre je pocitat */
-	this._engine.addLayer(Game.LAYER_TOP, {clear:HAF.CLEAR_ALL, dirty:HAF.DIRTY_CHANGED});
+	this._engine.addLayer(Game.LAYER_TOP, {clear:HAF.CLEAR_ALL, dirty:HAF.DIRTY_ALL});
 
 	document.body.innerHTML = "Loading&hellip;";
 

@@ -1,10 +1,11 @@
 Game.Animation = OZ.Class().extend(Game.Tile);
 
-Game.Animation.prototype.init = function(game, position, image, conf) {
+Game.Animation.prototype.init = function(game, position, image, conf, layer) {
 	Game.Tile.prototype.init.call(this, game, position, image);
 	
-	this._layer = Game.LAYER_BG;
 	this._conf = conf;
+	this._layer = layer;
+
 	this._size[0] *= conf.width;
 	this._size[1] *= conf.height;
 	this._time = 0;

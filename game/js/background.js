@@ -44,6 +44,7 @@ Game.Background.prototype._build = function(tiles, map) {
 	var context = this._canvas.getContext("2d");
 	
 	var data = map.getData();
+
 	for (var i=0;i<data.length;i++) {
 		for (var j=0;j<data[i].length;j++) {
 			var obj = data[i][j];
@@ -53,10 +54,11 @@ Game.Background.prototype._build = function(tiles, map) {
 				
 				var position = [i*tile, j*tile];
 				
-				if (index in ANIMATIONS) {
+				if (index in ANIMATIONS) { /* animation - do not render normal tile */
+					var layer = (k ? Game.LAYER_TOP : Game.LAYER_BG);
 					var anim = ANIMATIONS[index];
 					var sprite = tiles.createAnimation(index, anim);
-					new Game.Animation(this._game, position, sprite, anim);
+					new Game.Animation(this._game, position, sprite, anim, layer);
 					continue;
 				}
 
