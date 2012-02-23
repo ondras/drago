@@ -59,6 +59,8 @@ Game.Background.prototype._build = function(tiles, map) {
 					var anim = ANIMATIONS[index];
 					var sprite = tiles.createAnimation(index, anim);
 					new Game.Animation(this._game, position, sprite, anim, layer);
+					
+					/* FIXME ignore all further tiles used by animation */
 					continue;
 				}
 
