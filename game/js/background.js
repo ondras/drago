@@ -52,8 +52,7 @@ Game.Background.prototype._build = function(tiles, map) {
 				if (index == 31) { continue; } /* transparent */
 				
 				if (obj.top[k]) {
-					var toptile = new Game.TopTile([i*tile, j*tile], tiles, index, obj.mirror[j]);
-					engine.addActor(toptile, Game.LAYER_TOP);
+					var toptile = new Game.TopTile(this._game, [i*tile, j*tile], tiles, index, obj.mirror[j]);
 				} else {
 					tiles.render(index, context, [i*tile, j*tile], obj.mirror[k]);
 				}
