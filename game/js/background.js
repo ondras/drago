@@ -49,6 +49,7 @@ Game.Background.prototype._build = function(tiles, map) {
 		for (var j=0;j<data[i].length;j++) {
 			var obj = data[i][j];
 			for (var k=0;k<obj.images.length;k++) {
+				if (k && obj.ignore) { continue; } /* part of a previous animation */
 				var index = obj.images[k];
 				if (index == 31) { continue; } /* transparent */
 				
@@ -60,7 +61,12 @@ Game.Background.prototype._build = function(tiles, map) {
 					var sprite = tiles.createAnimation(index, anim);
 					new Game.Animation(this._game, position, sprite, anim, layer);
 					
-					/* FIXME ignore all further tiles used by animation */
+					for (var x=0;x<anim.width;x++) {
+						for (var y=0;y<anim.height;y++) {
+							data[i+x][j+y].ignore = true;
+						}
+					}
+					
 					continue;
 				}
 

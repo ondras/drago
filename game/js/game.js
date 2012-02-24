@@ -8,7 +8,7 @@ Game.prototype.init = function() {
 	this._engine.addLayer(Game.LAYER_BG, {clear:HAF.CLEAR_NONE, dirty:HAF.DIRTY_CHANGED});
 	
 	/* FIXME misto k vylepseni; staci asi mazat changed a chytre je pocitat */
-	this._engine.addLayer(Game.LAYER_TOP, {clear:HAF.CLEAR_ALL, dirty:HAF.DIRTY_ALL});
+	this._engine.addLayer(Game.LAYER_TOP, {clear:HAF.CLEAR_ACTORS, dirty:HAF.DIRTY_CHANGED});
 
 	document.body.innerHTML = "Loading&hellip;";
 

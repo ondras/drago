@@ -28,6 +28,14 @@ Game.Tile.prototype.draw = function(context) {
 	context.drawImage(this._image, position[0], position[1]);
 }
 
+Game.Tile.prototype.getBox = function() {
+	var position = [
+		this._position[0]-this._offset[0], 
+		this._position[1]-this._offset[1]
+	];
+	return [position, this._size];
+}
+
 Game.Tile.prototype._portChange = function(e) {
 	this._offset = e.target.getOffset();
 	var size = e.target.getSize();
@@ -52,3 +60,4 @@ Game.Tile.prototype._isVisible = function(size) {
 	}
 	return result;
 }
+
