@@ -150,6 +150,7 @@ HAF.Engine.prototype.removeActor = function(actor, layerId) {
 		var a = layer.actors[i];
 		if (a.actor == actor) { 
 			a.dead = true; 
+			a.changed = true; 
 			break;
 		}
 	}
@@ -158,7 +159,10 @@ HAF.Engine.prototype.removeActor = function(actor, layerId) {
 
 HAF.Engine.prototype.removeActors = function(layerId) {
 	var actors = this._layers[layerId].actors;
-	for (var i=0;i<actors.length;i++) { actors[i].dead = true;  }
+	for (var i=0;i<actors.length;i++) { 
+		actors[i].dead = true;  
+		actors[i].changed = true;  
+	}
 	return this;
 }
 
@@ -252,9 +256,10 @@ HAF.Engine.prototype.draw = function() {
 			case HAF.CLEAR_ACTORS: 
 				for (var i=0;i<allCount;i++) {
 					var actor = actors[i];
-					if (!actor.changed && !actor.dead) { continue; }
-					var box = actor.box;
-					if (box) { layer.ctx.clearRect(box[0][0], box[0][1], box[1][0], box[1][1]); }
+					if (actor.changed && actor.box) { 
+						var box = actor.box;
+						layer.ctx.clearRect(box[0][0], box[0][1], box[1][0], box[1][1]);
+					}
 				}
 			break;
 		}
@@ -262,13 +267,15 @@ HAF.Engine.prototype.draw = function() {
 		/* draw */
 		for (var i=0;i<allCount;i++) {
 			var actor = actors[i];
+			if (!actor.changed) { continue; }
+
 			if (actor.dead) { /* empty record: was recently deleted and cleared */
 				actors.splice(i, 1);
 				i--;
 				allCount--;
 				continue;
 			}
-			if (!actor.changed) { continue; }
+
 			actor.changed = false;
 			actor.actor.draw(layer.ctx);
 			actor.box = actor.actor.getBox();

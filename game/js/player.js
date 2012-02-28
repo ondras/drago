@@ -39,7 +39,7 @@ Game.Player.prototype.setTile = function(tile) {
 	var t = 16;
 	this._position = [
 		(this._tile[0] + 0.5)*t - this._size[0]/2,
-		this._tile[1]*t - this._size[1]/2
+		this._tile[1]*t - this._size[1]/2 + 1
 	];
 	this._dirty = true;
 	

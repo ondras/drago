@@ -38,7 +38,8 @@ Game.prototype._load = function(e) {
 
 	var player = new Game.Player(this, [0, 0], "D");
 	player.setTile([5, 5]);
-	player.setFlight(true);
+
+	this._port = new Game.Port(this, document.body, this._background);
 
 /* */
 	var monitor1 = new HAF.Monitor.Sim(this._engine, [220, 100], {textColor:"#000"}).getContainer();
@@ -54,7 +55,5 @@ Game.prototype._load = function(e) {
 	document.body.appendChild(monitor2);
 /* */
 
-
-	this._port = new Game.Port(this, document.body, this._background);
 	this._engine.start();
 }
