@@ -16,8 +16,6 @@ vyska (2B)
 cosi (4B)
 data; u kazdeho radku padding na nasobek 4
 
-
-
 */
 
 var FS = require("fs");
@@ -86,15 +84,19 @@ Record.prototype.parse = function() {
 	var tmp = this._data.getBytes(4);
 	var cell = 1;
 	
-	this._image = new GD.Image(GD.Image.PALETTE, width, height);
+	this._image = new GD.Image(GD.Image.TRUECOLOR, width, height);
+	
+	this._image.alphaBlending(false);
+	this._image.saveAlpha(true);
+	var empty = this._image.colorAllocateAlpha(0, 0, 0, 127);
+	this._image.fill(0, 0, empty);	
+
 	var colors = [];
 	for (var i=0;i<this._palette.length;i++) {
 		var item = this._palette[i];
 		var color = this._image.colorAllocate(item[0], item[1], item[2]);
 		colors.push(color);
 	}
-	this._image.colorTransparent(colors[0]);
-	
 	
 	var padding = (4-(width%4)) % 4;
 	

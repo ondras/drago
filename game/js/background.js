@@ -58,7 +58,7 @@ Game.Background.prototype._build = function(tiles, map) {
 				if (index in ANIMATIONS) { /* animation - do not render normal tile */
 					var anim = ANIMATIONS[index];
 					var sprite = tiles.createAnimation(index, anim);
-					new Game.Animation(this._game, position, sprite, anim);
+					new Game.Animation.Map(this._game, position, sprite, anim);
 					
 					for (var x=0;x<anim.size[0];x++) {
 						for (var y=0;y<anim.size[1];y++) {

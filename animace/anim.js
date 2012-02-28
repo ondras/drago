@@ -2,7 +2,7 @@
 struktura animaci (zacinaji na 2 a5f8, konci na af64):
 
 2B pozice dlazdice
-2B nuly - pozor, ryba tam ma 01 00
+2B pruhlednost 1/0
 1B sirka oblasti
 1B vyska oblasti
 7B neznamo (
@@ -11,7 +11,14 @@ struktura animaci (zacinaji na 2 a5f8, konci na af64):
 				mlyn: 		04 FF 0A 00 00 00 00 repeat
 				velbloud: 	03 00 C8 00 00 00 00
 				ryba: 		04 00 F4 01 00 00 00 not repeat, random
-			)
+				             |  |  |  |  |  |  \-
+				             |  |  |  |  |  \----
+				             |  |  |  |  \-------
+				             |  |  |  \----------
+				             |  |  \-------------
+				             |  \---------------- patrne pauza mezi opakovanimi: 255 zadna, 0 random
+				             \------------------- patrne rychlost
+ 			)
 
 Xkrat 2B pozice nasledne sady dlazdic
 2B 0
@@ -51,7 +58,7 @@ Anim.Set = OZ.Class();
 Anim.Set.prototype.init = function(data, tiles) {
 	var position = data.getBytes(2);
 	
-	this._tmp1 = data.getBytes(2);
+	var transparent = data.getBytes(2);
 	this._tmp2 = [];
 	
 	var width = data.getByte(1);
@@ -108,7 +115,8 @@ Anim.Set.prototype.init = function(data, tiles) {
 }
 
 Anim.Set.prototype.draw = function() {
-	document.body.appendChild(OZ.DOM.text(this._tmp1 + "; " + this._tmp2.join(", ") + " "));
+	document.body.appendChild(OZ.DOM.text(this._frames.toString().lpad(2) + " frames, "));
+	document.body.appendChild(OZ.DOM.text(this._tmp2.join(", ") + " "));
 	document.body.appendChild(this._smallCanvas);
 	document.body.appendChild(OZ.DOM.elm("br"));
 }

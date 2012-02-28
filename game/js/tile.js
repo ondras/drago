@@ -1,16 +1,24 @@
 Game.Tile = OZ.Class().extend(HAF.Actor);
 
-Game.Tile.prototype.init = function(game, position, image) {
+Game.Tile.prototype.init = function(game, position, image, options) {
 	this._game = game;
-	this._layer = Game.LAYER_TOP;
+	this._position = position;
+	this._image = image;
+	
+	this._options = {
+		layer: Game.LAYER_TOP,
+		size: [1, 1]
+	}
+	for (var p in options) { this._options[p] = options[p]; }
+
 	this._offset = null;
 	this._dirty = false;
 	this._visible = false;
-	this._size = [16, 16];
-	
-	this._position = position;
-	this._image = image;
+	this._size = [];
 
+	var px = 16;
+	for (var i=0;i<2;i++) { this._size.push(px*this._options.size[i]); }
+	
 	OZ.Event.add(null, "port-change", this._portChange.bind(this));
 }
 
@@ -19,6 +27,7 @@ Game.Tile.prototype.tick = function(dt) {
 	this._dirty = false;
 	return changed;
 }
+
 
 Game.Tile.prototype.draw = function(context) {
 	var position = [
@@ -44,9 +53,9 @@ Game.Tile.prototype._portChange = function(e) {
 	if (visible || this._visible) { this._dirty = true; }
 
 	if (visible && !this._visible) {
-		this._game.getEngine().addActor(this, this._layer);
+		this._game.getEngine().addActor(this, this._options.layer);
 	} else if (!visible && this._visible) {
-		this._game.getEngine().removeActor(this, this._layer);
+		this._game.getEngine().removeActor(this, this._options.layer);
 	}
 	
 	this._visible = visible;

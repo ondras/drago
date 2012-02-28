@@ -1,3 +1,5 @@
+#!/usr/bin/env v8cgi
+
 var Animations = require("./lib/animations");
 var a = new Animations.Animations("MAP/EUROPE.STR");
 

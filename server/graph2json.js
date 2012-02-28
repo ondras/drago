@@ -1,3 +1,5 @@
+#!/usr/bin/env v8cgi
+
 var Graph = require("./lib/graph");
 var g = new Graph.Graph("MAP/EUROPE.STR");
 

@@ -1,21 +1,20 @@
 Game.Animation = OZ.Class().extend(Game.Tile);
 
-Game.Animation.prototype.init = function(game, position, image, conf) {
-	Game.Tile.prototype.init.call(this, game, position, image);
+Game.Animation.prototype.init = function(game, position, image, options) {
+	Game.Tile.prototype.init.call(this, game, position, image, options);
 	
-	this._conf = conf;
-	this._layer = conf.transparent ? Game.LAYER_TOP : Game.LAYER_BG;
+	this._animation = {
+		time: 0,
+		fps: 8,
+		frame: -1,
+		frames: 0
+	}
 
-	this._size[0] *= conf.size[0];
-	this._size[1] *= conf.size[1];
-	this._time = 0;
-	this._fps = 8;
-	this._frame = 0;
 }
 
 Game.Animation.prototype.tick = function(dt) {
-	this._time += dt;
-	var frame = Math.floor(this._time * this._fps / 1000) % this._conf.frames.length;
+	this._animation.time += dt;
+	var frame = Math.floor(this._animation.time * this._animation.fps / 1000) % this._animation.frames;
 	
 	var changed = (this._dirty || (this._frame != frame));
 	this._frame = frame;

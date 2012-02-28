@@ -1,13 +1,13 @@
 var Game = OZ.Class();
 Game.LAYER_BG	= "bg";
+Game.LAYER_PLAYERS	= "players";
 Game.LAYER_TOP	= "top";
 
 Game.prototype.init = function() {
 	this._port = null;
 	this._engine = new HAF.Engine();
 	this._engine.addLayer(Game.LAYER_BG, {clear:HAF.CLEAR_NONE, dirty:HAF.DIRTY_CHANGED});
-	
-	/* FIXME misto k vylepseni; staci asi mazat changed a chytre je pocitat */
+	this._engine.addLayer(Game.LAYER_PLAYERS, {clear:HAF.CLEAR_ACTORS, dirty:HAF.DIRTY_CHANGED});
 	this._engine.addLayer(Game.LAYER_TOP, {clear:HAF.CLEAR_ACTORS, dirty:HAF.DIRTY_CHANGED});
 
 	document.body.innerHTML = "Loading&hellip;";
@@ -35,7 +35,11 @@ Game.prototype._load = function(e) {
 	
 	this._background = new Game.Background(this, this._tiles, this._map);
 	document.body.innerHTML = "";
-	this._port = new Game.Port(this, document.body, this._background);
+
+	var player = new Game.Player(this, [0, 0], "D");
+	player.setTile([5, 5]);
+	player.setFlight(true);
+
 /* */
 	var monitor1 = new HAF.Monitor.Sim(this._engine, [220, 100], {textColor:"#000"}).getContainer();
 	monitor1.style.position = "absolute";
@@ -49,5 +53,8 @@ Game.prototype._load = function(e) {
 	monitor2.style.top = monitor1.offsetHeight + "px";
 	document.body.appendChild(monitor2);
 /* */
+
+
+	this._port = new Game.Port(this, document.body, this._background);
 	this._engine.start();
 }
