@@ -40,10 +40,9 @@ Animations.prototype.getAnimations = function() {
 
 var Animation = function(data) {
 	this._position = data.getBytes(2);
-	this._tmp1 = data.getBytes(2);
+	this._transparent = data.getBytes(2);
 	this._tmp2 = [];
-	this._width = data.getByte();
-	this._height = data.getByte();
+	this._size = [data.getByte(), data.getByte()];
 	
 	for (var i=0;i<7;i++) { this._tmp2.push(data.getByte()); }
 	
@@ -64,9 +63,8 @@ Animation.prototype.getPosition = function() {
 
 Animation.prototype.toJSON = function() {
 	return  {
-		width: this._width,
-		height: this._height,
-		tmp1: this._tmp1,
+		size: this._size,
+		transparent: this._transparent,
 		tmp2: this._tmp2,
 		frames: this._frames
 	}

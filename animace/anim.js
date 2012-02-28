@@ -50,10 +50,14 @@ Anim.prototype._go = function() {
 Anim.Set = OZ.Class();
 Anim.Set.prototype.init = function(data, tiles) {
 	var position = data.getBytes(2);
-	var tmp1 = data.getBytes(2);
+	
+	this._tmp1 = data.getBytes(2);
+	this._tmp2 = [];
+	
 	var width = data.getByte(1);
 	var height = data.getByte(1);
-	var tmp2 = data.getBytes(7);
+	
+	for (var i=0;i<7;i++) { this._tmp2.push(data.getByte().toString().lpad(3)); }
 	
 	this._frames = 0;
 	this._frame = -1;
@@ -104,12 +108,13 @@ Anim.Set.prototype.init = function(data, tiles) {
 }
 
 Anim.Set.prototype.draw = function() {
+	document.body.appendChild(OZ.DOM.text(this._tmp1 + "; " + this._tmp2.join(", ") + " "));
 	document.body.appendChild(this._smallCanvas);
 	document.body.appendChild(OZ.DOM.elm("br"));
 }
 
 Anim.Set.prototype.start = function() {
-	setInterval(this._step.bind(this), 100);
+	setInterval(this._step.bind(this), 1000/8);
 }
 
 Anim.Set.prototype._step = function() {
