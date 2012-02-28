@@ -57,8 +57,8 @@ Game.Tiles.prototype.createTile = function(index, mirror) {
 Game.Tiles.prototype.createAnimation = function(id, conf) {
 	var tile = 16;
 	if (!(id in this._cache.animations)) {
-		var width = conf.width;
-		var height = conf.height;
+		var width = conf.size[0];
+		var height = conf.size[1];
 		var canvas = OZ.DOM.elm("canvas", {width:width*tile, height:height*tile*conf.frames.length});
 		var context = canvas.getContext("2d");
 		

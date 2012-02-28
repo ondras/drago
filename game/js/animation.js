@@ -1,13 +1,13 @@
 Game.Animation = OZ.Class().extend(Game.Tile);
 
-Game.Animation.prototype.init = function(game, position, image, conf, layer) {
+Game.Animation.prototype.init = function(game, position, image, conf) {
 	Game.Tile.prototype.init.call(this, game, position, image);
 	
 	this._conf = conf;
-	this._layer = layer;
+	this._layer = conf.transparent ? Game.LAYER_TOP : Game.LAYER_BG;
 
-	this._size[0] *= conf.width;
-	this._size[1] *= conf.height;
+	this._size[0] *= conf.size[0];
+	this._size[1] *= conf.size[1];
 	this._time = 0;
 	this._fps = 8;
 	this._frame = 0;

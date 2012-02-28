@@ -56,13 +56,12 @@ Game.Background.prototype._build = function(tiles, map) {
 				var position = [i*tile, j*tile];
 				
 				if (index in ANIMATIONS) { /* animation - do not render normal tile */
-					var layer = (k ? Game.LAYER_TOP : Game.LAYER_BG);
 					var anim = ANIMATIONS[index];
 					var sprite = tiles.createAnimation(index, anim);
-					new Game.Animation(this._game, position, sprite, anim, layer);
+					new Game.Animation(this._game, position, sprite, anim);
 					
-					for (var x=0;x<anim.width;x++) {
-						for (var y=0;y<anim.height;y++) {
+					for (var x=0;x<anim.size[0];x++) {
+						for (var y=0;y<anim.size[1];y++) {
 							data[i+x][j+y].ignore = true;
 						}
 					}

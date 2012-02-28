@@ -42,7 +42,7 @@ Game.Tile.prototype._portChange = function(e) {
 	
 	var visible = this._isVisible(size);
 	if (visible || this._visible) { this._dirty = true; }
-	
+
 	if (visible && !this._visible) {
 		this._game.getEngine().addActor(this, this._layer);
 	} else if (!visible && this._visible) {

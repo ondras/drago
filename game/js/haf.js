@@ -251,8 +251,9 @@ HAF.Engine.prototype.draw = function() {
 			/* clear actors */
 			case HAF.CLEAR_ACTORS: 
 				for (var i=0;i<allCount;i++) {
-					if (!actors[i].changed) { continue; }
-					var box = actors[i].box;
+					var actor = actors[i];
+					if (!actor.changed && !actor.dead) { continue; }
+					var box = actor.box;
 					if (box) { layer.ctx.clearRect(box[0][0], box[0][1], box[1][0], box[1][1]); }
 				}
 			break;
