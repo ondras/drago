@@ -66,7 +66,7 @@ Game.Background.prototype._build = function(tiles, map) {
 						}
 					}
 					
-					continue;
+					if (k) { continue; }
 				}
 
 
