@@ -36,8 +36,8 @@ Game.prototype._load = function(e) {
 	this._background = new Game.Background(this, this._tiles, this._map);
 	document.body.innerHTML = "";
 
-	var player = new Game.Player(this, [0, 0], "D");
-	player.setTile([5, 5]);
+	var player = new Game.Player(this, 0, "D");
+	player.setOrientation(1);
 
 	this._port = new Game.Port(this, document.body, this._background);
 

@@ -7,7 +7,6 @@ Game.Animation.Map.prototype.init = function(game, position, image, conf) {
 	}
 	Game.Animation.prototype.init.call(this, game, position, image, options);
 	
-	this._conf = conf;
 	this._animation.frames = conf.frames.length;
 	this._animation.fps = 1000 / (25 * conf.delay);
 	this._animation.wait = conf.wait;

@@ -28,8 +28,8 @@ Game.Animation.prototype.tick = function(dt) {
 		}
 	}
 	
-	var changed = (this._dirty || (this._frame != frame));
-	this._frame = frame;
+	var changed = (this._dirty || (this._animation.frame != frame));
+	this._animation.frame = frame;
 	this._dirty = false;
 	
 	return changed;
@@ -37,13 +37,13 @@ Game.Animation.prototype.tick = function(dt) {
 
 Game.Animation.prototype.draw = function(context) {
 	var position = [
-		this._position[0]-this._offset[0], 
-		this._position[1]-this._offset[1]
+		this._sprite.position[0]-this._offset[0], 
+		this._sprite.position[1]-this._offset[1]
 	];
 	context.drawImage(
-		this._image, 
-		0, this._frame * this._size[1], this._size[0], this._size[1],
-		position[0], position[1], this._size[0], this._size[1]
+		this._sprite.image, 
+		0, this._animation.frame * this._sprite.size[1], this._sprite.size[0], this._sprite.size[1],
+		position[0], position[1], this._sprite.size[0], this._sprite.size[1]
 	);
 }
 
