@@ -12,12 +12,12 @@ struktura animaci (zacinaji na 2 a5f8, konci na af64):
 				velbloud: 	03 00 C8 00 00 00 00
 				ryba: 		04 00 F4 01 00 00 00 not repeat, random
 				             |  |  |  |  |  |  \-
-				             |  |  |  |  |  \----
+				             |  |  |  |  |  \---- vzdy 0
 				             |  |  |  |  \-------
-				             |  |  |  \----------
-				             |  |  \-------------
-				             |  \---------------- patrne pauza mezi opakovanimi: 255 zadna, 0 random
-				             \------------------- patrne rychlost
+				             |  |  |  \---------\ max. delka pro random pauzu (2 bajty
+				             |  |  \------------/ 
+				             |  \---------------- patrne pauza mezi opakovanimi: 255 zadna, 0 random, jinak pocet cehosi
+				             \------------------- rychlost - pocet 25ms casti mezi snimky
  			)
 
 Xkrat 2B pozice nasledne sady dlazdic
@@ -64,7 +64,12 @@ Anim.Set.prototype.init = function(data, tiles) {
 	var width = data.getByte(1);
 	var height = data.getByte(1);
 	
-	for (var i=0;i<7;i++) { this._tmp2.push(data.getByte().toString().lpad(3)); }
+	this._delay = data.getByte();
+	/*
+	this._pause = data.getByte();
+	this._random = data.getBytes(2);
+	*/
+	for (var i=0;i<6;i++) { this._tmp2.push(data.getByte().toString().lpad(3)); }
 	
 	this._frames = 0;
 	this._frame = -1;
@@ -122,7 +127,8 @@ Anim.Set.prototype.draw = function() {
 }
 
 Anim.Set.prototype.start = function() {
-	setInterval(this._step.bind(this), 1000/8);
+	var delay = 25 * this._delay;
+	setInterval(this._step.bind(this), delay);
 }
 
 Anim.Set.prototype._step = function() {

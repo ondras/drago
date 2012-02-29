@@ -5,11 +5,10 @@ var ANIMATIONS = {
 			1
 		],
 		"transparent": 1,
+		"delay": 4,
+		"wait": -1,
+		"random": 100,
 		"tmp2": [
-			4,
-			0,
-			100,
-			0,
 			0,
 			0,
 			0
@@ -53,11 +52,10 @@ var ANIMATIONS = {
 			1
 		],
 		"transparent": 1,
+		"delay": 4,
+		"wait": -1,
+		"random": 80,
 		"tmp2": [
-			4,
-			0,
-			80,
-			0,
 			0,
 			0,
 			0
@@ -101,11 +99,10 @@ var ANIMATIONS = {
 			1
 		],
 		"transparent": 1,
+		"delay": 4,
+		"wait": -1,
+		"random": 120,
 		"tmp2": [
-			4,
-			0,
-			120,
-			0,
 			30,
 			0,
 			20
@@ -141,11 +138,10 @@ var ANIMATIONS = {
 			2
 		],
 		"transparent": 0,
+		"delay": 4,
+		"wait": 0,
+		"random": 0,
 		"tmp2": [
-			4,
-			255,
-			0,
-			0,
 			0,
 			0,
 			0
@@ -163,11 +159,10 @@ var ANIMATIONS = {
 			1
 		],
 		"transparent": 0,
+		"delay": 6,
+		"wait": 20,
+		"random": 0,
 		"tmp2": [
-			6,
-			20,
-			0,
-			0,
 			26,
 			0,
 			6
@@ -195,11 +190,10 @@ var ANIMATIONS = {
 			4
 		],
 		"transparent": 0,
+		"delay": 4,
+		"wait": 0,
+		"random": 10,
 		"tmp2": [
-			4,
-			255,
-			10,
-			0,
 			0,
 			0,
 			0
@@ -221,11 +215,10 @@ var ANIMATIONS = {
 			1
 		],
 		"transparent": 0,
+		"delay": 3,
+		"wait": -1,
+		"random": 200,
 		"tmp2": [
-			3,
-			0,
-			200,
-			0,
 			0,
 			0,
 			0
@@ -258,11 +251,10 @@ var ANIMATIONS = {
 			1
 		],
 		"transparent": 0,
+		"delay": 3,
+		"wait": 2,
+		"random": 10,
 		"tmp2": [
-			3,
-			2,
-			10,
-			0,
 			0,
 			0,
 			0
@@ -283,11 +275,10 @@ var ANIMATIONS = {
 			2
 		],
 		"transparent": 0,
+		"delay": 5,
+		"wait": 0,
+		"random": 0,
 		"tmp2": [
-			5,
-			255,
-			0,
-			0,
 			0,
 			0,
 			0
@@ -307,11 +298,10 @@ var ANIMATIONS = {
 			2
 		],
 		"transparent": 0,
+		"delay": 4,
+		"wait": -1,
+		"random": 300,
 		"tmp2": [
-			4,
-			0,
-			44,
-			1,
 			0,
 			0,
 			0
@@ -339,11 +329,10 @@ var ANIMATIONS = {
 			1
 		],
 		"transparent": 1,
+		"delay": 4,
+		"wait": -1,
+		"random": 100,
 		"tmp2": [
-			4,
-			0,
-			100,
-			0,
 			27,
 			0,
 			5
@@ -371,11 +360,10 @@ var ANIMATIONS = {
 			2
 		],
 		"transparent": 0,
+		"delay": 4,
+		"wait": 0,
+		"random": 0,
 		"tmp2": [
-			4,
-			255,
-			0,
-			0,
 			0,
 			0,
 			0
@@ -395,11 +383,10 @@ var ANIMATIONS = {
 			1
 		],
 		"transparent": 1,
+		"delay": 4,
+		"wait": -1,
+		"random": 100,
 		"tmp2": [
-			4,
-			0,
-			100,
-			0,
 			27,
 			0,
 			5
@@ -427,11 +414,10 @@ var ANIMATIONS = {
 			1
 		],
 		"transparent": 0,
+		"delay": 4,
+		"wait": 0,
+		"random": 0,
 		"tmp2": [
-			4,
-			255,
-			0,
-			0,
 			0,
 			0,
 			0
@@ -453,11 +439,10 @@ var ANIMATIONS = {
 			1
 		],
 		"transparent": 0,
+		"delay": 4,
+		"wait": 0,
+		"random": 0,
 		"tmp2": [
-			4,
-			255,
-			0,
-			0,
 			0,
 			0,
 			0
@@ -479,11 +464,10 @@ var ANIMATIONS = {
 			1
 		],
 		"transparent": 0,
+		"delay": 4,
+		"wait": 0,
+		"random": 0,
 		"tmp2": [
-			4,
-			255,
-			0,
-			0,
 			0,
 			0,
 			0
@@ -509,11 +493,10 @@ var ANIMATIONS = {
 			2
 		],
 		"transparent": 0,
+		"delay": 4,
+		"wait": 0,
+		"random": 0,
 		"tmp2": [
-			4,
-			255,
-			0,
-			0,
 			32,
 			0,
 			10
@@ -576,11 +559,10 @@ var ANIMATIONS = {
 			2
 		],
 		"transparent": 0,
+		"delay": 4,
+		"wait": -1,
+		"random": 300,
 		"tmp2": [
-			4,
-			0,
-			44,
-			1,
 			33,
 			0,
 			15
@@ -625,11 +607,10 @@ var ANIMATIONS = {
 			1
 		],
 		"transparent": 1,
+		"delay": 4,
+		"wait": -1,
+		"random": 200,
 		"tmp2": [
-			4,
-			0,
-			200,
-			0,
 			25,
 			0,
 			10
@@ -659,11 +640,10 @@ var ANIMATIONS = {
 			1
 		],
 		"transparent": 1,
+		"delay": 4,
+		"wait": -1,
+		"random": 200,
 		"tmp2": [
-			4,
-			0,
-			200,
-			0,
 			0,
 			0,
 			0
@@ -693,11 +673,10 @@ var ANIMATIONS = {
 			1
 		],
 		"transparent": 1,
+		"delay": 4,
+		"wait": -1,
+		"random": 200,
 		"tmp2": [
-			4,
-			0,
-			200,
-			0,
 			31,
 			0,
 			10
@@ -727,11 +706,10 @@ var ANIMATIONS = {
 			1
 		],
 		"transparent": 1,
+		"delay": 4,
+		"wait": -1,
+		"random": 200,
 		"tmp2": [
-			4,
-			0,
-			200,
-			0,
 			0,
 			0,
 			0
@@ -761,11 +739,10 @@ var ANIMATIONS = {
 			2
 		],
 		"transparent": 1,
+		"delay": 4,
+		"wait": 0,
+		"random": 10,
 		"tmp2": [
-			4,
-			255,
-			10,
-			0,
 			0,
 			0,
 			0
@@ -787,11 +764,10 @@ var ANIMATIONS = {
 			1
 		],
 		"transparent": 1,
+		"delay": 4,
+		"wait": -1,
+		"random": 500,
 		"tmp2": [
-			4,
-			0,
-			244,
-			1,
 			0,
 			0,
 			0
@@ -820,11 +796,10 @@ var ANIMATIONS = {
 			2
 		],
 		"transparent": 1,
+		"delay": 6,
+		"wait": 0,
+		"random": 30,
 		"tmp2": [
-			6,
-			255,
-			30,
-			0,
 			0,
 			0,
 			0
@@ -844,11 +819,10 @@ var ANIMATIONS = {
 			2
 		],
 		"transparent": 1,
+		"delay": 4,
+		"wait": 0,
+		"random": 0,
 		"tmp2": [
-			4,
-			255,
-			0,
-			0,
 			0,
 			0,
 			0
@@ -868,11 +842,10 @@ var ANIMATIONS = {
 			2
 		],
 		"transparent": 1,
+		"delay": 4,
+		"wait": 0,
+		"random": 0,
 		"tmp2": [
-			4,
-			255,
-			0,
-			0,
 			0,
 			0,
 			0
@@ -892,11 +865,10 @@ var ANIMATIONS = {
 			2
 		],
 		"transparent": 1,
+		"delay": 4,
+		"wait": 0,
+		"random": 0,
 		"tmp2": [
-			4,
-			255,
-			0,
-			0,
 			0,
 			0,
 			0
@@ -916,11 +888,10 @@ var ANIMATIONS = {
 			2
 		],
 		"transparent": 1,
+		"delay": 4,
+		"wait": 0,
+		"random": 0,
 		"tmp2": [
-			4,
-			255,
-			0,
-			0,
 			0,
 			0,
 			0
@@ -944,11 +915,10 @@ var ANIMATIONS = {
 			2
 		],
 		"transparent": 1,
+		"delay": 4,
+		"wait": 0,
+		"random": 0,
 		"tmp2": [
-			4,
-			255,
-			0,
-			0,
 			0,
 			0,
 			0
@@ -972,11 +942,10 @@ var ANIMATIONS = {
 			1
 		],
 		"transparent": 1,
+		"delay": 4,
+		"wait": -1,
+		"random": 200,
 		"tmp2": [
-			4,
-			0,
-			200,
-			0,
 			0,
 			0,
 			0
@@ -1004,11 +973,10 @@ var ANIMATIONS = {
 			1
 		],
 		"transparent": 1,
+		"delay": 4,
+		"wait": -1,
+		"random": 200,
 		"tmp2": [
-			4,
-			0,
-			200,
-			0,
 			0,
 			0,
 			0
@@ -1036,11 +1004,10 @@ var ANIMATIONS = {
 			1
 		],
 		"transparent": 0,
+		"delay": 4,
+		"wait": 2,
+		"random": 50,
 		"tmp2": [
-			4,
-			2,
-			50,
-			0,
 			0,
 			0,
 			0
@@ -1061,11 +1028,10 @@ var ANIMATIONS = {
 			1
 		],
 		"transparent": 0,
+		"delay": 4,
+		"wait": 3,
+		"random": 40,
 		"tmp2": [
-			4,
-			3,
-			40,
-			0,
 			0,
 			0,
 			0
@@ -1086,11 +1052,10 @@ var ANIMATIONS = {
 			1
 		],
 		"transparent": 0,
+		"delay": 4,
+		"wait": 0,
+		"random": 0,
 		"tmp2": [
-			4,
-			255,
-			0,
-			0,
 			0,
 			0,
 			0
@@ -1116,11 +1081,10 @@ var ANIMATIONS = {
 			1
 		],
 		"transparent": 0,
+		"delay": 4,
+		"wait": 0,
+		"random": 0,
 		"tmp2": [
-			4,
-			255,
-			0,
-			0,
 			0,
 			0,
 			0
@@ -1146,11 +1110,10 @@ var ANIMATIONS = {
 			2
 		],
 		"transparent": 1,
+		"delay": 4,
+		"wait": -1,
+		"random": 200,
 		"tmp2": [
-			4,
-			0,
-			200,
-			0,
 			28,
 			0,
 			60
@@ -1178,11 +1141,10 @@ var ANIMATIONS = {
 			2
 		],
 		"transparent": 1,
+		"delay": 4,
+		"wait": -1,
+		"random": 200,
 		"tmp2": [
-			4,
-			0,
-			200,
-			0,
 			28,
 			0,
 			50
@@ -1210,11 +1172,10 @@ var ANIMATIONS = {
 			1
 		],
 		"transparent": 1,
+		"delay": 4,
+		"wait": 0,
+		"random": 0,
 		"tmp2": [
-			4,
-			255,
-			0,
-			0,
 			0,
 			0,
 			0
@@ -1234,11 +1195,10 @@ var ANIMATIONS = {
 			1
 		],
 		"transparent": 1,
+		"delay": 4,
+		"wait": 0,
+		"random": 0,
 		"tmp2": [
-			4,
-			255,
-			0,
-			0,
 			0,
 			0,
 			0
@@ -1258,11 +1218,10 @@ var ANIMATIONS = {
 			1
 		],
 		"transparent": 1,
+		"delay": 4,
+		"wait": 0,
+		"random": 0,
 		"tmp2": [
-			4,
-			255,
-			0,
-			0,
 			0,
 			0,
 			0
@@ -1282,11 +1241,10 @@ var ANIMATIONS = {
 			1
 		],
 		"transparent": 1,
+		"delay": 4,
+		"wait": 0,
+		"random": 0,
 		"tmp2": [
-			4,
-			255,
-			0,
-			0,
 			0,
 			0,
 			0
@@ -1306,11 +1264,10 @@ var ANIMATIONS = {
 			1
 		],
 		"transparent": 0,
+		"delay": 4,
+		"wait": 0,
+		"random": 0,
 		"tmp2": [
-			4,
-			255,
-			0,
-			0,
 			0,
 			0,
 			0
@@ -1336,11 +1293,10 @@ var ANIMATIONS = {
 			1
 		],
 		"transparent": 0,
+		"delay": 4,
+		"wait": 3,
+		"random": 40,
 		"tmp2": [
-			4,
-			3,
-			40,
-			0,
 			0,
 			0,
 			0
@@ -1361,11 +1317,10 @@ var ANIMATIONS = {
 			1
 		],
 		"transparent": 1,
+		"delay": 4,
+		"wait": -1,
+		"random": 80,
 		"tmp2": [
-			4,
-			0,
-			80,
-			0,
 			0,
 			0,
 			0
@@ -1429,11 +1384,10 @@ var ANIMATIONS = {
 			1
 		],
 		"transparent": 1,
+		"delay": 4,
+		"wait": -1,
+		"random": 50,
 		"tmp2": [
-			4,
-			0,
-			50,
-			0,
 			0,
 			0,
 			0
@@ -1496,11 +1450,10 @@ var ANIMATIONS = {
 			2
 		],
 		"transparent": 1,
+		"delay": 4,
+		"wait": -1,
+		"random": 400,
 		"tmp2": [
-			4,
-			0,
-			144,
-			1,
 			0,
 			0,
 			0
@@ -1572,11 +1525,10 @@ var ANIMATIONS = {
 			2
 		],
 		"transparent": 1,
+		"delay": 4,
+		"wait": 0,
+		"random": 0,
 		"tmp2": [
-			4,
-			255,
-			0,
-			0,
 			0,
 			0,
 			0
@@ -1596,11 +1548,10 @@ var ANIMATIONS = {
 			1
 		],
 		"transparent": 1,
+		"delay": 4,
+		"wait": 0,
+		"random": 0,
 		"tmp2": [
-			4,
-			255,
-			0,
-			0,
 			0,
 			0,
 			0
@@ -1620,11 +1571,10 @@ var ANIMATIONS = {
 			2
 		],
 		"transparent": 0,
+		"delay": 4,
+		"wait": 0,
+		"random": 0,
 		"tmp2": [
-			4,
-			255,
-			0,
-			0,
 			0,
 			0,
 			0
@@ -1642,11 +1592,10 @@ var ANIMATIONS = {
 			2
 		],
 		"transparent": 0,
+		"delay": 4,
+		"wait": -1,
+		"random": 300,
 		"tmp2": [
-			4,
-			0,
-			44,
-			1,
 			0,
 			0,
 			0

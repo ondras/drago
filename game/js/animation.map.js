@@ -9,4 +9,9 @@ Game.Animation.Map.prototype.init = function(game, position, image, conf) {
 	
 	this._conf = conf;
 	this._animation.frames = conf.frames.length;
+	this._animation.fps = 1000 / (25 * conf.delay);
+	this._animation.wait = conf.wait;
+	this._animation.random = conf.random;
+
+	this._wait();
 }

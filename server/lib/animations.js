@@ -44,7 +44,16 @@ var Animation = function(data) {
 	this._tmp2 = [];
 	this._size = [data.getByte(), data.getByte()];
 	
-	for (var i=0;i<7;i++) { this._tmp2.push(data.getByte()); }
+	this._delay = data.getByte();
+	this._wait = data.getByte();
+	if (this._wait == 255) {
+		this._wait = 0;
+	} else if (this._wait == 0) {
+		this._wait = -1;
+	}
+	this._random = data.getBytes(2);
+	
+	for (var i=0;i<3;i++) { this._tmp2.push(data.getByte()); }
 	
 	this._frames = [];
 	while (1) {
@@ -65,6 +74,9 @@ Animation.prototype.toJSON = function() {
 	return  {
 		size: this._size,
 		transparent: this._transparent,
+		delay: this._delay,
+		wait: this._wait,
+		random: this._random,
 		tmp2: this._tmp2,
 		frames: this._frames
 	}
