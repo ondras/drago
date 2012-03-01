@@ -2,9 +2,9 @@ Game.Background = OZ.Class().extend(HAF.Actor);
 
 Game.Background.prototype.init = function(game, tiles, map) {
 	this._game = game;
+	this._offset = this._game.getPort().getOffset();
 	this._dirty = false;
 	this._canvas = null;
-	this._offset = null;
 	
 	this._build(tiles, map);
 	OZ.Event.add(null, "port-change", this._portChange.bind(this));

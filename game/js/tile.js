@@ -2,6 +2,7 @@ Game.Tile = OZ.Class().extend(HAF.Actor);
 
 Game.Tile.prototype.init = function(game, position, image, options) {
 	this._game = game;
+	this._offset = this._game.getPort().getOffset();
 	
 	this._sprite = {
 		position: position,
@@ -15,7 +16,6 @@ Game.Tile.prototype.init = function(game, position, image, options) {
 	}
 	for (var p in options) { this._options[p] = options[p]; }
 
-	this._offset = null;
 	this._dirty = false;
 	this._visible = false;
 

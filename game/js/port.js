@@ -1,11 +1,10 @@
 Game.Port = OZ.Class();
 
-Game.Port.prototype.init = function(game, node, background) {
+Game.Port.prototype.init = function(game, node) {
 	this._game = game;
 	this._node = node;
 	this._offset = [0, 0];
 	this._size = [];
-	this._backgroundSize = background.getSize();
 	
 	var engine = game.getEngine();
 	this._node.appendChild(engine.getContainer());
@@ -28,6 +27,17 @@ Game.Port.prototype.getSize = function() {
 	return this._size;
 }
 
+Game.Port.prototype.setOffset = function(offset) {
+	var bgSize = this._game.getBackground().getSize();
+	for (var i=0;i<2;i++) {
+		var o = offset[i];
+		o = Math.max(o, 0);
+		o = Math.min(o, bgSize[i]-this._size[i]);
+		this._offset[i] = o;
+	}
+	this.dispatch("port-change");
+}
+ 
 Game.Port.prototype._resize = function() {
 	this._size = [this._node.clientWidth, this._node.clientHeight];
 	this.dispatch("port-change");
@@ -42,13 +52,14 @@ Game.Port.prototype._mousedown = function(e) {
 }
 
 Game.Port.prototype._mousemove = function(e) {
+	var bgSize = this._game.getBackground().getSize();
 	var mouse = [e.clientX, e.clientY];
 
 	var changed = false;
 	for (var i=0;i<2;i++) {
 		var o = this._offset[i] + (this._mouse.pos[i] - mouse[i]);
 		o = Math.max(o, 0);
-		o = Math.min(o, this._backgroundSize[i]-this._size[i]);
+		o = Math.min(o, bgSize[i]-this._size[i]);
 		if (o != this._offset[i]) {
 			this._mouse.pos[i] = mouse[i];
 			this._offset[i] = o;
@@ -56,7 +67,7 @@ Game.Port.prototype._mousemove = function(e) {
 		}
 	}
 	
-	if (changed) { this.dispatch("port-change"); }
+	if (changed) { this.setOffset(this._offset); }
 	
 }
 
