@@ -1,8 +1,6 @@
 Game.Animation = OZ.Class().extend(Game.Tile);
 
 Game.Animation.prototype.init = function(game, position, image, options) {
-	Game.Tile.prototype.init.call(this, game, position, image, options);
-	
 	this._animation = {
 		time: 0,
 		fps: 8,
@@ -12,6 +10,8 @@ Game.Animation.prototype.init = function(game, position, image, options) {
 		random: 0
 	}
 	
+	Game.Tile.prototype.init.call(this, game, position, image, options);
+
 	this._wait();
 }
 

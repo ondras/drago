@@ -72,5 +72,6 @@ Game.prototype._load = function(e) {
 /* */
 
 	this._engine.start();
-	this._port.setOffset(this._port.getOffset());
+	
+	Game.Audio.playBackground();
 }

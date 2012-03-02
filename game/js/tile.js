@@ -23,6 +23,7 @@ Game.Tile.prototype.init = function(game, position, image, options) {
 	for (var i=0;i<2;i++) { this._sprite.size.push(px*this._options.size[i]); }
 	
 	OZ.Event.add(null, "port-change", this._portChange.bind(this));
+	this._updateVisibility();
 }
 
 Game.Tile.prototype.tick = function(dt) {
@@ -48,9 +49,8 @@ Game.Tile.prototype.getBox = function() {
 	return [position, this._sprite.size];
 }
 
-Game.Tile.prototype._portChange = function(e) {
-	this._offset = e.target.getOffset();
-	var size = e.target.getSize();
+Game.Tile.prototype._updateVisibility = function() {
+	var size = this._game.getPort().getSize();
 	
 	var visible = this._isVisible(size);
 	if (visible || this._visible) { this._dirty = true; }
@@ -62,6 +62,11 @@ Game.Tile.prototype._portChange = function(e) {
 	}
 	
 	this._visible = visible;
+}
+
+Game.Tile.prototype._portChange = function(e) {
+	this._offset = e.target.getOffset();
+	this._updateVisibility();
 }
 
 Game.Tile.prototype._isVisible = function(size) {

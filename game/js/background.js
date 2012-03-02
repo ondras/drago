@@ -2,15 +2,19 @@ Game.Background = OZ.Class().extend(HAF.Actor);
 
 Game.Background.prototype.init = function(game, tiles, map) {
 	this._game = game;
+	this._tiles = tiles;
+	this._map = map;
+
 	this._offset = this._game.getPort().getOffset();
 	this._dirty = false;
 	this._canvas = null;
 	
-	this._build(tiles, map);
-	OZ.Event.add(null, "port-change", this._portChange.bind(this));
+	this._remainingParts = [];
+	this._build();
 	
-	var engine = game.getEngine();
-	engine.addActor(this, Game.LAYER_BG);
+	this._game.getEngine().addActor(this, Game.LAYER_BG);
+
+	OZ.Event.add(null, "port-change", this._portChange.bind(this));
 }
 
 Game.Background.prototype.getSize = function() {
@@ -37,18 +41,34 @@ Game.Background.prototype._portChange = function(e) {
 }
 
 Game.Background.prototype._build = function(tiles, map) {
-	var engine = this._game.getEngine();
 	var tile = 16;
-	var size = map.getSize();
+	var size = this._map.getSize();
 	this._canvas = OZ.DOM.elm("canvas", {width:size[0]*tile, height:size[1]*tile});
-	var context = this._canvas.getContext("2d");
 	
-	var data = map.getData();
+	var partSize = 16;
+	var data = this._map.getData();
+	var count = Math.ceil(data.length / partSize);
+	for (var i=0;i<count;i++) {
+		this._remainingParts.push([
+			i*partSize,
+			Math.min((i+1)*partSize, data.length)
+		]);
+	}
+	
+	this._buildPart();
+}
 
-	for (var i=0;i<data.length;i++) {
+Game.Background.prototype._buildPart = function() {
+	var tile = 16;
+	var part = this._remainingParts.shift();
+	var context = this._canvas.getContext("2d");
+	var data = this._map.getData();
+
+	for (var i=part[0];i<part[1];i++) {
 		for (var j=0;j<data[i].length;j++) {
 			var obj = data[i][j];
 			for (var k=0;k<obj.images.length;k++) {
+
 				if (k && obj.ignore) { continue; } /* part of a previous animation */
 				var index = obj.images[k];
 				if (index == 31) { continue; } /* transparent */
@@ -57,7 +77,7 @@ Game.Background.prototype._build = function(tiles, map) {
 				
 				if (index in ANIMATIONS) { /* animation - do not render normal tile */
 					var anim = ANIMATIONS[index];
-					var sprite = tiles.createAnimation(index, anim);
+					var sprite = this._tiles.createAnimation(index, anim);
 					new Game.Animation.Map(this._game, position, sprite, anim);
 					
 					for (var x=0;x<anim.size[0];x++) {
@@ -71,14 +91,22 @@ Game.Background.prototype._build = function(tiles, map) {
 
 
 				if (obj.top[k]) {
-					var canvas = tiles.createTile(index, obj.mirror[k]);
+					var canvas = this._tiles.createTile(index, obj.mirror[k]);
 					new Game.Tile(this._game, position, canvas);
 				} else {
-					tiles.render(index, context, position, obj.mirror[k]);
+					this._tiles.render(index, context, position, obj.mirror[k]);
 				}
 				
 				
 			}
 		}
 	}
+	
+	this._dirty = true;
+	
+	if (this._remainingParts.length) {
+		setTimeout(this._buildPart.bind(this), 50);
+	}
+	
+	
 }

@@ -11,6 +11,15 @@ Game.Keyboard.prototype.setPlayer = function(player) {
 }
 
 Game.Keyboard.prototype._keydown = function(e) {
+	switch (e.keyCode) {
+		case "O".charCodeAt(0):
+			Game.Audio.prevBackground();
+		break;
+		case "P".charCodeAt(0):
+			Game.Audio.nextBackground();
+		break;
+	}
+	
 	if (!this._player) { return; }
 
 	switch (e.keyCode) {
