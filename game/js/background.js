@@ -45,7 +45,7 @@ Game.Background.prototype._build = function(tiles, map) {
 	var size = this._map.getSize();
 	this._canvas = OZ.DOM.elm("canvas", {width:size[0]*tile, height:size[1]*tile});
 	
-	var partSize = 16;
+	var partSize = 32;
 	var data = this._map.getData();
 	var count = Math.ceil(data.length / partSize);
 	for (var i=0;i<count;i++) {
@@ -105,7 +105,7 @@ Game.Background.prototype._buildPart = function() {
 	this._dirty = true;
 	
 	if (this._remainingParts.length) {
-		setTimeout(this._buildPart.bind(this), 50);
+		setTimeout(this._buildPart.bind(this), 100);
 	}
 	
 	
