@@ -8,6 +8,7 @@ Game.Background.prototype.init = function(game, tiles, map) {
 	this._offset = this._game.getPort().getOffset();
 	this._dirty = false;
 	this._canvas = null;
+	this._context = null;
 	
 	this._remainingParts = [];
 	this._build();
@@ -44,6 +45,7 @@ Game.Background.prototype._build = function(tiles, map) {
 	var tile = 16;
 	var size = this._map.getSize();
 	this._canvas = OZ.DOM.elm("canvas", {width:size[0]*tile, height:size[1]*tile});
+	this._context = this._canvas.getContext("2d");
 	
 	var partSize = 32;
 	var data = this._map.getData();
@@ -61,44 +63,13 @@ Game.Background.prototype._build = function(tiles, map) {
 Game.Background.prototype._buildPart = function() {
 	var tile = 16;
 	var part = this._remainingParts.shift();
-	var context = this._canvas.getContext("2d");
 	var data = this._map.getData();
 
 	for (var i=part[0];i<part[1];i++) {
 		for (var j=0;j<data[i].length;j++) {
 			var obj = data[i][j];
-			for (var k=0;k<obj.images.length;k++) {
-
-				if (k && obj.ignore) { continue; } /* part of a previous animation */
-				var index = obj.images[k];
-				if (index == 31) { continue; } /* transparent */
-				
-				var position = [i*tile, j*tile];
-				
-				if (index in ANIMATIONS) { /* animation - do not render normal tile */
-					var anim = ANIMATIONS[index];
-					var sprite = this._tiles.createAnimation(index, anim);
-					new Game.Animation.Map(this._game, position, sprite, anim);
-					
-					for (var x=0;x<anim.size[0];x++) {
-						for (var y=0;y<anim.size[1];y++) {
-							data[i+x][j+y].ignore = true;
-						}
-					}
-					
-					if (k) { continue; }
-				}
-
-
-				if (obj.top[k]) {
-					var canvas = this._tiles.createTile(index, obj.mirror[k]);
-					new Game.Tile(this._game, position, canvas);
-				} else {
-					this._tiles.render(index, context, position, obj.mirror[k]);
-				}
-				
-				
-			}
+			var position = [i*tile, j*tile];
+			for (var k=0;k<obj.images.length;k++) { this._buildTile(obj, k, position); }
 		}
 	}
 	
@@ -107,6 +78,26 @@ Game.Background.prototype._buildPart = function() {
 	if (this._remainingParts.length) {
 		setTimeout(this._buildPart.bind(this), 100);
 	}
+}
+
+/**
+ * @param {object} obj Map tile object
+ * @param {int} index First or second map layer
+ */
+Game.Background.prototype._buildTile = function(obj, index, position) {
+	var tileIndex = obj.images[index];
+	if (tileIndex == 31) { return; } /* transparent */
 	
-	
+	if (obj.top[index]) { /* create a separate tile object in top layer */
+		var canvas = this._tiles.createTile(tileIndex, obj.mirror[index]);
+		new Game.Tile(this._game, position, canvas);
+	} else { /* add to background */
+		this._tiles.render(tileIndex, this._context, position, obj.mirror[index]);
+	}
+
+	if (tileIndex in ANIMATIONS) { /* animation: create an animation object in background layer; if necessary (transparent), merge it with background */
+		var anim = ANIMATIONS[tileIndex];
+		var sprite = this._tiles.createAnimation(tileIndex, anim);
+		new Game.Animation.Map(this._game, position, sprite, anim);
+	}
 }
