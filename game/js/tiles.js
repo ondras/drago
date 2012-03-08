@@ -79,7 +79,6 @@ Game.Tiles.prototype.createAnimation = function(id, conf) {
 			
 		} /* for all frames */		
 		this._cache.animations[id] = canvas;
-		window.a = canvas;
 	}
 
 	return this._cache.animations[id];
