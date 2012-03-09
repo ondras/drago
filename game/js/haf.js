@@ -129,7 +129,7 @@ HAF.Engine.prototype.addLayer = function(id, options) {
 	return canvas;
 }
 
-HAF.Engine.prototype.addActor = function(actor, layerId) {
+HAF.Engine.prototype.addActor = function(actor, layerId, insert) {
 	var layer = this._layers[layerId];
 	
 	var a = {
@@ -138,7 +138,12 @@ HAF.Engine.prototype.addActor = function(actor, layerId) {
 		actor: actor,	/* user-supplied instance */
 		dead: false		/* is this one dead, waiting to be collected? */
 	};
-	layer.actors.push(a); 
+	
+	if (insert) {
+		layer.actors.unshift(a);
+	} else {
+		layer.actors.push(a); 
+	}
 
 	actor.tick(0);		/* potential initialization */
 	return this;

@@ -68,8 +68,9 @@ Game.Background.prototype._buildPart = function() {
 	for (var i=part[0];i<part[1];i++) {
 		for (var j=0;j<data[i].length;j++) {
 			var obj = data[i][j];
-			var position = [i*tile, j*tile];
-			for (var k=0;k<obj.images.length;k++) { this._buildTile(obj, k, position); }
+			var position = [i, j];
+			var pxPosition = [i*tile, j*tile];
+			for (var k=0;k<obj.images.length;k++) { this._buildTile(obj, k, position, pxPosition); }
 		}
 	}
 	
@@ -84,20 +85,34 @@ Game.Background.prototype._buildPart = function() {
  * @param {object} obj Map tile object
  * @param {int} index First or second map layer
  */
-Game.Background.prototype._buildTile = function(obj, index, position) {
+Game.Background.prototype._buildTile = function(obj, index, position, pxPosition) {
+	if (index && obj.ignore) { return; } /* already covered by an animation */
+	
 	var tileIndex = obj.images[index];
 	if (tileIndex == 31) { return; } /* transparent */
 	
-	if (obj.top[index]) { /* create a separate tile object in top layer */
-		var canvas = this._tiles.createTile(tileIndex, obj.mirror[index]);
-		new Game.Tile(this._game, position, canvas);
-	} else { /* add to background */
-		this._tiles.render(tileIndex, this._context, position, obj.mirror[index]);
-	}
-
-	if (tileIndex in ANIMATIONS) { /* animation: create an animation object in background layer; if necessary (transparent), merge it with background */
+	if (tileIndex in ANIMATIONS) { /* animation: create an animation object in bg/middle layer */
 		var anim = ANIMATIONS[tileIndex];
 		var sprite = this._tiles.createAnimation(tileIndex, anim);
-		new Game.Animation.Map(this._game, position, sprite, anim);
+		new Game.Animation.Map(this._game, pxPosition, sprite, anim);
+		
+		if (index) { /* mark further tiles in this animation; we don't need them */
+			var data = this._map.getData();
+			for (var i=0;i<anim.size[0];i++) {
+				for (var j=0;j<anim.size[1];j++) {
+					data[position[0]+i][position[1]+j].ignore = true;
+				}
+			}
+		}
+		
+		return;
 	}
+
+	if (obj.top[index]) { /* create a separate tile object in top layer */
+		var canvas = this._tiles.createTile(tileIndex, obj.mirror[index]);
+		new Game.Tile(this._game, pxPosition, canvas);
+	} else { /* add to background */
+		this._tiles.render(tileIndex, this._context, pxPosition, obj.mirror[index]);
+	}
+
 }

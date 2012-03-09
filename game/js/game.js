@@ -53,7 +53,7 @@ Game.prototype._load = function(e) {
 	this._port = new Game.Port(this, document.body);
 	this._background = new Game.Background(this, this._tiles, this._map);
 
-	var player = new Game.Player(this, 36, "D");
+	var player = new Game.Player(this, 137, "D");
 	this._keyboard.setPlayer(player);
 
 

@@ -12,6 +12,7 @@ Game.Tile.prototype.init = function(game, position, image, options) {
 	
 	this._options = {
 		layer: Game.LAYER_TOP,
+		insert: false,
 		size: [1, 1]
 	}
 	for (var p in options) { this._options[p] = options[p]; }
@@ -56,7 +57,7 @@ Game.Tile.prototype._updateVisibility = function() {
 	if (visible || this._visible) { this._dirty = true; }
 
 	if (visible && !this._visible) {
-		this._game.getEngine().addActor(this, this._options.layer);
+		this._game.getEngine().addActor(this, this._options.layer, this._options.insert);
 	} else if (!visible && this._visible) {
 		this._game.getEngine().removeActor(this, this._options.layer);
 	}
