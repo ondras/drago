@@ -139,7 +139,6 @@ Game.Player.prototype._updatePosition = function() {
 	this._dirty = true;
 }
 
-
-Game.Player.prototype.draw = function(ctx) {
-	Game.Animation.prototype.draw.call(this, ctx);
+Game.Player.prototype._isVisible = function(size) {
+	return true;
 }
