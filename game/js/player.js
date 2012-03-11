@@ -27,7 +27,14 @@ Game.Player.prototype.init = function(game, index, type) {
 		layer: Game.LAYER_PLAYERS,
 		size: [3, 2]
 	}
-	Game.Animation.prototype.init.call(this, game, [0, 0], null, o);
+	
+	var spriteSize = [
+		16 * o.size[0] * 8,
+		16 * o.size[1] * 4
+	];
+	var image = HAF.Sprite.get("img/player/" + type + ".png", spriteSize, 0, true);
+
+	Game.Animation.prototype.init.call(this, game, [0, 0], image, o);
 
 	this._animation.frames = 4;
 	this._updateImage();
@@ -83,16 +90,7 @@ Game.Player.prototype._distance = function(tile1, tile2) {
 }
 
 Game.Player.prototype._updateImage = function() {
-	var names = ["UP", "R", "DOWN", "L"];
-	var flight = (this._flight ? "F" : "");
-	var url = "img/player/" + this._type + "/" + this._type + flight + names[this._orientation] + ".png";
-
-	var size = [
-		this._sprite.size[0],
-		this._sprite.size[1] * this._animation.frames
-	]
-	this._sprite.image = HAF.Sprite.get(url, size, 0, true);
-
+	this._animation.column = this._orientation + (this._flight ? 4 : 0);
 	this._dirty = true;
 }
 

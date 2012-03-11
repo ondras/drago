@@ -7,6 +7,7 @@ Game.Animation.prototype.init = function(game, position, image, options) {
 		frame: -1,
 		frames: 0,
 		wait: 0, /* time to wait before starting an animation cycle */
+		column: 0,
 		random: 0
 	}
 	
@@ -42,7 +43,7 @@ Game.Animation.prototype.draw = function(context) {
 	];
 	context.drawImage(
 		this._sprite.image, 
-		0, this._animation.frame * this._sprite.size[1], this._sprite.size[0], this._sprite.size[1],
+		this._animation.column*this._sprite.size[0], this._animation.frame * this._sprite.size[1], this._sprite.size[0], this._sprite.size[1],
 		position[0], position[1], this._sprite.size[0], this._sprite.size[1]
 	);
 }
