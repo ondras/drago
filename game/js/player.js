@@ -123,7 +123,7 @@ Game.Player.prototype._updatePosition = function() {
 	/* finetuning */
 	var takeOff = (this._flight ? 1 : 0);
 	if (this._target.index !== null && this._flight) { /* traveling */
-		var threshold = 40/tile; /* 20 pixels far */
+		var threshold = 40/tile; /* 40 pixels far */
 		
 		var traveled = this._target.distanceTraveled;
 		var remaining = this._target.distanceTotal - traveled;
@@ -134,8 +134,8 @@ Game.Player.prototype._updatePosition = function() {
 			takeOff = remaining/threshold;
 		}
 	}
-	var yOffset = 2 - 10*takeOff;
-	this._sprite.position[1] += yOffset;
+	var yOffset = 2 - 24*takeOff;
+	this._sprite.position[1] += Math.round(yOffset);
 	this._dirty = true;
 }
 
