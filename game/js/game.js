@@ -9,6 +9,15 @@ Array.prototype.random = function() {
 	return this[Math.floor(Math.random()*this.length)];
 }
 
+Array.prototype.randomize = function() {
+	var result = [];
+	while (this.length) {
+		var index = this.indexOf(this.random());
+		result.push(this.splice(index, 1)[0]);
+	}
+	return result;
+}
+
 var Game = OZ.Class();
 Game.LAYER_BG		= "bg";
 Game.LAYER_PLAYERS	= "players";
@@ -73,7 +82,10 @@ Game.prototype._load = function(e) {
 
 	this._engine.start();
 	
-	Game.Audio.playBackground();
+//	Game.Audio.playBackground();
+	OZ.Audio.Background.queue = ["G0", "G1", "G2", "G3", "G4", "G5"].randomize();
+	OZ.Audio.Background.template = "sound/music/{format}/{name}.{format}";
+	OZ.Audio.Background.play();
 }
 
 /**
