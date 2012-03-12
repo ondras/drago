@@ -1,11 +1,10 @@
 Game.Background = OZ.Class().extend(HAF.Actor);
 
-Game.Background.prototype.init = function(game, tiles, map) {
-	this._game = game;
+Game.Background.prototype.init = function(tiles, map) {
 	this._tiles = tiles;
 	this._map = map;
 
-	this._offset = this._game.getPort().getOffset();
+	this._offset = Game.port.getOffset();
 	this._dirty = false;
 	this._canvas = null;
 	this._context = null;
@@ -13,7 +12,7 @@ Game.Background.prototype.init = function(game, tiles, map) {
 	this._remainingParts = [];
 	this._build();
 	
-	this._game.getEngine().addActor(this, Game.LAYER_BG);
+	Game.engine.addActor(this, Game.LAYER_BG);
 
 	OZ.Event.add(null, "port-change", this._portChange.bind(this));
 }
@@ -96,7 +95,7 @@ Game.Background.prototype._buildTile = function(obj, index, position, pxPosition
 	if (tileIndex in ANIMATIONS) { /* animation: create an animation object in bg/middle layer */
 		var anim = ANIMATIONS[tileIndex];
 		var sprite = this._tiles.createAnimation(tileIndex, anim);
-		new Game.Animation.Map(this._game, pxPosition, sprite, anim);
+		new Game.Animation.Map(pxPosition, sprite, anim);
 		
 		if (index) { /* mark further tiles in this animation; we don't need them */
 			var data = this._map.getData();
@@ -112,7 +111,7 @@ Game.Background.prototype._buildTile = function(obj, index, position, pxPosition
 
 	if (obj.top[index]) { /* create a separate tile object in top layer */
 		var canvas = this._tiles.createTile(tileIndex, obj.mirror[index]);
-		new Game.Tile(this._game, pxPosition, canvas);
+		new Game.Tile(pxPosition, canvas);
 	} else { /* add to background */
 		this._tiles.render(tileIndex, this._context, pxPosition, obj.mirror[index]);
 	}

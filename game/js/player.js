@@ -1,5 +1,5 @@
 Game.Player = OZ.Class().extend(Game.Animation);
-Game.Player.prototype.init = function(game, index, type) {
+Game.Player.prototype.init = function(index, type) {
 	this._index = index;
 	this._type = type;
 	this._port = null;
@@ -34,7 +34,7 @@ Game.Player.prototype.init = function(game, index, type) {
 	];
 	var image = HAF.Sprite.get("img/player/" + type + ".png", spriteSize, 0, true);
 
-	Game.Animation.prototype.init.call(this, game, [0, 0], image, o);
+	Game.Animation.prototype.init.call(this, [0, 0], image, o);
 
 	this._animation.frames = 4;
 	this._updateImage();
@@ -73,6 +73,8 @@ Game.Player.prototype.tick = function(dt) {
 			this._target.index = null;
 			this._flight = GRAPH[this._index].air;
 			this._updateImage();
+			
+			Game.movement.show(this._index);
 
 			/* FIXME do something */
 		}
@@ -102,7 +104,7 @@ Game.Player.prototype._updatePosition = function() {
 	
 	/* adjust viewport */
 	var offsetChanged = false;
-	var port = this._game.getPort();
+	var port = Game.port;
 	var size = port.getSize();
 	for (var i=0;i<2;i++) {
 		var portPosition = this._sprite.position[i] - this._offset[i];

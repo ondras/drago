@@ -18,18 +18,29 @@ Array.prototype.randomize = function() {
 	return result;
 }
 
-var Game = OZ.Class();
-Game.LAYER_BG		= "bg";
-Game.LAYER_PLAYERS	= "players";
-Game.LAYER_TOP		= "top";
+var Game = {
+	LAYER_BG		: "bg",
+	LAYER_PLAYERS	: "players",
+	LAYER_TOP		: "top",
+	
+	engine: null,
+	port: null,
+	background: null,
+	keyboard: null,
+	movement: null,
+	
+	_tiles: null,
+	_map: null,
+	_remain: 0
+};
 
-Game.prototype.init = function() {
-	this._port = null;
-	this._keyboard = new Game.Keyboard();
-	this._engine = new HAF.Engine();
-	this._engine.addLayer(Game.LAYER_BG, {clear:HAF.CLEAR_NONE, dirty:HAF.DIRTY_CHANGED});
-	this._engine.addLayer(Game.LAYER_PLAYERS, {clear:HAF.CLEAR_ACTORS, dirty:HAF.DIRTY_CHANGED});
-	this._engine.addLayer(Game.LAYER_TOP, {clear:HAF.CLEAR_ACTORS, dirty:HAF.DIRTY_CHANGED});
+Game.init = function() {
+	this.keyboard = new Game.Keyboard();
+	this.movement = new Game.Movement();
+	this.engine = new HAF.Engine();
+	this.engine.addLayer(this.LAYER_BG, {clear:HAF.CLEAR_NONE, dirty:HAF.DIRTY_CHANGED});
+	this.engine.addLayer(this.LAYER_PLAYERS, {clear:HAF.CLEAR_ACTORS, dirty:HAF.DIRTY_CHANGED});
+	this.engine.addLayer(this.LAYER_TOP, {clear:HAF.CLEAR_ACTORS, dirty:HAF.DIRTY_CHANGED});
 
 	document.body.innerHTML = "Loading&hellip;";
 
@@ -41,51 +52,38 @@ Game.prototype.init = function() {
 	OZ.Event.add(this._map, "load", this._load.bind(this));
 }
 
-Game.prototype.getEngine = function() {
-	return this._engine;
-}
-
-Game.prototype.getPort = function() {
-	return this._port;
-}
-
-Game.prototype.getBackground = function() {
-	return this._background;
-}
-
-Game.prototype._load = function(e) {
+Game._load = function(e) {
 	this._remain--;
 	if (this._remain) { return; }
 	
 	document.body.innerHTML = "";
 
-	this._port = new Game.Port(this, document.body);
-	this._background = new Game.Background(this, this._tiles, this._map);
+	this.port = new Game.Port(document.body);
+	this.background = new Game.Background(this._tiles, this._map);
 	
-	OZ.Event.add(this._background, "load", this._loadBackground.bind(this));
+	OZ.Event.add(this.background, "load", this._loadBackground.bind(this));
 }
 
-Game.prototype._loadBackground = function() {
-	var player = new Game.Player(this, 50, "D");
-	this._keyboard.setPlayer(player);
+Game._loadBackground = function() {
+	var player = new Game.Player(0, "D");
+	this.keyboard.setPlayer(player);
 
 /* */
-	var monitor1 = new HAF.Monitor.Sim(this._engine, [220, 100], {textColor:"#000"}).getContainer();
+	var monitor1 = new HAF.Monitor.Sim(this.engine, [220, 100], {textColor:"#000"}).getContainer();
 	monitor1.style.position = "absolute";
 	monitor1.style.left = "0px";
 	monitor1.style.top = "0px";
 	document.body.appendChild(monitor1);
 
-	var monitor2 = new HAF.Monitor.Draw(this._engine, [220, 100], {textColor:"#000"}).getContainer();
+	var monitor2 = new HAF.Monitor.Draw(this.engine, [220, 100], {textColor:"#000"}).getContainer();
 	monitor2.style.position = "absolute";
 	monitor2.style.left = "0px";
 	monitor2.style.top = monitor1.offsetHeight + "px";
 	document.body.appendChild(monitor2);
 /* */
 
-//	this._engine.start();
+	this.engine.start();
 	
-//	Game.Audio.playBackground();
 	OZ.Audio.Background.queue = ["G0", "G1", "G2", "G3", "G4", "G5"].randomize();
 	OZ.Audio.Background.template = "sound/music/{format}/{name}.{format}";
 	OZ.Audio.Background.play();
@@ -94,7 +92,7 @@ Game.prototype._loadBackground = function() {
 /**
  * Compute shortest path to a given index
  */
-Game.prototype._computePath = function(index) {
+Game._computePath = function(index) {
 	for (var i=0;i<GRAPH.length;i++) { 
 		GRAPH[i].path = null;
 		GRAPH[i].distance = Infinity;

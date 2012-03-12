@@ -1,8 +1,7 @@
 Game.Tile = OZ.Class().extend(HAF.Actor);
 
-Game.Tile.prototype.init = function(game, position, image, options) {
-	this._game = game;
-	this._offset = this._game.getPort().getOffset();
+Game.Tile.prototype.init = function(position, image, options) {
+	this._offset = Game.port.getOffset();
 	
 	this._sprite = {
 		position: position,
@@ -51,15 +50,15 @@ Game.Tile.prototype.getBox = function() {
 }
 
 Game.Tile.prototype._updateVisibility = function() {
-	var size = this._game.getPort().getSize();
+	var size = Game.port.getSize();
 	
 	var visible = this._isVisible(size);
 	if (visible || this._visible) { this._dirty = true; }
 
 	if (visible && !this._visible) {
-		this._game.getEngine().addActor(this, this._options.layer, this._options.insert);
+		Game.engine.addActor(this, this._options.layer, this._options.insert);
 	} else if (!visible && this._visible) {
-		this._game.getEngine().removeActor(this, this._options.layer);
+		Game.engine.removeActor(this, this._options.layer);
 	}
 	
 	this._visible = visible;
