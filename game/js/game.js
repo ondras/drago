@@ -66,7 +66,9 @@ Game._load = function(e) {
 
 Game._loadBackground = function() {
 	var player = new Game.Player(0, "D");
-	this.keyboard.setPlayer(player);
+	
+	this._computePath(GRAPH.length-1);
+	player.moveBy(5);
 
 /* */
 	var monitor1 = new HAF.Monitor.Sim(this.engine, [220, 100], {textColor:"#000"}).getContainer();

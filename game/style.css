@@ -7,3 +7,37 @@ body {
 	overflow: hidden;
 	height: 100%;
 }
+
+.movement-0 {
+	background-image: url(img/movement/0.png);
+	background-position: 50% 100%;
+}
+.movement-0:hover {
+	background-image: url(img/movement/0-hover.png);
+}
+
+.movement-1 {
+	background-image: url(img/movement/1.png);
+	background-position: 0% 50%;
+}
+.movement-1:hover {
+	background-image: url(img/movement/1-hover.png);
+}
+
+.movement-2 {
+	background-image: url(img/movement/2.png);
+	background-position: 50% 00%;
+}
+.movement-2:hover {
+	background-image: url(img/movement/2-hover.png);
+}
+
+.movement-3 {
+	background-image: url(img/movement/3.png);
+	background-position: 100% 50%;
+}
+.movement-3:hover {
+	background-image: url(img/movement/3-hover.png);
+}
+
+

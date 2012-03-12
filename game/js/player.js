@@ -1,10 +1,13 @@
 Game.Player = OZ.Class().extend(Game.Animation);
+Game.Player.FLIGHT_OFFSET = -24;
 Game.Player.prototype.init = function(index, type) {
 	this._index = index;
 	this._type = type;
-	this._port = null;
+
 	this._flight = GRAPH[this._index].air;
 	this._orientation = 1;
+	this._moves = 0;
+	this._path = [];
 	this._speed = 8; /* tiles per second */
 	this._velocity = [
 		[ 0, -1],
@@ -27,26 +30,39 @@ Game.Player.prototype.init = function(index, type) {
 		layer: Game.LAYER_PLAYERS,
 		size: [3, 2]
 	}
-	
 	var spriteSize = [
 		16 * o.size[0] * 8,
 		16 * o.size[1] * 4
 	];
 	var image = HAF.Sprite.get("img/player/" + type + ".png", spriteSize, 0, true);
-
 	Game.Animation.prototype.init.call(this, [0, 0], image, o);
 
 	this._animation.frames = 4;
+
 	this._updateImage();
 	this._updatePosition();
 }
 
-Game.Player.prototype.moveDirection = function(direction) {
-	if (this._target.index !== null) { return; }
+Game.Player.prototype.getIndex = function() {
+	return this._index;
+}
 
+Game.Player.prototype.moveBy = function(moves) {
+	this._moves = moves;
+	this._path = [this._index];
+	Game.keyboard.setPlayer(this);
+	Game.movement.show(this);
+}
+
+Game.Player.prototype.moveDirection = function(direction) {
+	if (this._target.index !== null) { return; } /* already moving */
 	var index = GRAPH[this._index].neighbors[direction];
-	if (index === null) { return; }
+	if (index === null) { return; } /* edge does not exist */
 	
+	if (this._moves == 0 && this._path[this._path.length-2] != index) { return; } /* can move only backwards */
+	
+	Game.movement.hide();
+
 	this._target.index = index;
 	this._target.source = this._tile.clone();
 	this._target.tile = [GRAPH[index].x, GRAPH[index].y];
@@ -67,22 +83,32 @@ Game.Player.prototype.tick = function(dt) {
 		}
 		
 		this._target.distanceTraveled = this._distance(this._tile, this._target.source);
+
 		if (this._target.distanceTraveled >= this._target.distanceTotal) { /* arrived at target */
 			this._index = this._target.index;
 			this._tile = this._target.tile;
 			this._target.index = null;
-			this._flight = GRAPH[this._index].air;
-			this._updateImage();
-			
-			Game.movement.show(this._index);
-
-			/* FIXME do something */
+			this._arrived();
 		}
 		
 		this._updatePosition();
 	}
 	
 	return Game.Animation.prototype.tick.call(this, dt);
+}
+
+Game.Player.prototype._arrived = function() {
+	this._flight = GRAPH[this._index].air;
+	this._updateImage();
+	if (this._path.length > 1 && this._path[this._path.length-2] == this._index) {
+		this._moves++;
+		this._path.pop();
+	} else {
+		this._moves--;
+		this._path.push(this._index);
+	}
+	
+	Game.movement.show(this);
 }
 
 Game.Player.prototype._distance = function(tile1, tile2) {
@@ -134,7 +160,7 @@ Game.Player.prototype._updatePosition = function() {
 			takeOff = remaining/threshold;
 		}
 	}
-	var yOffset = 2 - 24*takeOff;
+	var yOffset = 2 + Game.Player.FLIGHT_OFFSET*takeOff;
 	this._sprite.position[1] += Math.round(yOffset);
 	this._dirty = true;
 }
