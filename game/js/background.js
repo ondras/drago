@@ -78,6 +78,8 @@ Game.Background.prototype._buildPart = function() {
 	
 	if (this._remainingParts.length) {
 		setTimeout(this._buildPart.bind(this), 100);
+	} else {
+		this.dispatch("load");
 	}
 }
 

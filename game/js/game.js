@@ -61,10 +61,13 @@ Game.prototype._load = function(e) {
 
 	this._port = new Game.Port(this, document.body);
 	this._background = new Game.Background(this, this._tiles, this._map);
+	
+	OZ.Event.add(this._background, "load", this._loadBackground.bind(this));
+}
 
+Game.prototype._loadBackground = function() {
 	var player = new Game.Player(this, 50, "D");
 	this._keyboard.setPlayer(player);
-
 
 /* */
 	var monitor1 = new HAF.Monitor.Sim(this._engine, [220, 100], {textColor:"#000"}).getContainer();
@@ -80,7 +83,7 @@ Game.prototype._load = function(e) {
 	document.body.appendChild(monitor2);
 /* */
 
-	this._engine.start();
+//	this._engine.start();
 	
 //	Game.Audio.playBackground();
 	OZ.Audio.Background.queue = ["G0", "G1", "G2", "G3", "G4", "G5"].randomize();
