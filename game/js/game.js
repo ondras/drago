@@ -110,7 +110,7 @@ Game._computePath = function(index) {
 
 		for (var i=0;i<node.neighbors.length;i++) {
 			var neighbor = node.neighbors[i];
-			if (!neighbor) { continue; }
+			if (neighbor === null) { continue; }
 			neighbor = GRAPH[neighbor];
 			
 			if (neighbor.distance > dist) { /* we can score better this way */

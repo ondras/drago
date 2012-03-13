@@ -1,6 +1,6 @@
 Game.Movement = OZ.Class();
 Game.Movement.prototype.init = function() {
-	this._size = 48;
+	this._size = 40;
 	this._dom = {};
 	this._player = null;
 
@@ -40,6 +40,8 @@ Game.Movement.prototype.show = function(player) {
 		this._dom.dir[i].style.display = (node.neighbors[i] === null ? "none" : "");
 		if (node.path) {
 			this._dom.dir[i].style.opacity = (node.path[i] ? 1 : 0.5);
+		} else {
+			this._dom.dir[i].style.opacity = 1;
 		}
 	}
 }
@@ -58,20 +60,10 @@ Game.Movement.prototype._touch = function(e) {
 Game.Movement.prototype._updatePosition = function() {
 	if (!this._player) { return; }
 	
-	var tile = 16;
-	var node = GRAPH[this._player.getIndex()];
-	var position = [
-		tile * node.x + tile/2,
-		tile * node.y + 2
-	];
-	
-	if (node.air) { position[1] += Game.Player.FLIGHT_OFFSET; }
-	
-	var offset = Game.port.getOffset();
 	var half = 3*this._size/2;
-	
-	this._dom.container.style.left = (position[0] - offset[0] - half) + "px";
-	this._dom.container.style.top = (position[1] - offset[1] - half) + "px";
+	var box = this._player.getBox();
+	this._dom.container.style.left = (box[0][0] + box[1][0]/2 - half) + "px";
+	this._dom.container.style.top = (box[0][1] + box[1][1]/2 - half) + "px";
 }
 	
 Game.Movement.prototype._buildPart = function(left, top) {

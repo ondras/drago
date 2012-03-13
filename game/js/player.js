@@ -40,11 +40,30 @@ Game.Player.prototype.init = function(index, type) {
 	this._animation.frames = 4;
 
 	this._updateImage();
-	this._updatePosition();
+	this._computePosition();
 }
 
 Game.Player.prototype.getIndex = function() {
 	return this._index;
+}
+
+Game.Player.prototype.makeVisible = function() {
+	var offsetChanged = false;
+	var port = Game.port;
+	var size = port.getSize();
+	for (var i=0;i<2;i++) {
+		var portPosition = this._sprite.position[i] - this._offset[i];
+		var limit = Math.round(size[i]/6);
+
+		if (portPosition < limit) {
+			offsetChanged = true;
+			this._offset[i] -= limit - portPosition;
+		} else if (portPosition > size[i]-limit) {
+			offsetChanged = true;
+			this._offset[i] += portPosition - (size[i]-limit);
+		}
+	}
+	if (offsetChanged) { port.setOffset(this._offset); }
 }
 
 Game.Player.prototype.moveBy = function(moves) {
@@ -58,7 +77,6 @@ Game.Player.prototype.moveDirection = function(direction) {
 	if (this._target.index !== null) { return; } /* already moving */
 	var index = GRAPH[this._index].neighbors[direction];
 	if (index === null) { return; } /* edge does not exist */
-	
 	if (this._moves == 0 && this._path[this._path.length-2] != index) { return; } /* can move only backwards */
 	
 	Game.movement.hide();
@@ -91,7 +109,7 @@ Game.Player.prototype.tick = function(dt) {
 			this._arrived();
 		}
 		
-		this._updatePosition();
+		this._computePosition();
 	}
 	
 	return Game.Animation.prototype.tick.call(this, dt);
@@ -122,29 +140,14 @@ Game.Player.prototype._updateImage = function() {
 	this._dirty = true;
 }
 
-Game.Player.prototype._updatePosition = function() {
+/**
+ * Convert tile coords to sprite pixel coords
+ */
+Game.Player.prototype._computePosition = function() {
 	var tile = 16;
 
-	this._sprite.position[0] = Math.round((this._tile[0] + 0.5)*tile) - this._sprite.size[0]/2;
-	this._sprite.position[1] = Math.round(this._tile[1]*tile) - this._sprite.size[1]/2;
-	
-	/* adjust viewport */
-	var offsetChanged = false;
-	var port = Game.port;
-	var size = port.getSize();
-	for (var i=0;i<2;i++) {
-		var portPosition = this._sprite.position[i] - this._offset[i];
-		var limit = Math.round(size[i]/6);
-
-		if (portPosition < limit) {
-			offsetChanged = true;
-			this._offset[i] -= limit - portPosition;
-		} else if (portPosition > size[i]-limit) {
-			offsetChanged = true;
-			this._offset[i] += portPosition - (size[i]-limit);
-		}
-	}
-	if (offsetChanged) { port.setOffset(this._offset); }
+	this._sprite.position[0] = (this._tile[0] + 0.5)*tile - this._sprite.size[0]/2;
+	this._sprite.position[1] = this._tile[1]*tile - this._sprite.size[1]/2;
 	
 	/* finetuning */
 	var takeOff = (this._flight ? 1 : 0);
@@ -161,7 +164,15 @@ Game.Player.prototype._updatePosition = function() {
 		}
 	}
 	var yOffset = 2 + Game.Player.FLIGHT_OFFSET*takeOff;
-	this._sprite.position[1] += Math.round(yOffset);
+	this._sprite.position[1] += yOffset;
+	
+	/* round */
+	for (var i=0;i<2;i++) { this._sprite.position[i] = Math.round(this._sprite.position[i]); }
+
+	/* adjust port if necessary */
+	this.makeVisible();
+	
+	/* needs redrawing */
 	this._dirty = true;
 }
 
