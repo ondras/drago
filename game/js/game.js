@@ -65,7 +65,7 @@ Game._load = function(e) {
 }
 
 Game._loadBackground = function() {
-	var player = new Game.Player(0, "D");
+	var player = new Game.Player(399, "D");
 	
 	this._computePath(GRAPH.length-1);
 	player.moveBy(5);
@@ -86,6 +86,7 @@ Game._loadBackground = function() {
 
 	this.engine.start();
 	
+	OZ.Audio.template = "sound/fx/{format}/{name}.{format}";
 	OZ.Audio.Background.queue = ["G0", "G1", "G2", "G3", "G4", "G5"].randomize();
 	OZ.Audio.Background.template = "sound/music/{format}/{name}.{format}";
 	OZ.Audio.Background.play();

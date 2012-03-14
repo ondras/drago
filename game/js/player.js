@@ -126,6 +126,12 @@ Game.Player.prototype._arrived = function() {
 		this._path.push(this._index);
 	}
 	
+	if (this._moves) {
+		OZ.Audio.play("move-through");
+	} else {
+		OZ.Audio.play("move-stop");
+	}
+	
 	Game.movement.show(this);
 }
 
