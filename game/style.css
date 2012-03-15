@@ -4,8 +4,9 @@ html {
 
 body {
 	margin: 0px;
-	overflow: hidden;
 	height: 100%;
+	background-image: url(img/wood.png);
+	background-size: 100% 100%; 
 }
 
 .movement-0 {

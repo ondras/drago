@@ -70,6 +70,7 @@ Game.Tile.prototype._portChange = function(e) {
 }
 
 Game.Tile.prototype._isVisible = function(size) {
+	return true;
 	var result = true;
 	for (var i=0;i<2;i++) {
 		if (this._sprite.position[i] > this._offset[i]+size[i]) { result = false; }

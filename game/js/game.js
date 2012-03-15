@@ -38,6 +38,7 @@ Game.init = function() {
 	this.keyboard = new Game.Keyboard();
 	this.movement = new Game.Movement();
 	this.engine = new HAF.Engine();
+	this.port = new Game.Port();
 	this.engine.addLayer(this.LAYER_BG, {clear:HAF.CLEAR_NONE, dirty:HAF.DIRTY_CHANGED});
 	this.engine.addLayer(this.LAYER_PLAYERS, {clear:HAF.CLEAR_ACTORS, dirty:HAF.DIRTY_CHANGED});
 	this.engine.addLayer(this.LAYER_TOP, {clear:HAF.CLEAR_ACTORS, dirty:HAF.DIRTY_CHANGED});
@@ -56,30 +57,30 @@ Game._load = function(e) {
 	this._remain--;
 	if (this._remain) { return; }
 	
-	document.body.innerHTML = "";
-
-	this.port = new Game.Port(document.body);
 	this.background = new Game.Background(this._tiles, this._map);
 	
 	OZ.Event.add(this.background, "load", this._loadBackground.bind(this));
 }
 
 Game._loadBackground = function() {
+	document.body.innerHTML = "";
+	document.body.appendChild(this.port.getContainer());
+
 	var player = new Game.Player(399, "D");
 	
 	this._computePath(GRAPH.length-1);
 	player.moveBy(5);
 
 /* */
-	var monitor1 = new HAF.Monitor.Sim(this.engine, [220, 100], {textColor:"#000"}).getContainer();
+	var monitor1 = new HAF.Monitor.Sim(this.engine, [220, 100], {textColor:"#fff"}).getContainer();
 	monitor1.style.position = "absolute";
-	monitor1.style.left = "0px";
+	monitor1.style.right = "0px";
 	monitor1.style.top = "0px";
 	document.body.appendChild(monitor1);
 
-	var monitor2 = new HAF.Monitor.Draw(this.engine, [220, 100], {textColor:"#000"}).getContainer();
+	var monitor2 = new HAF.Monitor.Draw(this.engine, [220, 100], {textColor:"#fff"}).getContainer();
 	monitor2.style.position = "absolute";
-	monitor2.style.left = "0px";
+	monitor2.style.right = "0px";
 	monitor2.style.top = monitor1.offsetHeight + "px";
 	document.body.appendChild(monitor2);
 /* */

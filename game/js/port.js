@@ -1,10 +1,9 @@
 Game.Port = OZ.Class();
 
-Game.Port.prototype.init = function(node) {
-	this._node = node;
-	
-	this._node = OZ.DOM.elm("div", {position:"relative", left:"30px", top:"30px", width:"500px", height:"500px"});
-	document.body.appendChild(this._node);
+Game.Port.prototype.init = function() {
+	this._padding = [30, 300, 30, 30];
+
+	this._node = OZ.DOM.elm("div", {position:"relative", left:this._padding[3]+"px", top:this._padding[0]+"px"});
 		
 	this._offset = [0, 0];
 	this._size = [];
@@ -21,6 +20,10 @@ Game.Port.prototype.init = function(node) {
 	OZ.Event.add(window, "resize", this._resize.bind(this));
 
 	OZ.Touch.onStart(this._node, this._touchStart.bind(this));
+}
+
+Game.Port.prototype.getContainer = function() {
+	return this._node;
 }
 
 Game.Port.prototype.getOffset = function() {
@@ -43,7 +46,15 @@ Game.Port.prototype.setOffset = function(offset) {
 }
  
 Game.Port.prototype._resize = function() {
-	this._size = [this._node.clientWidth, this._node.clientHeight];
+	var win = OZ.DOM.win(true);
+	win[0] -= this._padding[1];
+	win[0] -= this._padding[3];
+	win[1] -= this._padding[0];
+	win[1] -= this._padding[2];
+	this._size = win;
+	
+	this._node.style.width = this._size[0] + "px";
+	this._node.style.height = this._size[1] + "px";
 	this.dispatch("port-change");
 	Game.engine.setSize(this._size);
 }
