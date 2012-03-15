@@ -3,15 +3,15 @@ Game.Port = OZ.Class();
 Game.Port.prototype.init = function() {
 	this._padding = [30, 300, 30, 30];
 
-	this._node = OZ.DOM.elm("div", {position:"relative", left:this._padding[3]+"px", top:this._padding[0]+"px"});
+	this._node = OZ.DOM.elm("div", {position:"relative", overflow:"hidden", left:this._padding[3]+"px", top:this._padding[0]+"px"});
 		
 	this._offset = [0, 0];
 	this._size = [];
 	
 	this._node.appendChild(Game.engine.getContainer());
-	Game.Border.create(this._node);
+	this._border = new Game.Border(this._node);
 	
-	this._resize();
+	this.sync();
 	this._mouse = {
 		ec: [],
 		pos: []
@@ -44,8 +44,8 @@ Game.Port.prototype.setOffset = function(offset) {
 	}
 	this.dispatch("port-change");
 }
- 
-Game.Port.prototype._resize = function() {
+
+Game.Port.prototype.sync = function() {
 	var win = OZ.DOM.win(true);
 	win[0] -= this._padding[1];
 	win[0] -= this._padding[3];
@@ -57,6 +57,11 @@ Game.Port.prototype._resize = function() {
 	this._node.style.height = this._size[1] + "px";
 	this.dispatch("port-change");
 	Game.engine.setSize(this._size);
+	this._border.update();
+}
+ 
+Game.Port.prototype._resize = function() {
+	this.sync();
 }
 
 Game.Port.prototype._touchStart = function(e) {

@@ -65,6 +65,7 @@ Game._load = function(e) {
 Game._loadBackground = function() {
 	document.body.innerHTML = "";
 	document.body.appendChild(this.port.getContainer());
+	this.port.sync();
 
 	var player = new Game.Player(399, "D");
 	
