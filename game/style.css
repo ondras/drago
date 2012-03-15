@@ -1,12 +1,9 @@
 html {
-	height: 100%;
 }
 
 body {
 	margin: 0px;
-	height: 100%;
-	background-image: url(img/wood.png);
-	background-size: 100% 100%; 
+	background-image: url(img/wood2.jpg);
 }
 
 .movement-0 {
