@@ -57,6 +57,8 @@ Game.Background.prototype._build = function(tiles, map) {
 	}
 	
 	this._buildPart();
+//	setTimeout(function(){	this.dispatch("load");}.bind(this), 100);
+
 }
 
 Game.Background.prototype._buildPart = function() {

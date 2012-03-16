@@ -69,7 +69,10 @@ OZ.Audio = {
 		this.Background._format = this._format;
 		
 		this.Background._audio = new Audio();
-		OZ.Event.add(this.Background._audio, "ended", this.Background.next.bind(this.Background));
+		OZ.Event.add(this.Background._audio, "ended", function() {
+			this.next();
+			this.play();
+		}.bind(this.Background));
 		
 		this.Background.next();
 	},

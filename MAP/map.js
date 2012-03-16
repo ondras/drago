@@ -116,11 +116,13 @@ Drago.prototype._response = function(data) {
 	for (var i=0;i<this._data.length;i++) {
 		for (var j=0;j<this._data[i].length;j++) {
 			var obj = this._data[i][j];
-			if (obj.images[0] in ANIMATIONS) {
+		//	if (obj.images[0] in ANIMATIONS) {
+			if (obj.top[0]) {
 				this._ctx.fillStyle = "red";
 				this._ctx.fillRect(i*16, j*16, 8, 8);
 			}
-			if (obj.images[1] in ANIMATIONS) {
+		//	if (obj.images[1] in ANIMATIONS) {
+			if (obj.top[1]) {
 				this._ctx.fillStyle = "black";
 				this._ctx.fillRect(i*16+8, j*16+8, 8, 8);
 			}

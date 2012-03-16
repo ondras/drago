@@ -92,6 +92,8 @@ Game._loadBackground = function() {
 	OZ.Audio.Background.queue = ["G0", "G1", "G2", "G3", "G4", "G5"].randomize();
 	OZ.Audio.Background.template = "sound/music/{format}/{name}.{format}";
 	OZ.Audio.Background.play();
+	
+	Game.Slot.roll1();
 }
 
 /**
