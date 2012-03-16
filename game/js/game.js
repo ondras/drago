@@ -93,7 +93,7 @@ Game._loadBackground = function() {
 	OZ.Audio.Background.template = "sound/music/{format}/{name}.{format}";
 	OZ.Audio.Background.play();
 	
-	Game.Slot.roll1();
+	Game.Slot.roll5();
 }
 
 /**
