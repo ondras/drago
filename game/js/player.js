@@ -8,6 +8,7 @@ Game.Player.prototype.init = function(index, type) {
 	this._orientation = 1;
 	this._moves = 0;
 	this._path = [];
+	this._turnStart = false; /* turn just started */
 	this._speed = 8; /* tiles per second */
 	this._velocity = [
 		[ 0, -1],
@@ -44,6 +45,19 @@ Game.Player.prototype.init = function(index, type) {
 }
 
 Game.Player.prototype.handleKey = function(key) {
+	if (this._turnStart) {
+		switch (key) {
+			case Game.Keyboard.ENTER:
+				var type = Math.floor(Math.random()*5) + 1;
+				Game.Slot["roll" + type](this._moveBy.bind(this));
+			break;
+			default:
+				return false;
+			break;
+		}
+		return true;
+	}
+	
 	switch (key) {
 		case Game.Keyboard.LEFT:
 			this.moveDirection(3);
@@ -56,6 +70,13 @@ Game.Player.prototype.handleKey = function(key) {
 		break;
 		case Game.Keyboard.DOWN:
 			this.moveDirection(2);
+		break;
+		case Game.Keyboard.ENTER:
+			if (this._moves == 0) {
+				Game.keyboard.pop();
+				Game.movement.hide();
+				this.dispatch("turn-end");
+			}
 		break;
 		default:
 			return false;
@@ -87,10 +108,26 @@ Game.Player.prototype.makeVisible = function() {
 	if (offsetChanged) { port.setOffset(this._offset); }
 }
 
-Game.Player.prototype.moveBy = function(moves) {
-	this._moves = moves;
-	this._path = [this._index];
+Game.Player.prototype.makeCentered = function() {
+	var portSize = Game.port.getSize();
+	var offset = [];
+	for (var i=0;i<2;i++) {
+		offset.push(this._sprite.position[i] + this._sprite.size[i]/2 - portSize[i]/2);
+	}
+	Game.port.setOffset(offset);
+}
+
+Game.Player.prototype.turn = function() {
+	this._turnStart = true;
 	Game.keyboard.push(this);
+	this._path = [this._index];
+	
+	/* fixme show movement center only */
+}
+
+Game.Player.prototype._moveBy = function(moves) {
+	this._turnStart = false;
+	this._moves = moves;
 	Game.movement.show(this);
 }
 
@@ -131,6 +168,7 @@ Game.Player.prototype.tick = function(dt) {
 		}
 		
 		this._computePosition();
+		this.makeVisible(); /* adjust port if necessary */
 	}
 	
 	return Game.Animation.prototype.tick.call(this, dt);
@@ -196,9 +234,6 @@ Game.Player.prototype._computePosition = function() {
 	/* round */
 	for (var i=0;i<2;i++) { this._sprite.position[i] = Math.round(this._sprite.position[i]); }
 
-	/* adjust port if necessary */
-	this.makeVisible();
-	
 	/* needs redrawing */
 	this._dirty = true;
 }

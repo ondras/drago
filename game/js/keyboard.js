@@ -11,7 +11,6 @@ Game.Keyboard.ESC	= 27;
 
 Game.Keyboard.prototype.init = function() {
 	this._handlers = [];
-	this._player = null;
 	OZ.Event.add(window, "keydown", this._keydown.bind(this));
 }
 
@@ -22,11 +21,6 @@ Game.Keyboard.prototype.push = function(handler) {
 
 Game.Keyboard.prototype.pop = function() {
 	this._handlers.pop();
-	return this;
-}
-
-Game.Keyboard.prototype.setPlayer = function(player) {
-	this._player = player;
 	return this;
 }
 

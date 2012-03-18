@@ -23,6 +23,7 @@ var Game = {
 	LAYER_PLAYERS	: "players",
 	LAYER_TOP		: "top",
 	LAYER_SLOT		: "slot",
+	TILE			: 16,
 	
 	engine: null,
 	port: null,
@@ -36,13 +37,15 @@ var Game = {
 };
 
 Game.init = function() {
+	document.body.innerHTML = "Loading&hellip;";
+
 	this.keyboard = new Game.Keyboard();
 	this.movement = new Game.Movement();
 	this.engine = new HAF.Engine();
 	this.port = new Game.Port();
 	
+	this._initAudio();
 	this._initEngine();
-	document.body.innerHTML = "Loading&hellip;";
 	
 	this.keyboard.push(this);
 
@@ -88,17 +91,22 @@ Game._loadBackground = function() {
 
 	this._computePath(GRAPH.length-1);
 	var player = new Game.Player(399, "D");
-	player.moveBy(5);
-
+	player.makeCentered();
+	
+	OZ.Event.add(null, "turn-end", function(e) {
+		e.target.makeCentered();
+		e.target.turn();
+	});
+	player.turn();
 
 	this.engine.start();
-	
+	OZ.Audio.Background.play();
+}
+
+Game._initAudio = function() {
 	OZ.Audio.template = "sound/fx/{format}/{name}.{format}";
 	OZ.Audio.Background.queue = ["G0", "G1", "G2", "G3", "G4", "G5"].randomize();
 	OZ.Audio.Background.template = "sound/music/{format}/{name}.{format}";
-	OZ.Audio.Background.play();
-	
-	Game.Slot.roll5();
 }
 
 Game._initEngine = function() {
