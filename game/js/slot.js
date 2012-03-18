@@ -122,6 +122,7 @@ Game.Slot.prototype.init = function(callback, conf) {
 	this._bg = HAF.Sprite.get(conf.bg, conf.size, 0, true);
 	this._counters = [];
 	this._animations = [];
+	this._done = false;
 
 	this._digitSize = [32, 32];
 	this._digits = HAF.Sprite.get("img/slot/digits.png", [this._digitSize[0], 6*this._digitSize[1]], 0, true);
@@ -136,6 +137,8 @@ Game.Slot.prototype.init = function(callback, conf) {
 	
 	var hand = new Game.Slot.Hand();
 	this._event = OZ.Event.add(hand, "start", this._handStart.bind(this));
+
+	Game.keyboard.push(this);
 }
 
 Game.Slot.prototype.draw = function(ctx) {
@@ -171,7 +174,7 @@ Game.Slot.prototype.draw = function(ctx) {
 Game.Slot.prototype.handleKey = function(key) {
 	switch (key) {
 		case Game.Keyboard.ENTER:
-			this._finish();
+			if (this._done) { this._finish(); }
 		break;
 		default:
 			return false;
@@ -211,7 +214,7 @@ Game.Slot.prototype._stop = function() {
 		while (this._animations.length) {
 			Game.engine.removeActor(this._animations.pop(), Game.LAYER_SLOT);
 		}
-		Game.keyboard.push(this);
+		this._done = true;
 		/* fixme mouse, touch */
 	}
 }
