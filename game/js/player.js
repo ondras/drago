@@ -1,4 +1,4 @@
-Game.Player = OZ.Class().extend(Game.Animation);
+Game.Player = OZ.Class().extend(Game.Animation).implement(Game.IKeyboardHandler);
 Game.Player.FLIGHT_OFFSET = -24;
 Game.Player.prototype.init = function(index, type) {
 	this._index = index;
@@ -43,6 +43,27 @@ Game.Player.prototype.init = function(index, type) {
 	this._computePosition();
 }
 
+Game.Player.prototype.handleKey = function(key) {
+	switch (key) {
+		case Game.Keyboard.LEFT:
+			this.moveDirection(3);
+		break;
+		case Game.Keyboard.RIGHT:
+			this.moveDirection(1);
+		break;	
+		case Game.Keyboard.UP:
+			this.moveDirection(0);
+		break;
+		case Game.Keyboard.DOWN:
+			this.moveDirection(2);
+		break;
+		default:
+			return false;
+		break;
+	}
+	return true;
+}
+
 Game.Player.prototype.getIndex = function() {
 	return this._index;
 }
@@ -69,7 +90,7 @@ Game.Player.prototype.makeVisible = function() {
 Game.Player.prototype.moveBy = function(moves) {
 	this._moves = moves;
 	this._path = [this._index];
-	Game.keyboard.setPlayer(this);
+	Game.keyboard.push(this);
 	Game.movement.show(this);
 }
 

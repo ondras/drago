@@ -1,8 +1,28 @@
+Game.IKeyboardHandler = OZ.Class();
+Game.IKeyboardHandler.prototype.handleKey = function(key) {};
+
 Game.Keyboard = OZ.Class();
+Game.Keyboard.LEFT	= 37;
+Game.Keyboard.RIGHT	= 39;
+Game.Keyboard.UP	= 38;
+Game.Keyboard.DOWN	= 40;
+Game.Keyboard.ENTER	= 13;
+Game.Keyboard.ESC	= 27;
 
 Game.Keyboard.prototype.init = function() {
+	this._handlers = [];
 	this._player = null;
 	OZ.Event.add(window, "keydown", this._keydown.bind(this));
+}
+
+Game.Keyboard.prototype.push = function(handler) {
+	this._handlers.push(handler);
+	return this;
+}
+
+Game.Keyboard.prototype.pop = function() {
+	this._handlers.pop();
+	return this;
 }
 
 Game.Keyboard.prototype.setPlayer = function(player) {
@@ -11,29 +31,11 @@ Game.Keyboard.prototype.setPlayer = function(player) {
 }
 
 Game.Keyboard.prototype._keydown = function(e) {
-	switch (e.keyCode) {
-		case "O".charCodeAt(0):
-			OZ.Audio.Background.previous();
-		break;
-		case "P".charCodeAt(0):
-			OZ.Audio.Background.next();
-		break;
+	var index = this._handlers.length-1;
+	while (index >= 0) {
+		var result = this._handlers[index].handleKey(e.keyCode);
+		if (result) { return; }
+		index--;
 	}
 	
-	if (!this._player) { return; }
-
-	switch (e.keyCode) {
-		case 37:
-			this._player.moveDirection(3);
-		break;
-		case 39:
-			this._player.moveDirection(1);
-		break;	
-		case 38:
-			this._player.moveDirection(0);
-		break;
-		case 40:
-			this._player.moveDirection(2);
-		break;
-	}
 }

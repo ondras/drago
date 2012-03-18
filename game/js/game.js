@@ -22,6 +22,7 @@ var Game = {
 	LAYER_BG		: "bg",
 	LAYER_PLAYERS	: "players",
 	LAYER_TOP		: "top",
+	LAYER_SLOT		: "slot",
 	
 	engine: null,
 	port: null,
@@ -39,11 +40,11 @@ Game.init = function() {
 	this.movement = new Game.Movement();
 	this.engine = new HAF.Engine();
 	this.port = new Game.Port();
-	this.engine.addLayer(this.LAYER_BG, {clear:HAF.CLEAR_NONE, dirty:HAF.DIRTY_CHANGED});
-	this.engine.addLayer(this.LAYER_PLAYERS, {clear:HAF.CLEAR_ACTORS, dirty:HAF.DIRTY_CHANGED});
-	this.engine.addLayer(this.LAYER_TOP, {clear:HAF.CLEAR_ACTORS, dirty:HAF.DIRTY_CHANGED});
-
+	
+	this._initEngine();
 	document.body.innerHTML = "Loading&hellip;";
+	
+	this.keyboard.push(this);
 
 	this._tiles = new Game.Tiles(1);
 	this._map = new Game.Map();
@@ -51,6 +52,22 @@ Game.init = function() {
 	
 	OZ.Event.add(this._tiles, "load", this._load.bind(this));
 	OZ.Event.add(this._map, "load", this._load.bind(this));
+}
+
+Game.handleKey = function(key) {
+	switch (key) {
+		case "O".charCodeAt(0):
+			OZ.Audio.Background.previous();
+		break;
+		case "P".charCodeAt(0):
+			OZ.Audio.Background.next();
+		break;
+		default: 
+			return false;
+		break;
+	}
+	
+	return true;
 }
 
 Game._load = function(e) {
@@ -65,14 +82,34 @@ Game._load = function(e) {
 Game._loadBackground = function() {
 	document.body.innerHTML = "";
 	document.body.appendChild(this.port.getContainer());
+	this._initDebug();
+
 	this.port.sync();
 
-	var player = new Game.Player(399, "D");
-	
 	this._computePath(GRAPH.length-1);
+	var player = new Game.Player(399, "D");
 	player.moveBy(5);
 
-/* */
+
+	this.engine.start();
+	
+	OZ.Audio.template = "sound/fx/{format}/{name}.{format}";
+	OZ.Audio.Background.queue = ["G0", "G1", "G2", "G3", "G4", "G5"].randomize();
+	OZ.Audio.Background.template = "sound/music/{format}/{name}.{format}";
+	OZ.Audio.Background.play();
+	
+	Game.Slot.roll5();
+}
+
+Game._initEngine = function() {
+	this.engine.addLayer(this.LAYER_BG, {clear:HAF.CLEAR_NONE, dirty:HAF.DIRTY_CHANGED});
+	this.engine.addLayer(this.LAYER_PLAYERS, {clear:HAF.CLEAR_ACTORS, dirty:HAF.DIRTY_CHANGED});
+	this.engine.addLayer(this.LAYER_TOP, {clear:HAF.CLEAR_ACTORS, dirty:HAF.DIRTY_CHANGED});
+	this.engine.addLayer(this.LAYER_SLOT, {clear:HAF.CLEAR_NONE, dirty:HAF.DIRTY_ALL, sync:false});
+	this.engine.setSize([0, 0,], this.LAYER_SLOT);
+}
+
+Game._initDebug = function() {
 	var monitor1 = new HAF.Monitor.Sim(this.engine, [220, 100], {textColor:"#fff"}).getContainer();
 	monitor1.style.position = "absolute";
 	monitor1.style.right = "0px";
@@ -84,16 +121,6 @@ Game._loadBackground = function() {
 	monitor2.style.right = "0px";
 	monitor2.style.top = monitor1.offsetHeight + "px";
 	document.body.appendChild(monitor2);
-/* */
-
-	this.engine.start();
-	
-	OZ.Audio.template = "sound/fx/{format}/{name}.{format}";
-	OZ.Audio.Background.queue = ["G0", "G1", "G2", "G3", "G4", "G5"].randomize();
-	OZ.Audio.Background.template = "sound/music/{format}/{name}.{format}";
-	OZ.Audio.Background.play();
-	
-	Game.Slot.roll5();
 }
 
 /**

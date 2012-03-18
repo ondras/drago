@@ -1,4 +1,4 @@
-Game.Slot = OZ.Class().extend(HAF.Actor);
+Game.Slot = OZ.Class().extend(HAF.Actor).implement(Game.IKeyboardHandler);
 
 Game.Slot.roll1 = function(callback) {
 	var conf = {
@@ -7,7 +7,8 @@ Game.Slot.roll1 = function(callback) {
 		score: [144, 210],
 		counters: [
 			[150, 146]
-		]
+		],
+		animations: []
 	};
 	new this(callback, conf);
 }
@@ -20,7 +21,8 @@ Game.Slot.roll2 = function(callback) {
 		counters: [
 			[108, 204],
 			[240, 204]
-		]
+		],
+		animations: []
 	};
 	new this(callback, conf);
 }
@@ -34,6 +36,15 @@ Game.Slot.roll3 = function(callback) {
 			[122, 178],
 			[198, 162],
 			[274, 178]
+		],
+		animations: [
+			{
+				img: "img/slot/slot3anim1.png",
+				size: [192, 32],
+				position: [194, 146],
+				frames: 12,
+				loop: false
+			}
 		]
 	};
 	new this(callback, conf);
@@ -49,6 +60,15 @@ Game.Slot.roll4 = function(callback) {
 			[200, 160],
 			[252, 160],
 			[286, 212]
+		],
+		animations: [
+			{
+				img: "img/slot/slot4anim1.png",
+				size: [192, 48],
+				position: [238, 130],
+				frames: 3,
+				loop: true
+			}
 		]
 	};
 	new this(callback, conf);
@@ -65,6 +85,27 @@ Game.Slot.roll5 = function(callback) {
 			[270, 154],
 			[246, 204],
 			[196, 204]
+		],
+		animations: [
+			{
+				img: "img/slot/slot5anim1.png",
+				size: [72, 56],
+				position: [158, 110],
+				frames: 3,
+				loop: true
+			}, {
+				img: "img/slot/slot5anim2.png",
+				size: [96, 56],
+				position: [304, 84],
+				frames: 6,
+				loop: true
+			}, {
+				img: "img/slot/slot5anim3.png",
+				size: [72, 64],
+				position: [134, 224],
+				frames: 6,
+				loop: true
+			}
 		]
 	};
 	new this(callback, conf);
@@ -73,22 +114,28 @@ Game.Slot.roll5 = function(callback) {
 Game.Slot.prototype.init = function(callback, conf) {
 	this._callback = callback;
 	this._conf = conf;
-	this._score = 66;
+
+	this._audio = null;
+	this._score = 0;
+	this._scores = [];
+	this._blur = null;
 	this._bg = HAF.Sprite.get(conf.bg, conf.size, 0, true);
+	this._counters = [];
+	this._animations = [];
 
-	this._digitSize = [22, 32];
-	this._digits = HAF.Sprite.get("img/slot/digits-big.png", [this._digitSize[0], 10*this._digitSize[1]], 0, true);
+	this._digitSize = [32, 32];
+	this._digits = HAF.Sprite.get("img/slot/digits.png", [this._digitSize[0], 6*this._digitSize[1]], 0, true);
 
-	var layer = Game.engine.addLayer(Game.LAYER_SLOT, {clear:HAF.CLEAR_NONE, dirty:HAF.DIRTY_ALL}); /* fixme position */
+	this._digitSizeBig = [22, 32];
+	this._digitsBig = HAF.Sprite.get("img/slot/digits-big.png", [this._digitSizeBig[0], 10*this._digitSizeBig[1]], 0, true);
+
+	var layer = Game.engine.getLayer(Game.LAYER_SLOT);
+	layer.style.left = (Game.port.getSize()[0] - conf.size[0])/2 + "px";
+	Game.engine.setSize(conf.size, Game.LAYER_SLOT);
 	Game.engine.addActor(this, Game.LAYER_SLOT);
 	
-	var blur = new Game.Slot.Blur(this._conf.counters);
 	var hand = new Game.Slot.Hand();
 	this._event = OZ.Event.add(hand, "start", this._handStart.bind(this));
-}
-
-Game.Slot.prototype.tick = function(dt) {
-	return true;
 }
 
 Game.Slot.prototype.draw = function(ctx) {
@@ -101,77 +148,77 @@ Game.Slot.prototype.draw = function(ctx) {
 	for (var i=0;i<2;i++) {
 		
 		ctx.drawImage(
-			this._digits,
-			0, digits[i]*this._digitSize[1], this._digitSize[0], this._digitSize[1],
-			x, y, this._digitSize[0], this._digitSize[1]
+			this._digitsBig,
+			0, digits[i]*this._digitSizeBig[1], this._digitSizeBig[0], this._digitSizeBig[1],
+			x, y, this._digitSizeBig[0], this._digitSizeBig[1]
 		);
 		
-		x += this._digitSize[0];
+		x += this._digitSizeBig[0];
 	}
+	
+	for (var i=0;i<this._counters.length;i++) {
+		var pos = this._counters[i];
+		var score = this._scores[i];
+		
+		ctx.drawImage(
+			this._digits,
+			0, (score-1)*this._digitSize[1], this._digitSize[0], this._digitSize[1],
+			pos[0], pos[1], this._digitSize[0], this._digitSize[1]
+		);
+	}
+}
+
+Game.Slot.prototype.handleKey = function(key) {
+	switch (key) {
+		case Game.Keyboard.ENTER:
+			this._finish();
+		break;
+		default:
+			return false;
+		break;
+	}
+	return true;
 }
 
 Game.Slot.prototype._handStart = function(e) {
 	OZ.Event.remove(this._event);
-	OZ.Audio.play("slot");
-}
+	setTimeout(this._stop.bind(this), 2000);
 
-Game.Slot.Hand = OZ.Class().extend(HAF.AnimatedSprite);
-Game.Slot.Hand.prototype.init = function() {
-	var frames = 19;
-	var size = [76, 144];
-	var spriteSize = [size[0], size[1]*frames];
-
-	var image = HAF.Sprite.get("img/slot/hand.png", spriteSize, 0, true);
-	HAF.AnimatedSprite.prototype.init.call(this, image, size, frames);
-	this._sprite.position = [size[0]/2 + 22, size[1]/2 + 112];
-
-	Game.engine.addActor(this, Game.LAYER_SLOT);
-}
-
-Game.Slot.Hand.prototype.tick = function(dt) {
-	var oldFrame = this._animation.frame;
-	var changed = HAF.AnimatedSprite.prototype.tick.call(this, dt);
+	this._audio = OZ.Audio.play("slot");
+	this._blur = new Game.Slot.Blur(this._conf.counters);
 	
-	var limitFrame = 9;
-	if (this._animation.frame >= limitFrame && oldFrame < limitFrame) { this.dispatch("start"); }
-	
-	var frame = Math.floor(this._animation.time * this._animation.fps / 1000);
-	if (frame >= this._animation.frames) {
-		changed = true;
-		this._animation.frame = 0;
-		Game.engine.removeActor(this, Game.LAYER_SLOT);
+	for (var i=0;i<this._conf.animations.length;i++) {
+		var anim = this._conf.animations[i];
+		var inst = new Game.Slot.Animation(anim);
+		if (anim.loop) { this._animations.push(inst); }
 	}
+}
+
+Game.Slot.prototype._stop = function() {
+	OZ.Audio.play("slot-stop");
+	var counter = this._conf.counters.shift();
+	var score = Math.floor(Math.random()*6) + 1;
+	this._score += score;
 	
-	return changed;
-}
-
-Game.Slot.Hand.prototype._getSourceImagePosition = function() {
-	return [0, this._animation.frame];
-}
-
-Game.Slot.Blur = OZ.Class().extend(HAF.AnimatedSprite);
-Game.Slot.Blur.prototype.init = function(positions) {
-	this._positions = positions;
-
-	var frames = 4;
-	var size = [32, 32];
-	var spriteSize = [size[0], size[1]*frames];
-
-	var image = HAF.Sprite.get("img/slot/blur.png", spriteSize, 0, true);
-//	var image = HAF.Sprite.get("img/slot/digits.png", [32, 192], 0, true);
-	HAF.AnimatedSprite.prototype.init.call(this, image, size, frames);
-
-	Game.engine.addActor(this, Game.LAYER_SLOT);
-}
-
-Game.Slot.Blur.prototype.draw = function(ctx) {
-	for (var i=0;i<this._positions.length;i++) {
-		var pos = this._positions[i];
-		ctx.drawImage(
-			this._sprite.image, 
-			0, this._sprite.size[1]*this._animation.frame, this._sprite.size[0], this._sprite.size[1], 
-			pos[0], pos[1], this._sprite.size[0], this._sprite.size[1]
-		);
-		
+	this._counters.push(counter);
+	this._scores.push(score);
+	
+	if (this._conf.counters.length) {
+		setTimeout(this._stop.bind(this), 500);
+	} else {
+		Game.engine.removeActor(this._blur, Game.LAYER_SLOT);
+		if (this._audio) { this._audio.pause(); }
+		while (this._animations.length) {
+			Game.engine.removeActor(this._animations.pop(), Game.LAYER_SLOT);
+		}
+		Game.keyboard.push(this);
+		/* fixme mouse, touch */
 	}
+}
+
+Game.Slot.prototype._finish = function() {
+	Game.keyboard.pop();
+	Game.engine.removeActor(this, Game.LAYER_SLOT);
+	Game.engine.setSize([0, 0], Game.LAYER_SLOT);
+	if (this._callback) { this._callback(this._score); }
 }

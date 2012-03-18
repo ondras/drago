@@ -4,8 +4,10 @@ OZ.Audio = {
 	template: "{name}.{format}",
 
 	play: function(name) {
-		if (!OZ.Audio.supported) { return; }
-		new Audio(this._format(name)).play();
+		if (!OZ.Audio.supported) { return null; }
+		var a = new Audio(this._format(name));
+		a.play();
+		return a;
 	},
 	
 	Background: {

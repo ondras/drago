@@ -92,6 +92,10 @@ HAF.Engine.prototype.getContainer = function() {
 	return this._container;
 }
 
+HAF.Engine.prototype.getLayer = function(id) {
+	return this._layers[id].canvas;
+}
+
 /**
  * @param {id} id Layer ID
  * @param {object} [options]
@@ -615,21 +619,31 @@ HAF.Sprite._render = function(url, key) {
  * Animated image sprite, consists of several frames
  */
 HAF.AnimatedSprite = OZ.Class().extend(HAF.Sprite);
-HAF.AnimatedSprite.prototype.init = function(image, size, frames) {
+HAF.AnimatedSprite.prototype.init = function(image, size, frames, loop) {
 	HAF.Sprite.prototype.init.call(this, image, size);
 	this._animation = {
 		fps: 10,
 		time: 0,
 		frame: 0,
-		frames: frames
+		frames: frames,
+		loop: loop
 	}
 	
 }
 HAF.AnimatedSprite.prototype.tick = function(dt) {
 	this._animation.time += dt;
 	var oldFrame = this._animation.frame;
-	this._animation.frame = Math.floor(this._animation.time * this._animation.fps / 1000) % this._animation.frames;
+	var frame = Math.floor(this._animation.time * this._animation.fps / 1000);
+	if (frame >= this._animation.frames && !this._animation.loop) {
+		this._stop();
+	} else {
+		this._animation.frame = frame % this._animation.frames;
+	}
 	return (oldFrame != this._animation.frame);
+}
+HAF.AnimatedSprite.prototype._stop = function() {
+	this._animation.frame = this._animation.frames - 1;
+	this.dispatch("stop");
 }
 
 /**
