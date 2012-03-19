@@ -24,6 +24,14 @@ var Game = {
 	LAYER_TOP		: "top",
 	LAYER_SLOT		: "slot",
 	TILE			: 16,
+
+	INPUT_KEY		: 0,
+	INPUT_LEFT		: 1,
+	INPUT_RIGHT		: 2,
+	INPUT_UP		: 3,
+	INPUT_DOWN		: 4,
+	INPUT_ENTER		: 5,
+	INPUT_ESC		: 6,
 	
 	engine: null,
 	port: null,
@@ -57,8 +65,10 @@ Game.init = function() {
 	OZ.Event.add(this._map, "load", this._load.bind(this));
 }
 
-Game.handleKey = function(key) {
-	switch (key) {
+Game.handleInput = function(input, param) {
+	if (input != Game.INPUT_KEY) { return false; }
+
+	switch (param) {
 		case "O".charCodeAt(0):
 			OZ.Audio.Background.previous();
 		break;

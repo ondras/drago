@@ -1,4 +1,4 @@
-Game.Player = OZ.Class().extend(Game.Animation).implement(Game.IKeyboardHandler);
+Game.Player = OZ.Class().extend(Game.Animation).implement(Game.IInputHandler);
 Game.Player.FLIGHT_OFFSET = -24;
 Game.Player.prototype.init = function(index, type) {
 	this._index = index;
@@ -44,10 +44,10 @@ Game.Player.prototype.init = function(index, type) {
 	this._computePosition();
 }
 
-Game.Player.prototype.handleKey = function(key) {
+Game.Player.prototype.handleInput = function(type, param) {
 	if (this._turnStart) {
-		switch (key) {
-			case Game.Keyboard.ENTER:
+		switch (type) {
+			case Game.INPUT_ENTER:
 				var type = Math.floor(Math.random()*5) + 1;
 				Game.Slot["roll" + type](this._moveBy.bind(this));
 			break;
@@ -58,20 +58,20 @@ Game.Player.prototype.handleKey = function(key) {
 		return true;
 	}
 	
-	switch (key) {
-		case Game.Keyboard.LEFT:
+	switch (type) {
+		case Game.INPUT_LEFT:
 			this.moveDirection(3);
 		break;
-		case Game.Keyboard.RIGHT:
+		case Game.INPUT_RIGHT:
 			this.moveDirection(1);
 		break;	
-		case Game.Keyboard.UP:
+		case Game.INPUT_UP:
 			this.moveDirection(0);
 		break;
-		case Game.Keyboard.DOWN:
+		case Game.INPUT_DOWN:
 			this.moveDirection(2);
 		break;
-		case Game.Keyboard.ENTER:
+		case Game.INPUT_ENTER:
 			if (this._moves == 0) {
 				Game.keyboard.pop();
 				Game.movement.hide();

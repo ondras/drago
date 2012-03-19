@@ -1,4 +1,4 @@
-Game.Slot = OZ.Class().extend(HAF.Actor).implement(Game.IKeyboardHandler);
+Game.Slot = OZ.Class().extend(HAF.Actor).implement(Game.IInputHandler);
 
 Game.Slot.roll1 = function(callback, abortCallback) {
 	var conf = {
@@ -173,16 +173,16 @@ Game.Slot.prototype.draw = function(ctx) {
 	}
 }
 
-Game.Slot.prototype.handleKey = function(key) {
-	switch (key) {
-		case Game.Keyboard.ENTER:
+Game.Slot.prototype.handleInput = function(type, param) {
+	switch (type) {
+		case Game.INPUT_ENTER:
 			if (this._phase == 0) { 
 				var hand = new Game.Slot.Hand();
 				this._event = OZ.Event.add(hand, "start", this._handStart.bind(this));
 			}
 			if (this._phase == 2) { this._finish(); }
 		break;
-		case Game.Keyboard.ESC:
+		case Game.INPUT_ESC:
 			if (this._phase == 0 || this._phase == 2) { this._finish(); }
 		break;
 		default:
@@ -194,7 +194,7 @@ Game.Slot.prototype.handleKey = function(key) {
 
 Game.Slot.prototype._handStart = function(e) {
 	OZ.Event.remove(this._event);
-	setTimeout(this._stop.bind(this), 2000);
+	setTimeout(this._stop.bind(this), 1500);
 
 	this._phase = 1;
 	this._audio = OZ.Audio.play("slot");
