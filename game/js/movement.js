@@ -54,7 +54,12 @@ Game.Movement.prototype.hide = function() {
 Game.Movement.prototype._touch = function(e) {
 	var node = OZ.Event.target(e);
 	var index = this._dom.dir.indexOf(node);
-	if (index != -1) { this._player.moveDirection(index); }
+	var inputTypes = [Game.INPUT_UP, Game.INPUT_RIGHT, Game.INPUT_DOWN, Game.INPUT_LEFT];
+	if (index != -1) { 
+		this._player.handleInput(inputTypes[index]); 
+	} else {
+		this._player.handleInput(Game.INPUT_ENTER); 
+	}
 }
 	
 Game.Movement.prototype._updatePosition = function() {

@@ -60,16 +60,16 @@ Game.Player.prototype.handleInput = function(type, param) {
 	
 	switch (type) {
 		case Game.INPUT_LEFT:
-			this.moveDirection(3);
+			this._moveDirection(3);
 		break;
 		case Game.INPUT_RIGHT:
-			this.moveDirection(1);
+			this._moveDirection(1);
 		break;	
 		case Game.INPUT_UP:
-			this.moveDirection(0);
+			this._moveDirection(0);
 		break;
 		case Game.INPUT_DOWN:
-			this.moveDirection(2);
+			this._moveDirection(2);
 		break;
 		case Game.INPUT_ENTER:
 			if (this._moves == 0) {
@@ -125,33 +125,6 @@ Game.Player.prototype.turn = function() {
 	/* fixme show movement center only */
 }
 
-Game.Player.prototype._moveBy = function(moves) {
-	this._turnStart = false;
-	this._moves = moves;
-	Game.movement.show(this);
-}
-
-Game.Player.prototype.moveDirection = function(direction) {
-	if (this._target.index !== null) { return; } /* already moving */
-	var index = GRAPH[this._index].neighbors[direction];
-	if (index === null) { return; } /* edge does not exist */
-	if (this._moves == 0 && this._path[this._path.length-2] != index) { return; } /* can move only backwards */
-	
-	Game.movement.hide();
-
-	this._target.index = index;
-	this._target.source = this._tile.clone();
-	this._target.tile = [GRAPH[index].x, GRAPH[index].y];
-	this._target.distanceTotal = this._distance(this._tile, this._target.tile);
-	this._target.distanceTraveled = 0;
-	
-	var flight = GRAPH[this._index].flight[direction];
-	if (flight && !this._flight) { this._flight = flight; }
-	
-	this._orientation = direction;
-	this._updateImage();	
-}
-
 Game.Player.prototype.tick = function(dt) {
 	if (this._target.index !== null) { /* movement */
 		for (var i=0;i<2;i++) {
@@ -172,6 +145,33 @@ Game.Player.prototype.tick = function(dt) {
 	}
 	
 	return Game.Animation.prototype.tick.call(this, dt);
+}
+
+Game.Player.prototype._moveBy = function(moves) {
+	this._turnStart = false;
+	this._moves = moves;
+	Game.movement.show(this);
+}
+
+Game.Player.prototype._moveDirection = function(direction) {
+	if (this._target.index !== null) { return; } /* already moving */
+	var index = GRAPH[this._index].neighbors[direction];
+	if (index === null) { return; } /* edge does not exist */
+	if (this._moves == 0 && this._path[this._path.length-2] != index) { return; } /* can move only backwards */
+	
+	Game.movement.hide();
+
+	this._target.index = index;
+	this._target.source = this._tile.clone();
+	this._target.tile = [GRAPH[index].x, GRAPH[index].y];
+	this._target.distanceTotal = this._distance(this._tile, this._target.tile);
+	this._target.distanceTraveled = 0;
+	
+	var flight = GRAPH[this._index].flight[direction];
+	if (flight && !this._flight) { this._flight = flight; }
+	
+	this._orientation = direction;
+	this._updateImage();	
 }
 
 Game.Player.prototype._arrived = function() {
