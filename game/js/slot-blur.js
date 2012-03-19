@@ -7,7 +7,7 @@ Game.Slot.Blur.prototype.init = function(positions) {
 	var spriteSize = [size[0], size[1]*frames];
 
 	var image = HAF.Sprite.get("img/slot/blur.png", spriteSize, 0, true);
-	HAF.AnimatedSprite.prototype.init.call(this, image, size, frames, true);
+	HAF.AnimatedSprite.prototype.init.call(this, image, size, {frames:frames});
 
 	Game.engine.addActor(this, Game.LAYER_SLOT);
 }

@@ -619,15 +619,16 @@ HAF.Sprite._render = function(url, key) {
  * Animated image sprite, consists of several frames
  */
 HAF.AnimatedSprite = OZ.Class().extend(HAF.Sprite);
-HAF.AnimatedSprite.prototype.init = function(image, size, frames, loop) {
+HAF.AnimatedSprite.prototype.init = function(image, size, animationOptions) {
 	HAF.Sprite.prototype.init.call(this, image, size);
 	this._animation = {
 		fps: 10,
 		time: 0,
 		frame: 0,
-		frames: frames,
-		loop: loop
+		frames: 10,
+		loop: true
 	}
+	for (var p in animationOptions) { this._animation[p] = animationOptions[p]; }
 	
 }
 HAF.AnimatedSprite.prototype.tick = function(dt) {

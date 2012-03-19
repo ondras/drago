@@ -9,7 +9,7 @@ Game.Player.prototype.init = function(index, type) {
 	this._moves = 0;
 	this._path = [];
 	this._turnStart = false; /* turn just started */
-	this._speed = 8; /* tiles per second */
+	this._speed = 10; /* tiles per second */
 	this._velocity = [
 		[ 0, -1],
 		[ 1,  0],

@@ -1,6 +1,6 @@
 Game.Slot = OZ.Class().extend(HAF.Actor).implement(Game.IKeyboardHandler);
 
-Game.Slot.roll1 = function(callback) {
+Game.Slot.roll1 = function(callback, abortCallback) {
 	var conf = {
 		size: [256, 265],
 		bg: "img/slot/bg1.png",
@@ -10,10 +10,10 @@ Game.Slot.roll1 = function(callback) {
 		],
 		animations: []
 	};
-	new this(callback, conf);
+	new this(callback, abortCallback, conf);
 }
 
-Game.Slot.roll2 = function(callback) {
+Game.Slot.roll2 = function(callback, abortCallback) {
 	var conf = {
 		size: [320, 265],
 		bg: "img/slot/bg2.png",
@@ -24,10 +24,10 @@ Game.Slot.roll2 = function(callback) {
 		],
 		animations: []
 	};
-	new this(callback, conf);
+	new this(callback, abortCallback, conf);
 }
 
-Game.Slot.roll3 = function(callback) {
+Game.Slot.roll3 = function(callback, abortCallback) {
 	var conf = {
 		size: [384, 265],
 		bg: "img/slot/bg3.png",
@@ -47,10 +47,10 @@ Game.Slot.roll3 = function(callback) {
 			}
 		]
 	};
-	new this(callback, conf);
+	new this(callback, abortCallback, conf);
 }
 
-Game.Slot.roll4 = function(callback) {
+Game.Slot.roll4 = function(callback, abortCallback) {
 	var conf = {
 		size: [384, 265],
 		bg: "img/slot/bg4.png",
@@ -71,10 +71,10 @@ Game.Slot.roll4 = function(callback) {
 			}
 		]
 	};
-	new this(callback, conf);
+	new this(callback, abortCallback, conf);
 }
 
-Game.Slot.roll5 = function(callback) {
+Game.Slot.roll5 = function(callback, abortCallback) {
 	var conf = {
 		size: [384, 265],
 		bg: "img/slot/bg5.png",
@@ -108,21 +108,22 @@ Game.Slot.roll5 = function(callback) {
 			}
 		]
 	};
-	new this(callback, conf);
+	new this(callback, abortCallback, conf);
 }
 
-Game.Slot.prototype.init = function(callback, conf) {
+Game.Slot.prototype.init = function(callback, abortCallback, conf) {
 	this._callback = callback;
+	this._abortCallback = abortCallback;
 	this._conf = conf;
 
 	this._audio = null;
 	this._score = 0;
 	this._scores = [];
 	this._blur = null;
-	this._bg = HAF.Sprite.get(conf.bg, conf.size, 0, true);
+	this._bg = HAF.Sprite.get(conf.bg, conf.size, 0, true); /* FIXME cache/redraw */
 	this._counters = [];
 	this._animations = [];
-	this._done = false;
+	this._phase = 0; /* 0 start, 1 running, 2 done */
 
 	this._digitSize = [32, 32];
 	this._digits = HAF.Sprite.get("img/slot/digits.png", [this._digitSize[0], 6*this._digitSize[1]], 0, true);
@@ -135,10 +136,11 @@ Game.Slot.prototype.init = function(callback, conf) {
 	Game.engine.setSize(conf.size, Game.LAYER_SLOT);
 	Game.engine.addActor(this, Game.LAYER_SLOT);
 	
-	var hand = new Game.Slot.Hand();
-	this._event = OZ.Event.add(hand, "start", this._handStart.bind(this));
-
 	Game.keyboard.push(this);
+}
+
+Game.Slot.prototype.tick = function(dt) {
+	return true;
 }
 
 Game.Slot.prototype.draw = function(ctx) {
@@ -174,7 +176,14 @@ Game.Slot.prototype.draw = function(ctx) {
 Game.Slot.prototype.handleKey = function(key) {
 	switch (key) {
 		case Game.Keyboard.ENTER:
-			if (this._done) { this._finish(); }
+			if (this._phase == 0) { 
+				var hand = new Game.Slot.Hand();
+				this._event = OZ.Event.add(hand, "start", this._handStart.bind(this));
+			}
+			if (this._phase == 2) { this._finish(); }
+		break;
+		case Game.Keyboard.ESC:
+			if (this._phase == 0 || this._phase == 2) { this._finish(); }
 		break;
 		default:
 			return false;
@@ -187,6 +196,7 @@ Game.Slot.prototype._handStart = function(e) {
 	OZ.Event.remove(this._event);
 	setTimeout(this._stop.bind(this), 2000);
 
+	this._phase = 1;
 	this._audio = OZ.Audio.play("slot");
 	this._blur = new Game.Slot.Blur(this._conf.counters);
 	
@@ -214,7 +224,7 @@ Game.Slot.prototype._stop = function() {
 		while (this._animations.length) {
 			Game.engine.removeActor(this._animations.pop(), Game.LAYER_SLOT);
 		}
-		this._done = true;
+		this._phase = 2;
 		/* fixme mouse, touch */
 	}
 }
@@ -223,5 +233,7 @@ Game.Slot.prototype._finish = function() {
 	Game.keyboard.pop();
 	Game.engine.removeActor(this, Game.LAYER_SLOT);
 	Game.engine.setSize([0, 0], Game.LAYER_SLOT);
-	if (this._callback) { this._callback(this._score); }
+	
+	var cb = (this._phase == 0 ? this._abortCallback : this._callback);
+	if (cb) { cb(this._score); }
 }
