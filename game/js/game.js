@@ -38,6 +38,7 @@ var Game = {
 	background: null,
 	keyboard: null,
 	movement: null,
+	status: null,
 	
 	_tiles: null,
 	_map: null,
@@ -50,6 +51,7 @@ Game.init = function() {
 	this.keyboard = new Game.Keyboard();
 	this.movement = new Game.Movement();
 	this.engine = new HAF.Engine();
+	this.status = new Game.Status();
 	this.port = new Game.Port();
 	
 	this._initAudio();
@@ -79,7 +81,7 @@ Game.handleInput = function(input, param) {
 			return false;
 		break;
 	}
-	
+
 	return true;
 }
 
@@ -95,12 +97,13 @@ Game._load = function(e) {
 Game._loadBackground = function() {
 	document.body.innerHTML = "";
 	document.body.appendChild(this.port.getContainer());
+	document.body.appendChild(this.status.getContainer());
 	this._initDebug();
 
 	this.port.sync();
 
 	this._computePath(GRAPH.length-1);
-	var player = new Game.Player(399, "D");
+	var player = new Game.Player(399, "V", "Armino Gesserti");
 	player.makeCentered();
 	
 	OZ.Event.add(null, "turn-end", function(e) {
@@ -130,14 +133,14 @@ Game._initEngine = function() {
 Game._initDebug = function() {
 	var monitor1 = new HAF.Monitor.Sim(this.engine, [220, 100], {textColor:"#fff"}).getContainer();
 	monitor1.style.position = "absolute";
-	monitor1.style.right = "0px";
-	monitor1.style.top = "0px";
+	monitor1.style.left = "0px";
+	monitor1.style.bottom = "0px";
 	document.body.appendChild(monitor1);
 
 	var monitor2 = new HAF.Monitor.Draw(this.engine, [220, 100], {textColor:"#fff"}).getContainer();
 	monitor2.style.position = "absolute";
-	monitor2.style.right = "0px";
-	monitor2.style.top = monitor1.offsetHeight + "px";
+	monitor2.style.left = "0px";
+	monitor2.style.bottom = monitor1.offsetHeight + "px";
 	document.body.appendChild(monitor2);
 }
 

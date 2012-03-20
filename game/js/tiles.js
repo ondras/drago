@@ -54,11 +54,10 @@ Game.Tiles.prototype.createTile = function(index, mirror) {
 }
 
 Game.Tiles.prototype.createAnimation = function(id, conf) {
-	var tile = 16;
 	if (!(id in this._cache.animations)) {
 		var width = conf.size[0];
 		var height = conf.size[1];
-		var canvas = OZ.DOM.elm("canvas", {width:width*tile, height:height*tile*conf.frames.length});
+		var canvas = OZ.DOM.elm("canvas", {width:width*Game.TILE, height:height*Game.TILE*conf.frames.length});
 		var context = canvas.getContext("2d");
 		
 		for (var i=0;i<conf.frames.length;i++) {
@@ -69,8 +68,8 @@ Game.Tiles.prototype.createAnimation = function(id, conf) {
 			
 			for (var y=0;y<height;y++) {
 				for (var x=0;x<width;x++) {
-					var left = x*tile;
-					var top = (y + topOffset)*tile;
+					var left = x*Game.TILE;
+					var top = (y + topOffset)*Game.TILE;
 					this.render(frame+count, context, [left, top], false);
 					count++;
 				}

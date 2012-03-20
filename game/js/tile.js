@@ -19,8 +19,7 @@ Game.Tile.prototype.init = function(position, image, options) {
 	this._dirty = false;
 	this._visible = false;
 
-	var px = 16;
-	for (var i=0;i<2;i++) { this._sprite.size.push(px*this._options.size[i]); }
+	for (var i=0;i<2;i++) { this._sprite.size.push(Game.TILE*this._options.size[i]); }
 	
 	OZ.Event.add(null, "port-change", this._portChange.bind(this));
 	this._updateVisibility();

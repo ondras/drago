@@ -1,7 +1,7 @@
 Game.Port = OZ.Class();
 
 Game.Port.prototype.init = function() {
-	this._padding = [30, 300, 30, 30];
+	this._padding = [30, 30, 30, 30];
 
 	this._node = OZ.DOM.elm("div", {position:"relative", overflow:"hidden", left:this._padding[3]+"px", top:this._padding[0]+"px"});
 		
@@ -11,7 +11,6 @@ Game.Port.prototype.init = function() {
 	this._node.appendChild(Game.engine.getContainer());
 	this._border = new Game.Border(this._node);
 	
-	this.sync();
 	this._mouse = {
 		ec: [],
 		pos: []
@@ -37,7 +36,7 @@ Game.Port.prototype.getSize = function() {
 Game.Port.prototype.setOffset = function(offset) {
 	var bgSize = Game.background.getSize();
 	for (var i=0;i<2;i++) {
-		var o = offset[i];
+		var o = Math.round(offset[i]);
 		o = Math.max(o, 0);
 		o = Math.min(o, bgSize[i]-this._size[i]);
 		this._offset[i] = o;
@@ -47,10 +46,15 @@ Game.Port.prototype.setOffset = function(offset) {
 
 Game.Port.prototype.sync = function() {
 	var win = OZ.DOM.win(true);
+
+	var status = Game.status.getContainer();
+	var statusSize = win[0] - OZ.DOM.pos(status)[0];
+
 	win[0] -= this._padding[1];
-	win[0] -= this._padding[3];
+	win[0] -= this._padding[3] + statusSize;
 	win[1] -= this._padding[0];
 	win[1] -= this._padding[2];
+
 	this._size = win;
 	
 	this._node.style.width = this._size[0] + "px";

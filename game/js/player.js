@@ -1,8 +1,9 @@
 Game.Player = OZ.Class().extend(Game.Animation).implement(Game.IInputHandler);
 Game.Player.FLIGHT_OFFSET = -24;
-Game.Player.prototype.init = function(index, type) {
+Game.Player.prototype.init = function(index, type, name) {
 	this._index = index;
 	this._type = type;
+	this._name = name;
 
 	this._flight = GRAPH[this._index].air;
 	this._orientation = 1;
@@ -42,6 +43,14 @@ Game.Player.prototype.init = function(index, type) {
 
 	this._updateImage();
 	this._computePosition();
+}
+
+Game.Player.prototype.getType = function() {
+	return this._type;
+}
+
+Game.Player.prototype.getName = function() {
+	return this._name;
 }
 
 Game.Player.prototype.handleInput = function(type, param) {
@@ -119,6 +128,7 @@ Game.Player.prototype.turn = function() {
 
 	Game.keyboard.push(this);
 	Game.movement.show(this, null);
+	this.dispatch("turn");
 }
 
 Game.Player.prototype.tick = function(dt) {
