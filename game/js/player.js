@@ -32,8 +32,8 @@ Game.Player.prototype.init = function(index, type) {
 		size: [3, 2]
 	}
 	var spriteSize = [
-		16 * o.size[0] * 8,
-		16 * o.size[1] * 4
+		Game.TILE * o.size[0] * 8,
+		Game.TILE * o.size[1] * 4
 	];
 	var image = HAF.Sprite.get("img/player/" + type + ".png", spriteSize, 0, true);
 	Game.Animation.prototype.init.call(this, [0, 0], image, o);
@@ -85,10 +85,6 @@ Game.Player.prototype.handleInput = function(type, param) {
 	return true;
 }
 
-Game.Player.prototype.getIndex = function() {
-	return this._index;
-}
-
 Game.Player.prototype.makeVisible = function() {
 	var offsetChanged = false;
 	var port = Game.port;
@@ -119,10 +115,10 @@ Game.Player.prototype.makeCentered = function() {
 
 Game.Player.prototype.turn = function() {
 	this._turnStart = true;
-	Game.keyboard.push(this);
 	this._path = [this._index];
-	
-	/* fixme show movement center only */
+
+	Game.keyboard.push(this);
+	Game.movement.show(this, null);
 }
 
 Game.Player.prototype.tick = function(dt) {
@@ -150,7 +146,7 @@ Game.Player.prototype.tick = function(dt) {
 Game.Player.prototype._moveBy = function(moves) {
 	this._turnStart = false;
 	this._moves = moves;
-	Game.movement.show(this);
+	Game.movement.show(this, this._index);
 }
 
 Game.Player.prototype._moveDirection = function(direction) {
@@ -191,7 +187,7 @@ Game.Player.prototype._arrived = function() {
 		OZ.Audio.play("move-stop");
 	}
 	
-	Game.movement.show(this);
+	Game.movement.show(this, this._index);
 }
 
 Game.Player.prototype._distance = function(tile1, tile2) {
@@ -209,15 +205,13 @@ Game.Player.prototype._updateImage = function() {
  * Convert tile coords to sprite pixel coords
  */
 Game.Player.prototype._computePosition = function() {
-	var tile = 16;
-
-	this._sprite.position[0] = (this._tile[0] + 0.5)*tile - this._sprite.size[0]/2;
-	this._sprite.position[1] = this._tile[1]*tile - this._sprite.size[1]/2;
+	this._sprite.position[0] = (this._tile[0] + 0.5)*Game.TILE - this._sprite.size[0]/2;
+	this._sprite.position[1] = this._tile[1]*Game.TILE - this._sprite.size[1]/2;
 	
 	/* finetuning */
 	var takeOff = (this._flight ? 1 : 0);
 	if (this._target.index !== null && this._flight) { /* traveling */
-		var threshold = 40/tile; /* 40 pixels far */
+		var threshold = 40/Game.TILE; /* 40 pixels far */
 		
 		var traveled = this._target.distanceTraveled;
 		var remaining = this._target.distanceTotal - traveled;

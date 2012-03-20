@@ -23,7 +23,7 @@ Game.Tiles.prototype.init = function(type) {
 
 Game.Tiles.prototype.render = function(index, context, offset, mirror) {
 	var cellsPerImage = 192;
-	var tile = 16;
+	var tile = Game.TILE;
 	var image = this._images[Math.floor(index / cellsPerImage)];
 	var imageOffset = index % cellsPerImage;
 	
@@ -44,9 +44,8 @@ Game.Tiles.prototype.render = function(index, context, offset, mirror) {
 
 Game.Tiles.prototype.createTile = function(index, mirror) {
 	var key = index + "-" + (mirror ? 1 : 0);
-	var tile = 16;
 	if (!(key in this._cache.tiles)) {
-		var canvas = OZ.DOM.elm("canvas", {width:tile, height:tile});
+		var canvas = OZ.DOM.elm("canvas", {width:Game.TILE, height:Game.TILE});
 		var context = canvas.getContext("2d");
 		this.render(index, context, [0, 0], mirror);
 		this._cache.tiles[key] = canvas;

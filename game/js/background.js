@@ -41,9 +41,8 @@ Game.Background.prototype._portChange = function(e) {
 }
 
 Game.Background.prototype._build = function(tiles, map) {
-	var tile = 16;
 	var size = this._map.getSize();
-	this._canvas = OZ.DOM.elm("canvas", {width:size[0]*tile, height:size[1]*tile});
+	this._canvas = OZ.DOM.elm("canvas", {width:size[0]*Game.TILE, height:size[1]*Game.TILE});
 	this._context = this._canvas.getContext("2d");
 	
 	var partSize = 32;
@@ -62,7 +61,6 @@ Game.Background.prototype._build = function(tiles, map) {
 }
 
 Game.Background.prototype._buildPart = function() {
-	var tile = 16;
 	var part = this._remainingParts.shift();
 	var data = this._map.getData();
 
@@ -70,7 +68,7 @@ Game.Background.prototype._buildPart = function() {
 		for (var j=0;j<data[i].length;j++) {
 			var obj = data[i][j];
 			var position = [i, j];
-			var pxPosition = [i*tile, j*tile];
+			var pxPosition = [i*Game.TILE, j*Game.TILE];
 			for (var k=0;k<obj.images.length;k++) { this._buildTile(obj, k, position, pxPosition); }
 		}
 	}
