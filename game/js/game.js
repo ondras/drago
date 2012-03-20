@@ -102,7 +102,8 @@ Game._loadBackground = function() {
 
 	this.port.sync();
 
-	this._computePath(GRAPH.length-1);
+	this._computePath(14);
+	
 	var player = new Game.Player(399, "V", "Armino Gesserti");
 	player.makeCentered();
 	

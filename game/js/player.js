@@ -53,6 +53,10 @@ Game.Player.prototype.getName = function() {
 	return this._name;
 }
 
+Game.Player.prototype.getMoves = function() {
+	return this._moves;
+}
+
 Game.Player.prototype.handleInput = function(type, param) {
 	if (this._turnStart) {
 		switch (type) {
@@ -156,6 +160,7 @@ Game.Player.prototype.tick = function(dt) {
 Game.Player.prototype._moveBy = function(moves) {
 	this._turnStart = false;
 	this._moves = moves;
+	this.dispatch("moves-change");
 	Game.movement.show(this, this._index);
 }
 
@@ -197,6 +202,7 @@ Game.Player.prototype._arrived = function() {
 		OZ.Audio.play("move-stop");
 	}
 	
+	this.dispatch("moves-change");
 	Game.movement.show(this, this._index);
 }
 

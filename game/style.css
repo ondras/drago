@@ -57,6 +57,7 @@ body {
 	width: 24px;
 	height: 24px;
 	background-image: url(img/status/digits.png);
+	position: absolute;
 }
 
 #status #portrait {
