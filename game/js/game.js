@@ -39,6 +39,7 @@ var Game = {
 	keyboard: null,
 	movement: null,
 	status: null,
+	race: null,
 	
 	_tiles: null,
 	_map: null,
@@ -102,8 +103,8 @@ Game._loadBackground = function() {
 
 	this.port.sync();
 
-	this._computePath(14);
-	
+	this.race = new Game.Race(14);
+
 	var player = new Game.Player(399, "V", "Armino Gesserti");
 	player.makeCentered();
 	
@@ -143,41 +144,4 @@ Game._initDebug = function() {
 	monitor2.style.left = "0px";
 	monitor2.style.bottom = monitor1.offsetHeight + "px";
 	document.body.appendChild(monitor2);
-}
-
-/**
- * Compute shortest path to a given index
- */
-Game._computePath = function(index) {
-	for (var i=0;i<GRAPH.length;i++) { 
-		GRAPH[i].path = null;
-		GRAPH[i].distance = Infinity;
-	}
-	
-	var target = GRAPH[index];
-	target.distance = 0;
-	var TODO = [target];
-	
-	while (TODO.length) { /* there are nodes remaining */
-		var node = TODO.shift(); /* pick first node with neighbors that need to be adjusted */
-		var dist = node.distance + 1;
-
-		for (var i=0;i<node.neighbors.length;i++) {
-			var neighbor = node.neighbors[i];
-			if (neighbor === null) { continue; }
-			neighbor = GRAPH[neighbor];
-			
-			if (neighbor.distance > dist) { /* we can score better this way */
-				neighbor.distance = dist;
-				neighbor.path = [false, false, false, false];
-				TODO.push(neighbor);
-			}
-			
-			if (neighbor.distance == dist) { /* same score */
-				var dir = (i+2) % 4;
-				neighbor.path[dir] = true;
-			}
-		} /* for all neighbors*/
-	}
-	
 }

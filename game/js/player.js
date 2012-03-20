@@ -57,6 +57,10 @@ Game.Player.prototype.getMoves = function() {
 	return this._moves;
 }
 
+Game.Player.prototype.getIndex = function() {
+	return this._index;
+}
+
 Game.Player.prototype.handleInput = function(type, param) {
 	if (this._turnStart) {
 		switch (type) {

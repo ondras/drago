@@ -60,6 +60,13 @@ body {
 	position: absolute;
 }
 
+#status #bottom .label {
+	position: absolute;
+	left: 20px;
+	color: #3a1600;
+	font-weight: bold;
+}
+
 #status #portrait {
 	width: 118px;
 	height: 118px;

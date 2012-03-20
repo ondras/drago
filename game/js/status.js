@@ -5,29 +5,37 @@ Game.Status.prototype.init = function() {
 		bottom: OZ.DOM.elm("div", {id:"bottom"}),
 		portrait: OZ.DOM.elm("div", {id:"portrait"}),
 		name: OZ.DOM.elm("div", {id:"name"}),
+		target: OZ.DOM.elm("div", {className:"label"}),
 		moves: [],
 		remain: []
 	};
 	OZ.DOM.append([this._dom.container, this._dom.portrait, this._dom.name, this._dom.bottom]);
 	this._border = new Game.Border(this._dom.portrait);
 	
+	this._dom.target.style.top = "85px";
+	this._dom.bottom.appendChild(this._dom.target);
+	
+	var moves = OZ.DOM.elm("div", {className:"label", top:"114px", innerHTML:"Moves"});
+	this._dom.bottom.appendChild(moves);
+
 	for (var i=0;i<2;i++) {
 		var right = 22 + (1-i)*24;
+
 		var top = 82;
-		
 		var digit = OZ.DOM.elm("div", {className:"digit", right:right+"px", top:top+"px"});
-		this._dom.moves.push(digit);
+		this._dom.remain.push(digit);
 		this._dom.bottom.appendChild(digit);
 		
 		top += 29;
 		var digit = OZ.DOM.elm("div", {className:"digit", right:right+"px", top:top+"px"});
-		this._dom.remain.push(digit);
+		this._dom.moves.push(digit);
 		this._dom.bottom.appendChild(digit);
 	}
 	
 	
 	OZ.Event.add(null, "turn", this._turn.bind(this));
 	OZ.Event.add(null, "change", this._change.bind(this));
+	OZ.Event.add(null, "race-ready", this._raceReady.bind(this));
 }
 
 Game.Status.prototype.getContainer = function() {
@@ -43,22 +51,25 @@ Game.Status.prototype._turn = function(e) {
 	this._dom.portrait.style.backgroundImage = "url(img/player/portrait/" + type + ".png)";
 	this._dom.name.innerHTML = name;
 	
-	this._setMoves(0);
-	this._setRemain(99); /* FIXME */
+	this._setMoves(player);
+	this._setRemain(player);
 }
 
 Game.Status.prototype._change = function(e) {
 	var player = e.target;
-	var moves = player.getMoves();
-	this._setMoves(moves);
+	this._setMoves(player);
+	this._setRemain(player);
 }
 
-Game.Status.prototype._setMoves = function(moves) {
+Game.Status.prototype._setMoves = function(player) {
+	var moves = player.getMoves();
 	this._setDigit(this._dom.moves[0], Math.floor(moves/10));
 	this._setDigit(this._dom.moves[1], moves%10);
 }
 
-Game.Status.prototype._setRemain = function(remain) {
+Game.Status.prototype._setRemain = function(player) {
+	var node = GRAPH[player.getIndex()];
+	var remain = node.distance;
 	this._setDigit(this._dom.remain[0], Math.floor(remain/10));
 	this._setDigit(this._dom.remain[1], remain%10);
 }
@@ -66,4 +77,9 @@ Game.Status.prototype._setRemain = function(remain) {
 Game.Status.prototype._setDigit = function(node, digit) {
 	var height = 24;
 	node.style.backgroundPosition = "0px -" + (digit*height) + "px";
+}
+
+Game.Status.prototype._raceReady = function(e) {
+	var node = GRAPH[e.target.getTarget()];
+	this._dom.target.innerHTML = node.name;
 }
