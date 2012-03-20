@@ -27,7 +27,7 @@ Game.Status.prototype.init = function() {
 	
 	
 	OZ.Event.add(null, "turn", this._turn.bind(this));
-	OZ.Event.add(null, "moves-change", this._movesChange.bind(this));
+	OZ.Event.add(null, "change", this._change.bind(this));
 }
 
 Game.Status.prototype.getContainer = function() {
@@ -42,14 +42,25 @@ Game.Status.prototype._turn = function(e) {
 
 	this._dom.portrait.style.backgroundImage = "url(img/player/portrait/" + type + ".png)";
 	this._dom.name.innerHTML = name;
+	
+	this._setMoves(0);
+	this._setRemain(99); /* FIXME */
 }
 
-Game.Status.prototype._movesChange = function(e) {
+Game.Status.prototype._change = function(e) {
 	var player = e.target;
 	var moves = player.getMoves();
-	
+	this._setMoves(moves);
+}
+
+Game.Status.prototype._setMoves = function(moves) {
 	this._setDigit(this._dom.moves[0], Math.floor(moves/10));
 	this._setDigit(this._dom.moves[1], moves%10);
+}
+
+Game.Status.prototype._setRemain = function(remain) {
+	this._setDigit(this._dom.remain[0], Math.floor(remain/10));
+	this._setDigit(this._dom.remain[1], remain%10);
 }
 
 Game.Status.prototype._setDigit = function(node, digit) {
