@@ -67,6 +67,12 @@ body {
 	font-weight: bold;
 }
 
+#status #bottom #node-image {
+	position: absolute;
+	right: 29px;
+	bottom: 27px;
+}
+
 #status #portrait {
 	width: 118px;
 	height: 118px;

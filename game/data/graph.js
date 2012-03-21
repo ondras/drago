@@ -5253,7 +5253,7 @@ var GRAPH = [
 			0
 		],
 		"type": "capital",
-		"name": "Brssel",
+		"name": "Brüssel",
 		"nameData": [
 			744,
 			748,
@@ -5965,7 +5965,7 @@ var GRAPH = [
 			0
 		],
 		"type": "city",
-		"name": "Straáburg",
+		"name": "Straßburg",
 		"nameData": [
 			952,
 			956,
@@ -6440,7 +6440,7 @@ var GRAPH = [
 			0
 		],
 		"type": "city",
-		"name": "Dsseldorf",
+		"name": "Düsseldorf",
 		"nameData": [
 			1068,
 			1072,
@@ -6468,7 +6468,7 @@ var GRAPH = [
 			0
 		],
 		"type": "city",
-		"name": "Kln",
+		"name": "Köln",
 		"nameData": [
 			1092,
 			1096,
@@ -6616,7 +6616,7 @@ var GRAPH = [
 			0
 		],
 		"type": "city",
-		"name": "Zrich",
+		"name": "Zürich",
 		"nameData": [
 			1168,
 			1172,
@@ -6806,7 +6806,7 @@ var GRAPH = [
 			0
 		],
 		"type": "city",
-		"name": "Mlheim",
+		"name": "Mülheim",
 		"nameData": [
 			1244,
 			1248,
@@ -7675,7 +7675,7 @@ var GRAPH = [
 			0
 		],
 		"type": "city",
-		"name": "Nrnberg",
+		"name": "Nürnberg",
 		"nameData": [
 			1488,
 			1492,
@@ -7724,7 +7724,7 @@ var GRAPH = [
 			0
 		],
 		"type": "city",
-		"name": "Mnchen",
+		"name": "München",
 		"nameData": [
 			1512,
 			1516,
@@ -8158,7 +8158,7 @@ var GRAPH = [
 			0
 		],
 		"type": "city",
-		"name": "Gteborg",
+		"name": "Göteborg",
 		"nameData": [
 			1632,
 			1636,
@@ -8485,7 +8485,7 @@ var GRAPH = [
 			0
 		],
 		"type": "city",
-		"name": "Malm",
+		"name": "Malmö",
 		"nameData": [
 			1672,
 			1676,

@@ -6,6 +6,8 @@ Game.Status.prototype.init = function() {
 		portrait: OZ.DOM.elm("div", {id:"portrait"}),
 		name: OZ.DOM.elm("div", {id:"name"}),
 		target: OZ.DOM.elm("div", {className:"label"}),
+		nodeType: OZ.DOM.elm("div", {className:"label"}),
+		nodeImage: OZ.DOM.elm("img", {id:"node-image"}),
 		moves: [],
 		remain: []
 	};
@@ -32,9 +34,12 @@ Game.Status.prototype.init = function() {
 		this._dom.bottom.appendChild(digit);
 	}
 	
+	this._dom.nodeType.style.top = "152px";
+	this._dom.bottom.appendChild(this._dom.nodeType);
+	this._dom.bottom.appendChild(this._dom.nodeImage);
 	
 	OZ.Event.add(null, "turn", this._turn.bind(this));
-	OZ.Event.add(null, "change", this._change.bind(this));
+	OZ.Event.add(null, "node-change", this._nodeChange.bind(this));
 	OZ.Event.add(null, "race-ready", this._raceReady.bind(this));
 }
 
@@ -53,12 +58,33 @@ Game.Status.prototype._turn = function(e) {
 	
 	this._setMoves(player);
 	this._setRemain(player);
+	this._setNode(player);
 }
 
-Game.Status.prototype._change = function(e) {
+Game.Status.prototype._nodeChange = function(e) {
 	var player = e.target;
 	this._setMoves(player);
 	this._setRemain(player);
+	this._setNode(player);
+}
+
+Game.Status.prototype._setNode = function(player) {
+	var node = GRAPH[player.getIndex()];
+	
+	if (node.name) {
+		this._dom.nodeType.innerHTML = node.name;
+		this._dom.nodeImage.style.display = "none";
+	} else {
+		var map = {
+			"blue": "Win",
+			"red": "Lose",
+			"yellow": "Get card",
+			"purple": "Buy cards"
+		};
+		this._dom.nodeType.innerHTML = map[node.type];
+		this._dom.nodeImage.src = "img/status/node-" + node.type + ".png";
+		this._dom.nodeImage.style.display = "";
+	}
 }
 
 Game.Status.prototype._setMoves = function(player) {

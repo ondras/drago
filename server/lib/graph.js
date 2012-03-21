@@ -42,6 +42,19 @@ QQ: pouze hodnoty 00 a 40
 */
 
 var File = require("./file");
+var FS = require("fs");
+
+var CP850 = {};
+var data = new FS.File("CP850.TXT").open("r").read().toString("ascii").split("\n");
+for (var i=0;i<data.length;i++) {
+	var line = data[i];
+	if (line.charAt(0) == "#") { continue; }
+	var parts = line.split(/\s+/);
+	var num1 = parseInt(parts[0]);
+	var num2 = parseInt(parts[1]);
+	CP850[num1] = num2;
+}
+
 
 var Graph = function(file) {
 	this._file = new File.File(file);
@@ -92,7 +105,7 @@ var Node = function(data, index) {
 		
 		for (var i=0;i<14;i++) {
 			var byte = data.getByte();
-			if (byte) { this._name += String.fromCharCode(byte); }
+			if (byte) { this._name += String.fromCharCode(CP850[byte]); }
 		}
 		var count = data.getBytes(2);
 		for (var i=0;i<count;i++) {

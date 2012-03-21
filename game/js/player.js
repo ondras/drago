@@ -164,7 +164,7 @@ Game.Player.prototype.tick = function(dt) {
 Game.Player.prototype._moveBy = function(moves) {
 	this._turnStart = false;
 	this._moves = moves;
-	this.dispatch("change");
+	this.dispatch("node-change");
 	Game.movement.show(this, this._index);
 }
 
@@ -206,7 +206,7 @@ Game.Player.prototype._arrived = function() {
 		OZ.Audio.play("move-stop");
 	}
 	
-	this.dispatch("change");
+	this.dispatch("node-change");
 	Game.movement.show(this, this._index);
 }
 
