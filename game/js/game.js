@@ -40,6 +40,7 @@ var Game = {
 	movement: null,
 	status: null,
 	race: null,
+	players: [],
 	
 	_tiles: null,
 	_map: null,
@@ -107,11 +108,9 @@ Game._loadBackground = function() {
 
 	var player = new Game.Player(399, "V", "Armino Gesserti");
 	player.makeCentered();
+	this.players.push(player);
 	
-	OZ.Event.add(null, "turn-end", function(e) {
-		e.target.makeCentered();
-		e.target.turn();
-	});
+	OZ.Event.add(null, "turn-end", this._turnEnd.bind(this));
 	player.turn();
 
 	this.engine.start();
@@ -144,4 +143,11 @@ Game._initDebug = function() {
 	monitor2.style.left = "0px";
 	monitor2.style.bottom = monitor1.offsetHeight + "px";
 	document.body.appendChild(monitor2);
+}
+
+Game._turnEnd = function(e) {
+	e.target.setMoney(e.target.getMoney()+1000);
+	/* FIXME */
+	e.target.makeCentered();
+	e.target.turn();
 }

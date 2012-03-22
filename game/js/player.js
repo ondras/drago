@@ -8,6 +8,7 @@ Game.Player.prototype.init = function(index, type, name) {
 	this._flight = GRAPH[this._index].air;
 	this._orientation = 1;
 	this._moves = 0;
+	this._money = 30000;
 	this._path = [];
 	this._turnStart = false; /* turn just started */
 	this._speed = 10; /* tiles per second */
@@ -43,6 +44,16 @@ Game.Player.prototype.init = function(index, type, name) {
 
 	this._updateImage();
 	this._computePosition();
+}
+
+Game.Player.prototype.setMoney = function(money) {
+	this._money = money;
+	this.dispatch("player-change");
+	return this;
+}
+
+Game.Player.prototype.getMoney = function() {
+	return this._money;
 }
 
 Game.Player.prototype.getType = function() {
@@ -164,7 +175,7 @@ Game.Player.prototype.tick = function(dt) {
 Game.Player.prototype._moveBy = function(moves) {
 	this._turnStart = false;
 	this._moves = moves;
-	this.dispatch("node-change");
+	this.dispatch("player-change");
 	Game.movement.show(this, this._index);
 }
 
@@ -206,7 +217,7 @@ Game.Player.prototype._arrived = function() {
 		OZ.Audio.play("move-stop");
 	}
 	
-	this.dispatch("node-change");
+	this.dispatch("player-change");
 	Game.movement.show(this, this._index);
 }
 

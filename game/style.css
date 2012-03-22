@@ -53,6 +53,18 @@ body {
 	bottom: 24px;
 }
 
+#status #bottom h2 {
+	color: white;
+	text-align: center;
+	font-style: italic;
+	text-shadow: -0.1em -0.1em 0px #000; 
+	margin: 0px;
+}
+
+#status #bottom h2:first-child {
+	margin-top: 13px;
+}
+
 #status #bottom .digit {
 	width: 24px;
 	height: 24px;
@@ -90,7 +102,8 @@ body {
 	margin: auto;
 	text-align: center;
 	color: white;
-	text-shadow: -1px -1px 0px #000;
+/*	text-shadow: -1px -1px 0px #000; */
+	text-shadow: -0.1em -0.1em 0px #000; 
 	font-weight: bold;
 	font-size: 94%;
 }
