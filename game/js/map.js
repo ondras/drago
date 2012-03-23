@@ -1,5 +1,4 @@
 Game.Map = OZ.Class();
-
 Game.Map.prototype.init = function() {
 	this._data = [];
 	OZ.Request("map/EUROPE.MAP", this._response.bind(this), {binary:true});
