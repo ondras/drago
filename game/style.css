@@ -64,7 +64,7 @@ body {
 	color: white;
 	text-align: center;
 	font-style: italic;
-	text-shadow: -0.1em -0.1em 0px #000; 
+	text-shadow: -0.08em -0.08em 0px #000; 
 	margin: 0px;
 }
 
@@ -109,8 +109,7 @@ body {
 	margin: auto;
 	text-align: center;
 	color: white;
-/*	text-shadow: -1px -1px 0px #000; */
-	text-shadow: -0.1em -0.1em 0px #000; 
+	text-shadow: -0.08em -0.08em 0px #000; 
 	font-weight: bold;
 	font-size: 94%;
 }

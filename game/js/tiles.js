@@ -2,7 +2,7 @@ Game.Tiles = OZ.Class();
 Game.Tiles.prototype.init = function() {
 	this._images = [];
 	this._remaining = 0;
-	this._type = 0;
+	this._type = 3;
 	this._cache = {
 		tiles: {},
 		animations: {}
@@ -34,6 +34,9 @@ Game.Tiles.prototype.init = function() {
 
 Game.Tiles.prototype.setType = function(type) {
 	this._type = type;
+	this._cache.tiles = {};
+	this._cache.animations = {};
+	
 	this.dispatch("tiles-change");
 	return this;
 }

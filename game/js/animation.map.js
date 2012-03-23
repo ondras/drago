@@ -1,5 +1,4 @@
 Game.Animation.Map = OZ.Class().extend(Game.Animation);
-
 Game.Animation.Map.prototype.init = function(position, image, conf) {
 	var options = {
 		layer: conf.transparent ? Game.LAYER_PLAYERS : Game.LAYER_BG,

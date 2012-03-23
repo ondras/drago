@@ -1,9 +1,10 @@
 Game.Background = OZ.Class().extend(HAF.Actor);
-Game.Background.prototype.init = function(tiles, map) {
-	this._tiles = tiles;
+Game.Background.prototype.init = function(map) {
 	this._map = map;
 
 	this._dirty = false;
+	this._animations = [];
+	this._topTiles = [];
 	
 	this._tileSize = 32; /* number of small tiles in a large tile */
 	this._tilesPerSide = this._map.getData().length / this._tileSize;
@@ -63,12 +64,29 @@ Game.Background.prototype._portChange = function(e) {
 }
 
 Game.Background.prototype._tilesChange = function(e) {
+	/* needs redraw */
 	this._dirty = true;
+	
+	/* all big tiles need to be updated */
 	for (var i=0;i<this._tilesReady.length;i++) {
 		for (var j=0;j<this._tilesReady[i].length;j++) {
 			this._tilesReady[i][j] = false;
 		}
 	}
+	
+	/* reset animation ignore state */
+	var data = this._map.getData();
+	for (var i=0;i<data.length;i++) {
+		for (var j=0;j<data[i].length;j++) {
+			data[i][j].ignore = false;
+		}
+	}
+	
+	/* remove animations */
+	while (this._animations.length) { this._animations.pop().destroy(); }
+	
+	/* remove top tiles */
+	while (this._topTiles.length) { this._topTiles.pop().destroy(); }
 }
 
 Game.Background.prototype._getLargeTile = function(x, y) {
@@ -125,8 +143,8 @@ Game.Background.prototype._processTile = function(obj, index, bigTile, smallTile
 	
 	if (tileIndex in ANIMATIONS) { /* animation: create an animation object in bg/middle layer */
 		var anim = ANIMATIONS[tileIndex];
-		var sprite = this._tiles.createAnimation(tileIndex, anim);
-		new Game.Animation.Map(absPx, sprite, anim);
+		var sprite = Game.tiles.createAnimation(tileIndex, anim);
+		this._animations.push(new Game.Animation.Map(absPx, sprite, anim));
 		
 		if (index) { /* mark further tiles in this animation; we don't need them */
 			var data = this._map.getData();
@@ -141,14 +159,14 @@ Game.Background.prototype._processTile = function(obj, index, bigTile, smallTile
 	}
 
 	if (obj.top[index]) { /* create a separate tile object in top layer */
-		var canvas = this._tiles.createTile(tileIndex, obj.mirror[index]);
-		new Game.Tile(absPx, canvas);
+		var canvas = Game.tiles.createTile(tileIndex, obj.mirror[index]);
+		this._topTiles.push(new Game.Tile(absPx, canvas));
 	} else { /* render to big tile */
 		var px = [
 			Game.TILE * smallTile[0],
 			Game.TILE * smallTile[1]
 		];
-		this._tiles.render(tileIndex, context, px, obj.mirror[index]);
+		Game.tiles.render(tileIndex, context, px, obj.mirror[index]);
 	}
 
 }

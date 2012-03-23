@@ -1,5 +1,4 @@
 Game.Tile = OZ.Class().extend(HAF.Actor);
-
 Game.Tile.prototype.init = function(position, image, options) {
 	this._offset = Game.port.getOffset();
 	
@@ -21,8 +20,13 @@ Game.Tile.prototype.init = function(position, image, options) {
 
 	for (var i=0;i<2;i++) { this._sprite.size.push(Game.TILE*this._options.size[i]); }
 	
-	OZ.Event.add(null, "port-change", this._portChange.bind(this));
+	this._event = OZ.Event.add(null, "port-change", this._portChange.bind(this));
 	this._updateVisibility();
+}
+
+Game.Tile.prototype.destroy = function() {
+	OZ.Event.remove(this._event);
+	if (this._visible) { Game.engine.removeActor(this, this._options.layer); }
 }
 
 Game.Tile.prototype.tick = function(dt) {

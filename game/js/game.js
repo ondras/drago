@@ -41,8 +41,8 @@ var Game = {
 	status: null,
 	race: null,
 	players: [],
-	
-	_tiles: null,
+	tiles: null,
+
 	_map: null,
 	_remain: 0
 };
@@ -53,13 +53,13 @@ Game.init = function() {
 	this.engine = new HAF.Engine();
 	this.status = new Game.Status();
 	this.port = new Game.Port();
+	this.tiles = new Game.Tiles();
 	
 	this._initAudio();
 	this._initEngine();
 	
 	this.keyboard.push(this);
 
-	this._tiles = new Game.Tiles(1);
 	this._map = new Game.Map();
 	this._remain = 2;
 	
@@ -89,7 +89,7 @@ Game._load = function(e) {
 	this._remain--;
 	if (this._remain) { return; }
 	
-	this.background = new Game.Background(this._tiles, this._map);
+	this.background = new Game.Background(this._map);
 
 	document.body.innerHTML = "";
 	document.body.appendChild(this.port.getContainer());

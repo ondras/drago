@@ -37,7 +37,7 @@ Drago.prototype.init = function() {
 		this._remain++;
 		var name = i + "";
 		if (name.length < 2) { name = "0"+name; }
-		name = "1/PART00" + name + ".gif";
+		name = "3/PART00" + name + ".gif";
 		var img = OZ.DOM.elm("img");
 		OZ.Event.add(img, "load", this._load.bind(this));
 		this._images.push(img); 
