@@ -5,14 +5,23 @@ Game.Background.prototype.init = function(tiles, map) {
 
 	this._dirty = false;
 	
-	this._mapTiles = [];
 	this._tileSize = 32; /* number of small tiles in a large tile */
-	this._tilesPerSide = 0;
+	this._tilesPerSide = this._map.getData().length / this._tileSize;
 	
+	this._mapTiles = [];
+	this._tilesReady = [];
+	for (var i=0;i<this._tilesPerSide;i++) {
+		this._mapTiles.push([]);
+		this._tilesReady.push([]);
+		for (var j=0;j<this._tilesPerSide;j++) {
+			this._mapTiles[i].push(null);
+			this._tilesReady[i].push(false);
+		}
+	}
+
 	Game.engine.addActor(this, Game.LAYER_BG);
 	OZ.Event.add(null, "port-change", this._portChange.bind(this));
-
-	this._build();
+	OZ.Event.add(null, "tiles-change", this._tilesChange.bind(this));
 }
 
 Game.Background.prototype.getSize = function() {
@@ -40,7 +49,7 @@ Game.Background.prototype.draw = function(context) {
 		for (var j=startY; j<offset[1]+size[1]; j+=tileSize) {
 			var tileX = Math.floor(i / tileSize);
 			var tileY = Math.floor(j / tileSize);
-			var tile = this._mapTiles[tileX + tileY*this._tilesPerSide];
+			var tile = this._getLargeTile(tileX, tileY);
 			var tileLeft = tileX * tileSize;
 			var tileTop = tileY * tileSize;
 			context.drawImage(tile, tileLeft - offset[0], tileTop - offset[1]);
@@ -53,58 +62,40 @@ Game.Background.prototype._portChange = function(e) {
 	this._dirty = true;
 }
 
-Game.Background.prototype._build = function() {
-	this._mapTiles = [];
+Game.Background.prototype._tilesChange = function(e) {
+	this._dirty = true;
+	for (var i=0;i<this._tilesReady.length;i++) {
+		for (var j=0;j<this._tilesReady[i].length;j++) {
+			this._tilesReady[i][j] = false;
+		}
+	}
+}
 
-	var data = this._map.getData();
-	this._tilesPerSide = data.length / this._tileSize;
-
-	this._buildTile();
-/*	
-	
-	var size = this._map.getSize();
-	this._canvas = OZ.DOM.elm("canvas", {width:size[0]*Game.TILE, height:size[1]*Game.TILE});
-	this._context = this._canvas.getContext("2d");
-	
-	var partSize = 32;
-	var data = this._map.getData();
-	var count = Math.ceil(data.length / partSize);
-	for (var i=0;i<count;i++) {
-		this._remainingParts.push([
-			i*partSize,
-			Math.min((i+1)*partSize, data.length)
-		]);
+Game.Background.prototype._getLargeTile = function(x, y) {
+	if (!this._mapTiles[x][y]) {
+		var canvas = OZ.DOM.elm("canvas", {width:this._tileSize*Game.TILE, height:this._tileSize*Game.TILE});
+		this._mapTiles[x][y] = canvas;
 	}
 	
-	this._buildPart();
-	*/
-//	setTimeout(function(){	this.dispatch("load");}.bind(this), 100);
+	var canvas = this._mapTiles[x][y];
 
+	if (!this._tilesReady[x][y]) { 
+		this._buildTile(canvas, [x, y]); 
+		this._tilesReady[x][y] = true;
+	}
+	
+	return canvas;
 }
 
 /**
  * Build one large tile
  */
-Game.Background.prototype._buildTile = function() {
+Game.Background.prototype._buildTile = function(canvas, bigPosition) {
 	var data = this._map.getData();
-
-	var currentTile = this._mapTiles.length;
-	var tilesTotal = this._tilesPerSide*this._tilesPerSide;
-	
-	if (currentTile >= tilesTotal) {
-		this._dirty = true;
-		this.dispatch("load");
-		return;
-	}
-	
-	var canvas = OZ.DOM.elm("canvas", {width:this._tileSize*Game.TILE, height:this._tileSize*Game.TILE});
-	this._mapTiles.push(canvas);
 	var context = canvas.getContext("2d");
 	
 	/* this tile's position in small tile coords */
-	var x = this._tileSize * (currentTile % this._tilesPerSide);
-	var y = this._tileSize * Math.floor(currentTile / this._tilesPerSide);
-	var bigTile = [x, y];
+	var bigTile = [bigPosition[0]*this._tileSize, bigPosition[1]*this._tileSize];
 	
 	for (var i=0;i<this._tileSize;i++) {
 		for (var j=0;j<this._tileSize;j++) {
@@ -113,9 +104,6 @@ Game.Background.prototype._buildTile = function() {
 			for (var k=0;k<obj.images.length;k++) { this._processTile(obj, k, bigTile, smallTile, context); }
 		}
 	}
-	
-	
-	setTimeout(this._buildTile.bind(this), 10);
 }
 
 /**

@@ -48,8 +48,6 @@ var Game = {
 };
 
 Game.init = function() {
-	document.body.innerHTML = "Loading&hellip;";
-
 	this.keyboard = new Game.Keyboard();
 	this.movement = new Game.Movement();
 	this.engine = new HAF.Engine();
@@ -92,11 +90,7 @@ Game._load = function(e) {
 	if (this._remain) { return; }
 	
 	this.background = new Game.Background(this._tiles, this._map);
-	
-	OZ.Event.add(this.background, "load", this._loadBackground.bind(this));
-}
 
-Game._loadBackground = function() {
 	document.body.innerHTML = "";
 	document.body.appendChild(this.port.getContainer());
 	document.body.appendChild(this.status.getContainer());

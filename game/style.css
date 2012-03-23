@@ -4,6 +4,13 @@ body {
 	font-family: sans-serif;
 }
 
+#loading {
+	color: white;
+	font-size: 200%;
+	text-align: center;
+	margin-top: 20%;
+}
+
 .movement-0 {
 	background-image: url(img/movement/0.png);
 	background-position: 50% 100%;

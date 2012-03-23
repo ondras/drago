@@ -1,5 +1,8 @@
 Game.Tiles = OZ.Class();
-Game.Tiles.prototype.init = function(type) {
+Game.Tiles.prototype.init = function() {
+	this._images = [];
+	this._remaining = 0;
+	this._type = 0;
 	this._cache = {
 		tiles: {},
 		animations: {}
@@ -20,9 +23,19 @@ Game.Tiles.prototype.init = function(type) {
 	}
 */
 
-	this._image = OZ.DOM.elm("img");
-	OZ.Event.add(this._image, "load", this._load.bind(this));
-	this._image.src = "map/" + type + ".png";
+	for (var i=0;i<4;i++) {
+		this._remaining++;
+		var image = OZ.DOM.elm("img");
+		OZ.Event.add(image, "load", this._load.bind(this));
+		image.src = "map/" + i + ".png";
+		this._images.push(image);
+	}
+}
+
+Game.Tiles.prototype.setType = function(type) {
+	this._type = type;
+	this.dispatch("tiles-change");
+	return this;
 }
 
 Game.Tiles.prototype.render = function(index, context, offset, mirror) {
@@ -51,7 +64,7 @@ Game.Tiles.prototype.render = function(index, context, offset, mirror) {
 	var imageOffset = index % cellsPerImage;
 	
 	context.drawImage(
-		this._image,
+		this._images[this._type],
 		column*tile, imageOffset*tile, tile, tile, 
 		offset[0], offset[1], tile, tile
 	);
@@ -101,9 +114,6 @@ Game.Tiles.prototype.createAnimation = function(id, conf) {
 }
 
 Game.Tiles.prototype._load = function(e) {
-/*
-	this._remain--;
-	if (!this._remain) { this.dispatch("load"); }
-*/
-	this.dispatch("load");
+	this._remaining--;
+	if (!this._remaining) { this.dispatch("load"); }
 }
