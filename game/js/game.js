@@ -100,21 +100,26 @@ Game._loadBackground = function() {
 	document.body.innerHTML = "";
 	document.body.appendChild(this.port.getContainer());
 	document.body.appendChild(this.status.getContainer());
-	this._initDebug();
 
 	this.port.sync();
-
-	this.race = new Game.Race(14);
-
-	var player = new Game.Player(399, "V", "Armino Gesserti");
-	player.makeCentered();
-	this.players.push(player);
 	
-	OZ.Event.add(null, "turn-end", this._turnEnd.bind(this));
-	player.turn();
+	this._initDebug();
+	this._initPlayers();
 
 	this.engine.start();
 	OZ.Audio.Background.play();
+
+	this.race = Game.Race.createFrom(399);
+}
+
+Game._initPlayers = function() {
+	var player = new Game.Player("V", "Armino Gesserti");
+	this.players.push(player);
+	player.setIndex(399);
+
+	var player = new Game.Player("D", "Helmut Pohl");
+	this.players.push(player);
+	player.setIndex(399);
 }
 
 Game._initAudio = function() {
@@ -143,11 +148,4 @@ Game._initDebug = function() {
 	monitor2.style.left = "0px";
 	monitor2.style.bottom = monitor1.offsetHeight + "px";
 	document.body.appendChild(monitor2);
-}
-
-Game._turnEnd = function(e) {
-	e.target.setMoney(e.target.getMoney()+1000);
-	/* FIXME */
-	e.target.makeCentered();
-	e.target.turn();
 }

@@ -1,11 +1,11 @@
 Game.Player = OZ.Class().extend(Game.Animation).implement(Game.IInputHandler);
 Game.Player.FLIGHT_OFFSET = -24;
-Game.Player.prototype.init = function(index, type, name) {
-	this._index = index;
+Game.Player.prototype.init = function(type, name) {
+	this._index = null;
 	this._type = type;
 	this._name = name;
 
-	this._flight = GRAPH[this._index].air;
+	this._flight = false;
 	this._orientation = 1;
 	this._moves = 0;
 	this._money = 30000;
@@ -19,7 +19,7 @@ Game.Player.prototype.init = function(index, type, name) {
 		[-1,  0]
 	];
 
-	this._tile = [GRAPH[this._index].x, GRAPH[this._index].y];
+	this._tile = [0, 0];
 
 	this._target = {
 		index: null,
@@ -41,9 +41,6 @@ Game.Player.prototype.init = function(index, type, name) {
 	Game.Animation.prototype.init.call(this, [0, 0], image, o);
 
 	this._animation.frames = 4;
-
-	this._updateImage();
-	this._computePosition();
 }
 
 Game.Player.prototype.setMoney = function(money) {
@@ -66,6 +63,18 @@ Game.Player.prototype.getName = function() {
 
 Game.Player.prototype.getMoves = function() {
 	return this._moves;
+}
+
+Game.Player.prototype.setIndex = function(index) {
+	this._index = index;
+	
+	var node = GRAPH[this._index];
+	this._flight = node.air;
+	this._tile = [node.x, node.y];
+	
+	this._updateImage();
+	this._computePosition();
+	return this;
 }
 
 Game.Player.prototype.getIndex = function() {
@@ -103,7 +112,7 @@ Game.Player.prototype.handleInput = function(type, param) {
 			if (this._moves == 0) {
 				Game.keyboard.pop();
 				Game.movement.hide();
-				this.dispatch("turn-end");
+				this._decideTurn();
 			}
 		break;
 		default:
@@ -142,6 +151,10 @@ Game.Player.prototype.makeCentered = function() {
 }
 
 Game.Player.prototype.turn = function() {
+	/* add to top */
+	Game.engine.removeActor(this, Game.LAYER_PLAYERS);
+	Game.engine.addActor(this, Game.LAYER_PLAYERS);
+	
 	this._turnStart = true;
 	this._path = [this._index];
 
@@ -265,4 +278,30 @@ Game.Player.prototype._computePosition = function() {
 
 Game.Player.prototype._isVisible = function(size) {
 	return true;
+}
+
+Game.Player.prototype._decideTurn = function() {
+	if (this._index == Game.race.getTarget()) {
+		/* FIXME won race! */
+		return;
+	}
+	
+	var type = GRAPH[this._index].type;
+	switch (type) {
+		case "blue":
+		break;
+
+		case "red":
+		break;
+
+		case "yellow":
+		break;
+
+		case "purple":
+		break;
+	}
+	
+	this.setMoney(this.getMoney()+1000);
+	/* FIXME */
+	this.dispatch("turn-end");
 }
