@@ -33,11 +33,13 @@ Game.Tiles.prototype.init = function() {
 }
 
 Game.Tiles.prototype.setType = function(type) {
-	this._type = type;
-	this._cache.tiles = {};
-	this._cache.animations = {};
-	
-	this.dispatch("tiles-change");
+	if (type != this._type) {
+		this._type = type;
+		this._cache.tiles = {};
+		this._cache.animations = {};
+		this.dispatch("tiles-change");
+	}
+
 	return this;
 }
 

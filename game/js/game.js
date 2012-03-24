@@ -42,6 +42,7 @@ var Game = {
 	race: null,
 	players: [],
 	tiles: null,
+	month: 0,
 
 	_map: null,
 	_remain: 0
@@ -63,7 +64,7 @@ Game.init = function() {
 	this._map = new Game.Map();
 	this._remain = 2;
 	
-	OZ.Event.add(this._tiles, "load", this._load.bind(this));
+	OZ.Event.add(this.tiles, "load", this._load.bind(this));
 	OZ.Event.add(this._map, "load", this._load.bind(this));
 }
 

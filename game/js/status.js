@@ -1,5 +1,6 @@
 Game.Status = OZ.Class();
 Game.Status.prototype.init = function() {
+	this._months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 	this._turns = 0;
 
 	this._dom = {
@@ -62,10 +63,20 @@ Game.Status.prototype._buildBottom = function() {
  * Change player
  */
 Game.Status.prototype._turn = function(e) {
+	var months = this._months.length;
 	this._turns++;
+	if (this._turns > Game.players.length) {
+		this._turns = 1;
+		Game.month++;
+	}
 	
-	var globalTurn = Math.ceil(this._turns / Game.players.length);
-	this._dom.turn.innerHTML = "Turn " + globalTurn;
+	var month = Game.month % months;
+	var year = Math.floor(Game.month / months) + 1;
+	this._dom.turn.innerHTML = this._months[month] + " (" + year + ")";
+	
+	/* change tileset? */
+	var season = Math.floor(((month + months - 2) % months)/3);
+	Game.tiles.setType(season);
 	
 	this._border.update();
 	var player = e.target;
