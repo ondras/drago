@@ -289,19 +289,25 @@ Game.Player.prototype._decideTurn = function() {
 	var type = GRAPH[this._index].type;
 	switch (type) {
 		case "blue":
+			Game.Info.showWin(this._endTurn.bind(this), this);
 		break;
 
 		case "red":
+			Game.Info.showLose(this._endTurn.bind(this), this);
 		break;
 
 		case "yellow":
+			Game.Info.showLose(this._endTurn.bind(this), this);
 		break;
 
 		case "purple":
+			Game.Info.showLose(this._endTurn.bind(this), this);
 		break;
 	}
 	
-	this.setMoney(this.getMoney()+1000);
 	/* FIXME */
+}
+
+Game.Player.prototype._endTurn = function() {
 	this.dispatch("turn-end");
 }

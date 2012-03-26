@@ -118,6 +118,7 @@ Game.Status.prototype._setNode = function(player) {
 
 Game.Status.prototype._setMoney = function(player) {
 	var money = player.getMoney();
+	this._dom.money.innerHTML = Game.formatMoney(money);
 	this._dom.money.innerHTML = (money < 0 ? "-" : "") + "$" + Math.abs(money).toString().replace(/(\d{1,3}(?=(\d{3})+(?!\d)))/g, "$1.");;
 }
 

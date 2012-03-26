@@ -107,6 +107,10 @@ Game._load = function(e) {
 	this.race = Game.Race.createFrom(399);
 }
 
+Game.formatMoney = function(money) {
+	return (money < 0 ? "-" : "") + "$" + Math.abs(money).toString().replace(/(\d{1,3}(?=(\d{3})+(?!\d)))/g, "$1.");
+}
+
 Game._initPlayers = function() {
 	var player = new Game.Player("V", "Armino Gesserti");
 	this.players.push(player);

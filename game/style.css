@@ -43,6 +43,24 @@ body {
 	background-image: url(img/movement/3-hover.png);
 }
 
+#info { 
+	width: 600px;
+	height: 102px;
+	padding: 18px;
+	color: #3a1600;
+	font-weight: bold;
+	background-image: url(img/paper.png);
+}
+
+#info img {
+	float:left;
+	margin-right:10px; 
+}
+
+#info p {
+	margin: 0px;
+}
+
 #status {
 	width: 220px;
 	height: 100%;
