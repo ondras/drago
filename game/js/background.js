@@ -1,16 +1,23 @@
 Game.Background = OZ.Class().extend(HAF.Actor);
-Game.Background.prototype.init = function(map) {
-	this._map = map;
-
+Game.Background.prototype.init = function() {
 	this._dirty = false;
 	this._animations = [];
 	this._topTiles = [];
 	
 	this._tileSize = 32; /* number of small tiles in a large tile */
-	this._tilesPerSide = this._map.getData().length / this._tileSize;
-	
+	this._tilesPerSide = 0;
 	this._mapTiles = [];
 	this._tilesReady = [];
+
+	OZ.Event.add(null, "port-change", this._portChange.bind(this));
+	OZ.Event.add(null, "tiles-change", this._tilesChange.bind(this));
+}
+
+Game.Background.prototype.prepare = function() {
+	Game.engine.addActor(this, Game.LAYER_BG);
+
+	this._tilesPerSide = Game.map.getData().length / this._tileSize;
+	
 	for (var i=0;i<this._tilesPerSide;i++) {
 		this._mapTiles.push([]);
 		this._tilesReady.push([]);
@@ -19,10 +26,6 @@ Game.Background.prototype.init = function(map) {
 			this._tilesReady[i].push(false);
 		}
 	}
-
-	Game.engine.addActor(this, Game.LAYER_BG);
-	OZ.Event.add(null, "port-change", this._portChange.bind(this));
-	OZ.Event.add(null, "tiles-change", this._tilesChange.bind(this));
 }
 
 Game.Background.prototype.getSize = function() {
@@ -75,7 +78,7 @@ Game.Background.prototype._tilesChange = function(e) {
 	}
 	
 	/* reset animation ignore state */
-	var data = this._map.getData();
+	var data = Game.map.getData();
 	for (var i=0;i<data.length;i++) {
 		for (var j=0;j<data[i].length;j++) {
 			data[i][j].ignore = false;
@@ -109,7 +112,7 @@ Game.Background.prototype._getLargeTile = function(x, y) {
  * Build one large tile
  */
 Game.Background.prototype._buildTile = function(canvas, bigPosition) {
-	var data = this._map.getData();
+	var data = Game.map.getData();
 	var context = canvas.getContext("2d");
 	
 	/* this tile's position in small tile coords */
@@ -147,7 +150,7 @@ Game.Background.prototype._processTile = function(obj, index, bigTile, smallTile
 		this._animations.push(new Game.Animation.Map(absPx, sprite, anim));
 		
 		if (index) { /* mark further tiles in this animation; we don't need them */
-			var data = this._map.getData();
+			var data = Game.map.getData();
 			for (var i=0;i<anim.size[0];i++) {
 				for (var j=0;j<anim.size[1];j++) {
 					data[bigTile[0]+smallTile[0]+i][bigTile[1]+smallTile[1]+j].ignore = true;

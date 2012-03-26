@@ -10,7 +10,7 @@ OZ.Audio = {
 		return a;
 	},
 	
-	Background: {
+	background: {
 		template: "{name}.{format}",
 		queue: [],
 		format: "",
@@ -53,7 +53,6 @@ OZ.Audio = {
 			var interval = setInterval(function() {
 				volume = Math.max(0, volume-diff);
 				this._audio.volume = Math.pow(volume, 2);
-				console.log(this._audio.volume);
 				if (!this._audio.volume) { 
 					clearInterval(interval);
 					this.next(); 
@@ -67,16 +66,16 @@ OZ.Audio = {
 		this.supported = !!window.Audio;
 		if (!this.supported) { return; }
 		this.format = (new Audio().canPlayType("audio/ogg") ? "ogg" : "mp3");
-		this.Background.format = this.format;
-		this.Background._format = this._format;
+		this.background.format = this.format;
+		this.background._format = this._format;
 		
-		this.Background._audio = new Audio();
-		OZ.Event.add(this.Background._audio, "ended", function() {
+		this.background._audio = new Audio();
+		OZ.Event.add(this.background._audio, "ended", function() {
 			this.next();
 			this.play();
-		}.bind(this.Background));
+		}.bind(this.background));
 		
-		this.Background.next();
+		this.background.next();
 	},
 	
 	_format: function(name) {

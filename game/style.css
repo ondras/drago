@@ -11,6 +11,37 @@ body {
 	margin-top: 20%;
 }
 
+#setup {
+	width: 967px;
+	height: 741px;
+	background-image: url(img/setup/bg.png);
+	margin: auto;
+}
+
+#setup div, #setup img {
+	cursor: pointer;
+}
+
+#setup img {
+	bottom: 40px;
+	left: 431px;
+}
+
+#setup img:hover {
+	border: 2px solid red;
+	bottom: 38px;
+	left: 429px;
+}
+
+#setup input {
+	border: none;
+	padding: 0px;
+	background-color: transparent;
+	font-size: 140%;
+	font-style: italic;
+	font-family: times, serif;
+}
+
 .movement-0 {
 	background-image: url(img/movement/0.png);
 	background-position: 50% 100%;

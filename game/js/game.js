@@ -35,6 +35,7 @@ var Game = {
 	
 	engine: null,
 	port: null,
+	map: null,
 	background: null,
 	keyboard: null,
 	movement: null,
@@ -44,7 +45,6 @@ var Game = {
 	tiles: null,
 	month: 0,
 
-	_map: null,
 	_remain: 0
 };
 
@@ -55,17 +55,18 @@ Game.init = function() {
 	this.status = new Game.Status();
 	this.port = new Game.Port();
 	this.tiles = new Game.Tiles();
+	this.map = new Game.Map();
+	this.background = new Game.Background();
 	
 	this._initAudio();
 	this._initEngine();
 	
 	this.keyboard.push(this);
 
-	this._map = new Game.Map();
 	this._remain = 2;
 	
 	OZ.Event.add(this.tiles, "load", this._load.bind(this));
-	OZ.Event.add(this._map, "load", this._load.bind(this));
+	OZ.Event.add(this.map, "load", this._load.bind(this));
 }
 
 Game.handleInput = function(input, param) {
@@ -73,10 +74,10 @@ Game.handleInput = function(input, param) {
 
 	switch (param) {
 		case "O".charCodeAt(0):
-			OZ.Audio.Background.previous();
+			OZ.Audio.background.previous();
 		break;
 		case "P".charCodeAt(0):
-			OZ.Audio.Background.next();
+			OZ.Audio.background.next();
 		break;
 		default: 
 			return false;
@@ -89,22 +90,32 @@ Game.handleInput = function(input, param) {
 Game._load = function(e) {
 	this._remain--;
 	if (this._remain) { return; }
-	
-	this.background = new Game.Background(this._map);
-
 	document.body.innerHTML = "";
+	
+	new Game.Setup();
+	/*
+	this._initPlayers();
+	this.play();
+	*/
+}
+
+Game.play = function() {
+	this.background.prepare();
 	document.body.appendChild(this.port.getContainer());
 	document.body.appendChild(this.status.getContainer());
-
 	this.port.sync();
-	
 	this._initDebug();
-	this._initPlayers();
-
 	this.engine.start();
-	OZ.Audio.Background.play();
 
+	OZ.Audio.background.queue = ["G0", "G1", "G2", "G3", "G4", "G5"].randomize();
+	OZ.Audio.background.fadeOut();
 	this.race = Game.Race.createFrom(399);
+}
+
+Game.createPlayer = function(type, name) {
+	var player = new Game.Player(type, name);
+	this.players.push(player);
+	player.setIndex(399);
 }
 
 Game.formatMoney = function(money) {
@@ -112,19 +123,13 @@ Game.formatMoney = function(money) {
 }
 
 Game._initPlayers = function() {
-	var player = new Game.Player("V", "Armino Gesserti");
-	this.players.push(player);
-	player.setIndex(399);
-
-	var player = new Game.Player("D", "Helmut Pohl");
-	this.players.push(player);
-	player.setIndex(399);
+	this.createPlayer("V", "Armino Gesserti");
+	this.createPlayer("D", "Helmut Pohl");
 }
 
 Game._initAudio = function() {
 	OZ.Audio.template = "sound/fx/{format}/{name}.{format}";
-	OZ.Audio.Background.queue = ["G0", "G1", "G2", "G3", "G4", "G5"].randomize();
-	OZ.Audio.Background.template = "sound/music/{format}/{name}.{format}";
+	OZ.Audio.background.template = "sound/music/{format}/{name}.{format}";
 }
 
 Game._initEngine = function() {
