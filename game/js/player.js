@@ -297,11 +297,11 @@ Game.Player.prototype._decideTurn = function() {
 		break;
 
 		case "yellow":
-			Game.Info.showLose(this._endTurn.bind(this), this);
+			Game.Info.showCard(this._endTurn.bind(this), this);
 		break;
 
 		case "purple":
-			Game.Info.showLose(this._endTurn.bind(this), this);
+			Game.Info.showBuy(this._endTurn.bind(this), this);
 		break;
 	}
 	
