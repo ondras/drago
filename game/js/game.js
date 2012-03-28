@@ -154,4 +154,11 @@ Game._initCards = function() {
 	this.cards.push(new Game.Card.Slot(3));
 	this.cards.push(new Game.Card.Slot(4));
 	this.cards.push(new Game.Card.Slot(5));
+
+	this.cards.push(new Game.Card.Move(1));
+	this.cards.push(new Game.Card.Move(2));
+	this.cards.push(new Game.Card.Move(3));
+	this.cards.push(new Game.Card.Move(4));
+	this.cards.push(new Game.Card.Move(5));
+	this.cards.push(new Game.Card.Move(6));
 }
