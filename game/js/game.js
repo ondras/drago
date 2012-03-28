@@ -42,6 +42,7 @@ var Game = {
 	status: null,
 	race: null,
 	players: [],
+	cards: [],
 	tiles: null,
 	month: 0,
 
@@ -60,6 +61,7 @@ Game.init = function() {
 	
 	this._initAudio();
 	this._initEngine();
+	this._initCards();
 	
 	this.keyboard.push(this);
 
@@ -93,10 +95,6 @@ Game._load = function(e) {
 	document.body.innerHTML = "";
 	
 	new Game.Setup();
-	/*
-	this._initPlayers();
-	this.play();
-	*/
 }
 
 Game.play = function() {
@@ -116,15 +114,12 @@ Game.createPlayer = function(type, name) {
 	var player = new Game.Player(type, name);
 	this.players.push(player);
 	player.setIndex(399);
+	player.addCard(this.cards[0]);
+	player.addCard(this.cards[1]);
 }
 
 Game.formatMoney = function(money) {
 	return (money < 0 ? "-" : "") + "$" + Math.abs(money).toString().replace(/(\d{1,3}(?=(\d{3})+(?!\d)))/g, "$1.");
-}
-
-Game._initPlayers = function() {
-	this.createPlayer("V", "Armino Gesserti");
-	this.createPlayer("D", "Helmut Pohl");
 }
 
 Game._initAudio = function() {
@@ -152,4 +147,11 @@ Game._initDebug = function() {
 	monitor2.style.left = "0px";
 	monitor2.style.bottom = monitor1.offsetHeight + "px";
 	document.body.appendChild(monitor2);
+}
+
+Game._initCards = function() {
+	this.cards.push(new Game.Card.Slot(2));
+	this.cards.push(new Game.Card.Slot(3));
+	this.cards.push(new Game.Card.Slot(4));
+	this.cards.push(new Game.Card.Slot(5));
 }

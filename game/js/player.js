@@ -10,6 +10,7 @@ Game.Player.prototype.init = function(type, name) {
 	this._moves = 0;
 	this._money = 30000;
 	this._path = [];
+	this._cards = [];
 	this._turnStart = false; /* turn just started */
 	this._speed = 10; /* tiles per second */
 	this._velocity = [
@@ -41,6 +42,16 @@ Game.Player.prototype.init = function(type, name) {
 	Game.Animation.prototype.init.call(this, [0, 0], image, o);
 
 	this._animation.frames = 4;
+}
+
+Game.Player.prototype.getCards = function() {
+	return this._cards;
+}
+
+Game.Player.prototype.addCard = function(card) {
+	this._cards.push(card);
+	this.dispatch("player-change");
+	return this;
 }
 
 Game.Player.prototype.setMoney = function(money) {
@@ -86,7 +97,7 @@ Game.Player.prototype.handleInput = function(type, param) {
 		switch (type) {
 			case Game.INPUT_ENTER:
 				var type = Math.floor(Math.random()*5) + 1;
-				Game.Slot.roll1(this._moveBy.bind(this));
+				Game.Slot.roll1(this.moveBy.bind(this));
 			break;
 			default:
 				return false;
@@ -185,7 +196,7 @@ Game.Player.prototype.tick = function(dt) {
 	return Game.Animation.prototype.tick.call(this, dt);
 }
 
-Game.Player.prototype._moveBy = function(moves) {
+Game.Player.prototype.moveBy = function(moves) {
 	this._turnStart = false;
 	this._moves = moves;
 	this.dispatch("player-change");
@@ -303,9 +314,11 @@ Game.Player.prototype._decideTurn = function() {
 		case "purple":
 			Game.Info.showBuy(this._endTurn.bind(this), this);
 		break;
+		
+		default:
+			this._endTurn();
+		break;
 	}
-	
-	/* FIXME */
 }
 
 Game.Player.prototype._endTurn = function() {

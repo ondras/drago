@@ -11,12 +11,13 @@ Game.Status.prototype.init = function() {
 		target: OZ.DOM.elm("div", {className:"label"}),
 		nodeType: OZ.DOM.elm("div", {className:"label"}),
 		nodeImage: OZ.DOM.elm("img", {id:"node-image"}),
+		cards: OZ.DOM.elm("div", {id:"cards"}),
 		turn: OZ.DOM.elm("h2"),
 		money: OZ.DOM.elm("h2"),
 		moves: [],
 		remain: []
 	};
-	OZ.DOM.append([this._dom.container, this._dom.portrait, this._dom.name, this._dom.bottom]);
+	OZ.DOM.append([this._dom.container, this._dom.portrait, this._dom.name, this._dom.cards, this._dom.bottom]);
 	this._border = new Game.Border(this._dom.portrait);
 	
 	this._buildBottom();
@@ -95,6 +96,19 @@ Game.Status.prototype._playerChange = function(e) {
 	this._setMoves(player);
 	this._setRemain(player);
 	this._setNode(player);
+	this._setCards(player);
+}
+
+Game.Status.prototype._setCards = function(player) {
+	var cards = player.getCards();
+	OZ.DOM.clear(this._dom.cards);
+	for (var i=0;i<cards.length;i++) {
+		var img = OZ.DOM.elm("img", {position:"absolute", src:"img/cards/" + cards[i].getImage() + ".png"});
+		/* fixme position */
+		this._dom.cards.appendChild(img);
+		img.style.top = (5*i) + "px";
+		img.style.left = (img.offsetLeft - 65 - 5*i) + "px";
+	}
 }
 
 Game.Status.prototype._setNode = function(player) {

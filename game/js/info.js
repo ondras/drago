@@ -76,7 +76,10 @@ Game.Info.showCard = function(callback, player) {
 	var text = texts.random();
 	text = text.replace("%s", player.getName());
 	
-	return new this(callback, "img/reporter.png", text);
+	var card = Game.cards.random();
+	player.addCard(card);
+	
+	return new this(callback, "img/cards/" + card.getImage() + ".png", text);
 }
 
 Game.Info.showBuy = function(callback, player) {
@@ -107,6 +110,7 @@ Game.Info.prototype.init = function(callback, picture, text) {
 	this._node = OZ.DOM.elm("div", {id:"info", position:"absolute"});
 	
 	var img = OZ.DOM.elm("img", {src:picture});
+	this._event = OZ.Event.add(img, "load", this._load.bind(this));
 	this._node.appendChild(img);
 	
 	var p = OZ.DOM.elm("p", {innerHTML:text});
@@ -114,7 +118,7 @@ Game.Info.prototype.init = function(callback, picture, text) {
 	
 	document.body.appendChild(this._node);
 	
-	new Game.Border(this._node);
+	this._border = new Game.Border(this._node);
 	
 	var win = OZ.DOM.win(true);
 	var w = this._node.offsetWidth;
@@ -138,4 +142,9 @@ Game.Info.prototype.handleInput = function(type, param) {
 		break;
 	}
 	return true;
+}
+
+Game.Info.prototype._load = function() {
+	this._border.update();
+	OZ.Event.remove(this._event);
 }

@@ -76,7 +76,6 @@ body {
 
 #info { 
 	width: 600px;
-	height: 102px;
 	padding: 18px;
 	color: #3a1600;
 	font-weight: bold;
@@ -98,6 +97,12 @@ body {
 	position: fixed;
 	right: 30px;
 	top: 0px;
+}
+
+#status #cards {
+	text-align: center;
+	margin-top: 10px;
+	position: relative;
 }
 
 #status #bottom {
