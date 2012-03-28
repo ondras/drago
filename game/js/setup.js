@@ -21,8 +21,8 @@ Game.Setup.prototype.init = function() {
 Game.Setup.prototype._build = function() {
 	this._node = OZ.DOM.elm("div", {id:"setup", position:"relative"});
 	
-	var offsetX = [118, 554];
-	var offsetY = 70;
+	var offsetX = [112, 548];
+	var offsetY = 33;
 
 	for (var i=0;i<this._players.length;i++) {
 		var p = this._players[i];
@@ -43,7 +43,7 @@ Game.Setup.prototype._build = function() {
 	
 	OZ.Touch.onActivate(this._node, this._click.bind(this));
 	
-	var done = OZ.DOM.elm("img", {src:"img/setup/start.png", position:"absolute", title:"Race!", alt:"Race!"});
+	var done = OZ.DOM.elm("img", {src:"img/setup/start.png", title:"Race!", alt:"Race!"});
 	this._node.appendChild(done);
 	OZ.Touch.onActivate(done, this._done.bind(this));
 }

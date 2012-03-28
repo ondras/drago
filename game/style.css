@@ -12,10 +12,9 @@ body {
 }
 
 #setup {
-	width: 967px;
-	height: 741px;
-	background-image: url(img/setup/bg.png);
-	margin: auto;
+	width: 961px;
+	height: 580px;
+	background-image: url(img/setup/bg2.png);
 }
 
 #setup div, #setup img {
@@ -23,14 +22,15 @@ body {
 }
 
 #setup img {
+	position: fixed;
 	bottom: 40px;
-	left: 431px;
+	right: 40px;
 }
 
 #setup img:hover {
 	border: 2px solid red;
 	bottom: 38px;
-	left: 429px;
+	right: 38px;
 }
 
 #setup input {
