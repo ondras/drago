@@ -102,7 +102,7 @@ Game.play = function() {
 	document.body.appendChild(this.port.getContainer());
 	document.body.appendChild(this.status.getContainer());
 	this.port.sync();
-	this._initDebug();
+	//this._initDebug();
 	this.engine.start();
 
 	OZ.Audio.background.queue = ["G0", "G1", "G2", "G3", "G4", "G5"].randomize();

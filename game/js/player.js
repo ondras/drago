@@ -96,8 +96,12 @@ Game.Player.prototype.handleInput = function(type, param) {
 	if (this._turnStart) {
 		switch (type) {
 			case Game.INPUT_ENTER:
-				var type = Math.floor(Math.random()*5) + 1;
-				Game.Slot.roll1(this.moveBy.bind(this));
+			case Game.INPUT_ESC:
+			case Game.INPUT_LEFT:
+			case Game.INPUT_RIGHT:
+			case Game.INPUT_UP:
+			case Game.INPUT_DOWN:
+				new Game.Menu(this);
 			break;
 			default:
 				return false;

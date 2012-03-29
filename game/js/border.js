@@ -1,10 +1,10 @@
 Game.Border = OZ.Class();
-Game.Border.prototype.init = function(node) {
+Game.Border.prototype.init = function(node, name, size) {
 	this._node = node;
 	this._parts = [];
-	this._size = 8;
-
-	var name = "B";
+	this._size = size || 8;
+	var name = name || "B";
+	
 	for (var i=1;i<9;i++) {
 		var div = OZ.DOM.elm("div", {position:"absolute", backgroundImage:"url(img/border/"+name+i+".png)"});
 		
