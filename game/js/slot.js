@@ -1,6 +1,6 @@
-Game.Slot = OZ.Class().extend(HAF.Actor).implement(Game.IInputHandler);
+Game.Slot = OZ.Class().extend(HAF.Actor).implement(Game.IInputHandler).implement(Game.IAsync);
 
-Game.Slot.roll1 = function(callback, abortCallback) {
+Game.Slot.roll1 = function() {
 	var conf = {
 		size: [256, 265],
 		bg: "img/slot/bg1.png",
@@ -10,10 +10,10 @@ Game.Slot.roll1 = function(callback, abortCallback) {
 		],
 		animations: []
 	};
-	new this(callback, abortCallback, conf);
+	return new this(conf);
 }
 
-Game.Slot.roll2 = function(callback, abortCallback) {
+Game.Slot.roll2 = function() {
 	var conf = {
 		size: [320, 265],
 		bg: "img/slot/bg2.png",
@@ -24,10 +24,10 @@ Game.Slot.roll2 = function(callback, abortCallback) {
 		],
 		animations: []
 	};
-	new this(callback, abortCallback, conf);
+	return new this(conf);
 }
 
-Game.Slot.roll3 = function(callback, abortCallback) {
+Game.Slot.roll3 = function() {
 	var conf = {
 		size: [384, 265],
 		bg: "img/slot/bg3.png",
@@ -47,10 +47,10 @@ Game.Slot.roll3 = function(callback, abortCallback) {
 			}
 		]
 	};
-	new this(callback, abortCallback, conf);
+	return new this(conf);
 }
 
-Game.Slot.roll4 = function(callback, abortCallback) {
+Game.Slot.roll4 = function() {
 	var conf = {
 		size: [384, 265],
 		bg: "img/slot/bg4.png",
@@ -71,10 +71,10 @@ Game.Slot.roll4 = function(callback, abortCallback) {
 			}
 		]
 	};
-	new this(callback, abortCallback, conf);
+	return new this(conf);
 }
 
-Game.Slot.roll5 = function(callback, abortCallback) {
+Game.Slot.roll5 = function() {
 	var conf = {
 		size: [384, 265],
 		bg: "img/slot/bg5.png",
@@ -108,12 +108,11 @@ Game.Slot.roll5 = function(callback, abortCallback) {
 			}
 		]
 	};
-	new this(callback, abortCallback, conf);
+	return new this(conf);
 }
 
-Game.Slot.prototype.init = function(callback, abortCallback, conf) {
-	this._callback = callback;
-	this._abortCallback = abortCallback;
+Game.Slot.prototype.init = function(conf) {
+	this._cb = {done:null, abort:null};
 	this._conf = conf;
 
 	this._audio = null;
@@ -183,7 +182,7 @@ Game.Slot.prototype.handleInput = function(type, param) {
 			if (this._phase == 2) { this._finish(); }
 		break;
 		case Game.INPUT_ESC:
-			if (this._phase == 0 || this._phase == 2) { this._finish(); }
+			if (this._cb.abort && (this._phase == 0 || this._phase == 2)) { this._finish(); }
 		break;
 		default:
 			return false;
@@ -234,6 +233,6 @@ Game.Slot.prototype._finish = function() {
 	Game.engine.removeActor(this, Game.LAYER_SLOT);
 	Game.engine.setSize([0, 0], Game.LAYER_SLOT);
 	
-	var cb = (this._phase == 0 ? this._abortCallback : this._callback);
+	var cb = (this._phase == 0 ? this._cb.abort : this._cb.done);
 	if (cb) { cb(this._score); }
 }

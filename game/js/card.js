@@ -20,7 +20,7 @@ Game.Card.Slot.prototype.play = function(owner) {
 	var cb = function(turns) {
 		owner.moveBy(turns);
 	}
-	Game.Slot["roll" + this._count](cb);
+	Game.Slot["roll" + this._count]().onDone(cb);
 }
 
 Game.Card.Move = OZ.Class().extend(Game.Card);

@@ -1,6 +1,8 @@
-Game.Menu = OZ.Class().implement(Game.IInputHandler);
+Game.Menu = OZ.Class().implement(Game.IInputHandler).implement(Game.IAsync);
 Game.Menu.prototype.init = function(player) {
 	this._player = player;
+	this._cb = {done: null, abort: null};
+
 	this._node = OZ.DOM.elm("div", {id:"menu", position:"absolute"});
 	this._content = OZ.DOM.elm("div");
 	this._node.appendChild(this._content);
@@ -29,6 +31,7 @@ Game.Menu.prototype.handleInput = function(type, param) {
 		case Game.INPUT_ESC:
 			this._hide();
 			this._destroy();
+			if (this._cb.abort) { this._cb.abort(); }
 		break;
 		case Game.INPUT_ENTER:
 			this._go(this._current);
@@ -80,13 +83,19 @@ Game.Menu.prototype._go = function(id) {
 		case "slot":
 			this._hide();
 
-			Game.Slot.roll1(
-				this._slot.bind(this), 
-				this._restore.bind(this)
-			);
+			Game.Slot.roll1()
+				.onDone(this._slot.bind(this)) 
+				.onAbort(this._restore.bind(this));
 		break;
 		
 		case "card":
+			var cards = this._player.getCards();
+			if (!cards.length) { return; }
+			
+			this._hide();
+			new Game.CardList(cards)
+				.onDone(this._card.bind(this))
+				.onAbort(this._restore.bind(this));
 		break;
 		
 		case "save":
@@ -142,3 +151,8 @@ Game.Menu.prototype._slot = function(result) {
 	this._player.moveBy(result);
 }
 
+Game.Menu.prototype._card = function(card) {
+	this._destroy();
+	this._player.removeCard(card);
+	card.play(this._player);
+}

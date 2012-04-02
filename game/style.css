@@ -5,6 +5,14 @@ body {
 	color: #3a1600;
 }
 
+.card {
+	border: 2px solid transparent;
+}
+
+.card.active {
+	border: 2px solid red;
+}
+
 #loading {
 	color: white;
 	font-size: 200%;

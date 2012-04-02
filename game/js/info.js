@@ -1,7 +1,6 @@
+Game.Info = OZ.Class().implement(Game.IInputHandler).implement(Game.IAsync);
 
-Game.Info = OZ.Class().implement(Game.IInputHandler);
-
-Game.Info.showWin = function(callback, player) {
+Game.Info.showWin = function(player) {
 	var amount = 2000 + Math.round(Math.random()*8000); /* 2k-10k */
 	player.setMoney(player.getMoney() + amount);
 
@@ -26,10 +25,10 @@ Game.Info.showWin = function(callback, player) {
 	var text = texts.random();
 	text = text.replace("%s", player.getName());
 	text = text.replace("%s", Game.formatMoney(amount));
-	return new this(callback, "img/reporter.png", text);
+	return new this("img/reporter.png", text);
 }
 
-Game.Info.showLose = function(callback, player, amount) {
+Game.Info.showLose = function(player, amount) {
 	var amount = 4000 + Math.round(Math.random()*11000); /* 4k-15k */
 	player.setMoney(player.getMoney() - amount);
 
@@ -53,10 +52,10 @@ Game.Info.showLose = function(callback, player, amount) {
 	var text = texts.random();
 	text = text.replace("%s", player.getName());
 	text = text.replace("%s", Game.formatMoney(amount));
-	return new this(callback, "img/reporter.png", text);
+	return new this("img/reporter.png", text);
 }
 
-Game.Info.showCard = function(callback, player) {
+Game.Info.showCard = function(player) {
 	var texts = [
 		"Brilliant, %s! Your delightful display is justly rewarded, here, have a card!",
 		"I suppose you came here accidently on purpose, %s? You can't fool me y'know, go on, take a card!",
@@ -79,10 +78,10 @@ Game.Info.showCard = function(callback, player) {
 	var card = Game.cards.random();
 	player.addCard(card);
 	
-	return new this(callback, "img/cards/" + card.getImage() + ".png", text);
+	return new this("img/cards/" + card.getImage() + ".png", text);
 }
 
-Game.Info.showBuy = function(callback, player) {
+Game.Info.showBuy = function(player) {
 	var texts = [
 		"Hi there, %s! We're open for business &ndash; you can buy some cards if you like!",
 		"Got plenty of bread on you, %s? You have? Good, treat yourself to some cards! I kneed the dough.",
@@ -102,11 +101,11 @@ Game.Info.showBuy = function(callback, player) {
 	var text = texts.random();
 	text = text.replace("%s", player.getName());
 	
-	return new this(callback, "img/reporter.png", text);
+	return new this("img/reporter.png", text);
 }
 
-Game.Info.prototype.init = function(callback, picture, text) {
-	this._callback = callback;
+Game.Info.prototype.init = function(picture, text) {
+	this._cb = {done:null, abort:null};
 	this._node = OZ.DOM.elm("div", {id:"info", position:"absolute"});
 	
 	var img = OZ.DOM.elm("img", {src:picture});
@@ -135,7 +134,7 @@ Game.Info.prototype.handleInput = function(type, param) {
 		case Game.INPUT_ESC:
 			Game.keyboard.pop();
 			this._node.parentNode.removeChild(this._node);
-			this._callback();
+			if (this._cb.done) { this._cb.done(); }
 		break;
 		default:
 			return false;

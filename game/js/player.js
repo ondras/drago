@@ -54,6 +54,13 @@ Game.Player.prototype.addCard = function(card) {
 	return this;
 }
 
+Game.Player.prototype.removeCard = function(card) {
+	var index = this._cards.indexOf(card);
+	this._cards.splice(index, 1);
+	this.dispatch("player-change");
+	return this;
+}
+
 Game.Player.prototype.setMoney = function(money) {
 	this._money = money;
 	this.dispatch("player-change");
@@ -302,25 +309,27 @@ Game.Player.prototype._decideTurn = function() {
 	}
 	
 	var type = GRAPH[this._index].type;
+	var bound = this._endTurn.bind(this);
+	
 	switch (type) {
 		case "blue":
-			Game.Info.showWin(this._endTurn.bind(this), this);
+			Game.Info.showWin(this).onDone(bound);
 		break;
 
 		case "red":
-			Game.Info.showLose(this._endTurn.bind(this), this);
+			Game.Info.showLose(this).onDone(bound);
 		break;
 
 		case "yellow":
-			Game.Info.showCard(this._endTurn.bind(this), this);
+			Game.Info.showCard(this).onDone(bound);
 		break;
 
 		case "purple":
-			Game.Info.showBuy(this._endTurn.bind(this), this);
+			Game.Info.showBuy(this).onDone(bound);
 		break;
 		
 		default:
-			this._endTurn();
+			bound();
 		break;
 	}
 }
