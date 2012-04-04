@@ -108,7 +108,9 @@ Game.Player.prototype.handleInput = function(type, param) {
 			case Game.INPUT_RIGHT:
 			case Game.INPUT_UP:
 			case Game.INPUT_DOWN:
-				new Game.Menu(this);
+				this._disableControl();
+				new Game.Menu(this)
+					.onAbort(this._enableControl.bind(this));
 			break;
 			default:
 				return false;
@@ -132,8 +134,7 @@ Game.Player.prototype.handleInput = function(type, param) {
 		break;
 		case Game.INPUT_ENTER:
 			if (this._moves == 0) {
-				Game.keyboard.pop();
-				Game.movement.hide();
+				this._disableControl();
 				this._decideTurn();
 			}
 		break;
@@ -180,8 +181,7 @@ Game.Player.prototype.turn = function() {
 	this._turnStart = true;
 	this._path = [this._index];
 
-	Game.keyboard.push(this);
-	Game.movement.show(this, null);
+	this._enableControl();
 	this.dispatch("turn");
 }
 
@@ -211,16 +211,40 @@ Game.Player.prototype.moveBy = function(moves) {
 	this._turnStart = false;
 	this._moves = moves;
 	this.dispatch("player-change");
-	Game.movement.show(this, this._index);
+	
+	this._enableControl();
+}
+
+Game.Player.prototype._enableControl = function() {
+	Game.keyboard.push(this);
+	
+	if (this._turnStart) {
+		Game.movement.show(this, null); /* hide arrows */
+	} else {
+		Game.movement.show(this, this._index);
+	}
+	
+}
+
+Game.Player.prototype._disableControl = function() {
+	Game.keyboard.pop();
+	Game.movement.hide();
 }
 
 Game.Player.prototype._moveDirection = function(direction) {
 	if (this._target.index !== null) { return; } /* already moving */
 	var index = GRAPH[this._index].neighbors[direction];
 	if (index === null) { return; } /* edge does not exist */
-	if (this._moves == 0 && this._path[this._path.length-2] != index) { return; } /* can move only backwards */
 	
-	Game.movement.hide();
+	if (this._moves == 0) { /* when we have 0 moves, we can move only backwards */
+		var returningBack = (this._path[this._path.length-2] == index);
+		var returningThroughView = (GRAPH[index].type == "view" && this._path[this._path.length-2] == GRAPH[index].neighbors[direction]);
+		var forwardThroughView = (this._path[this._path.length-1] == index);
+		if (!returningBack && !returningThroughView && !forwardThroughView) { return; } /* forbidden */
+		
+	}
+	
+	this._disableControl();
 
 	this._target.index = index;
 	this._target.source = this._tile.clone();
@@ -238,12 +262,20 @@ Game.Player.prototype._moveDirection = function(direction) {
 Game.Player.prototype._arrived = function() {
 	this._flight = GRAPH[this._index].air;
 	this._updateImage();
-	if (this._path.length > 1 && this._path[this._path.length-2] == this._index) {
-		this._moves++;
-		this._path.pop();
-	} else {
-		this._moves--;
-		this._path.push(this._index);
+	
+	if (GRAPH[this._index].type != "view") { /* adjust moves and path */
+		var returnedFromView = (this._path[this._path.length-1] == this._index);
+		var returnedFromNode = (this._path.length > 1 && this._path[this._path.length-2] == this._index);
+	
+		if (returnedFromView) { /* nothing! */
+		} else if (returnedFromNode) {
+			this._moves++;
+			this._path.pop();
+		} else {
+			this._moves--;
+			this._path.push(this._index);
+		}
+		
 	}
 	
 	if (this._moves) {
@@ -253,7 +285,8 @@ Game.Player.prototype._arrived = function() {
 	}
 	
 	this.dispatch("player-change");
-	Game.movement.show(this, this._index);
+	
+	this._enableControl();
 }
 
 Game.Player.prototype._distance = function(tile1, tile2) {

@@ -117,6 +117,9 @@ Game.Status.prototype._setNode = function(player) {
 	if (node.name) {
 		this._dom.nodeType.innerHTML = node.name;
 		this._dom.nodeImage.style.display = "none";
+	} else if (node.type == "view") {
+		this._dom.nodeImage.style.display = "none";
+		this._dom.nodeType.innerHTML = "";
 	} else {
 		var map = {
 			"blue": "Win",
@@ -144,6 +147,7 @@ Game.Status.prototype._setMoves = function(player) {
 
 Game.Status.prototype._setRemain = function(player) {
 	var node = GRAPH[player.getIndex()];
+	if (node.type == "view") { return; } /* do not change distance on views */
 	var remain = node.distance;
 	this._setDigit(this._dom.remain[0], Math.floor(remain/10));
 	this._setDigit(this._dom.remain[1], remain%10);

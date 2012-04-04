@@ -4,6 +4,8 @@ Game.CardList.prototype.init = function(cards, parent) {
 	this._cb = {done: null, abort: null};
 	this._current = -1;
 	this._events = [];
+	var size = [130, 187];
+	var padding = 10;
 	
 	for (var i=0;i<cards.length;i++) {
 		var card = cards[i];
@@ -12,6 +14,31 @@ Game.CardList.prototype.init = function(cards, parent) {
 			card: card,
 			node: node
 		});
+		
+		if (!parent) { /* position within body */
+			node.style.position = "absolute";
+			var pos = OZ.DOM.pos(Game.port.getContainer());
+			var port = Game.port.getSize();
+			pos[0] += port[0]/2;
+			pos[1] += port[1]/2;
+			
+			var cardsInRow = Math.min(4, cards.length);
+			var rowWidth = cardsInRow * size[0] + padding * (cardsInRow-1);
+			pos[0] -= rowWidth/2;
+			
+			var cardOffset = i % 4;
+			pos[0] += cardOffset * (size[0] + padding);
+			
+			var cardsInCol = Math.ceil(cards.length/4);
+			var colHeight = cardsInCol * size[1] + padding * (cardsInCol-1);
+			pos[1] -= colHeight/2;
+			
+			var cardOffset = Math.floor(i/4);
+			pos[1] += cardOffset * (size[1] + padding);
+
+			node.style.left = Math.round(pos[0]) + "px";
+			node.style.top = Math.round(pos[1]) + "px";
+		}
 		
 		(parent || document.body).appendChild(node);
 	}

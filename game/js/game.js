@@ -62,6 +62,7 @@ Game.init = function() {
 	this._initAudio();
 	this._initEngine();
 	this._initCards();
+	this._initGraph();
 	
 	this.keyboard.push(this);
 
@@ -116,6 +117,12 @@ Game.createPlayer = function(type, name) {
 	player.setIndex(399);
 	player.addCard(this.cards[0]);
 	player.addCard(this.cards[1]);
+/*	player.addCard(this.cards[2]);
+	player.addCard(this.cards[3]);
+	player.addCard(this.cards[4]);
+	player.addCard(this.cards[5]);
+	player.addCard(this.cards[6]);
+	player.addCard(this.cards[7]); */
 }
 
 Game.formatMoney = function(money) {
@@ -161,4 +168,70 @@ Game._initCards = function() {
 	this.cards.push(new Game.Card.Move(4));
 	this.cards.push(new Game.Card.Move(5));
 	this.cards.push(new Game.Card.Move(6));
+}
+
+/**
+ * Merge views into graph
+ */
+Game._initGraph = function() {
+	for (var i=0;i<VIEWS.length;i++) {
+		var view = VIEWS[i];
+		var viewNode = {
+			x: view.x,
+			y: view.y,
+			air: 0,
+			neighbors: [null, null, null, null],
+			flight: [0, 0, 0, 0],
+			type: "view",
+			name: "",
+			text: view.text
+		};
+		
+		this._addViewNode(viewNode);
+		
+	}
+}
+
+Game._addViewNode = function(viewNode) {
+	var viewIndex = GRAPH.length;
+	GRAPH.push(viewNode);
+	
+	for (var i=0;i<viewIndex;i++) {
+		var node = GRAPH[i];
+		
+		if (node.x == viewNode.x) { /* vertical test */
+			if (node.y > viewNode.y && node.neighbors[0] !== null && GRAPH[node.neighbors[0]].y < viewNode.y) { /* test up */
+				this._insertViewNode(i, 0, viewIndex);
+			}
+			
+			if (node.y < viewNode.y && node.neighbors[2] !== null && GRAPH[node.neighbors[2]].y > viewNode.y) { /* test down */
+				this._insertViewNode(i, 2, viewIndex);
+			}
+		} else if (node.y == viewNode.y) { /* horizontal test */
+			if (node.x > viewNode.x && node.neighbors[3] !== null && GRAPH[node.neighbors[3]].x < viewNode.x) { /* test left */
+				this._insertViewNode(i, 3, viewIndex);
+			}
+			
+			if (node.x < viewNode.x && node.neighbors[1] !== null && GRAPH[node.neighbors[1]].x > viewNode.x) { /* test right */
+				this._insertViewNode(i, 1, viewIndex);
+			}
+		}
+		
+		
+	}
+	
+}
+
+/**
+ * Insert a new node + new edge
+ * @param {int} nodeIndex tested node
+ * @param {int} direction tested direction
+ * @param {int} viewIndex new node
+ */
+Game._insertViewNode = function(nodeIndex, direction, viewIndex) {
+	var viewNode = GRAPH[viewIndex];
+	var node = GRAPH[nodeIndex];
+	
+	viewNode.neighbors[direction] = node.neighbors[direction];
+	node.neighbors[direction] = viewIndex;
 }

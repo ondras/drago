@@ -58,6 +58,10 @@ Game.Race.prototype._computePath = function(index) {
 			if (neighbor === null) { continue; }
 			neighbor = GRAPH[neighbor];
 			
+			if (neighbor.type == "view") { /* views are not considered in this algorithm; skip them */
+				neighbor = GRAPH[neighbor.neighbors[i]];
+			}
+			
 			if (neighbor.distance > dist) { /* we can score better this way */
 				neighbor.distance = dist;
 				neighbor.path = [false, false, false, false];
@@ -67,6 +71,13 @@ Game.Race.prototype._computePath = function(index) {
 			if (neighbor.distance == dist) { /* same score */
 				var dir = (i+2) % 4;
 				neighbor.path[dir] = true;
+				
+				var test = GRAPH[neighbor.neighbors[dir]];
+				if (test.type == "view") { /* we skipped view; let's update its path */
+					test.path = [false, false, false, false];
+					test.path[dir] = true;
+				}
+				
 			}
 		} /* for all neighbors*/
 	}
