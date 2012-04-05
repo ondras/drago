@@ -1,5 +1,11 @@
 Game.Info = OZ.Class().implement(Game.IInputHandler).implement(Game.IAsync);
 
+Game.Info.showView = function(index) {
+	var viewNode = GRAPH[index];
+	var path = viewNode.x + "_" + viewNode.y;
+	return new this("img/views/"+path+".png", viewNode.text);
+}
+
 Game.Info.showWin = function(player) {
 	var amount = 2000 + Math.round(Math.random()*8000); /* 2k-10k */
 	player.setMoney(player.getMoney() + amount);

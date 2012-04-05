@@ -133,7 +133,10 @@ Game.Player.prototype.handleInput = function(type, param) {
 			this._moveDirection(2);
 		break;
 		case Game.INPUT_ENTER:
-			if (this._moves == 0) {
+			if (GRAPH[this._index].type == "view") {
+				this._disableControl();
+				Game.Info.showView(this._index).onDone(this._enableControl.bind(this));
+			} else if (this._moves == 0) {
 				this._disableControl();
 				this._decideTurn();
 			}
