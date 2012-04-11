@@ -30,9 +30,15 @@ body {
 	cursor: pointer;
 }
 
-#setup img {
+#setup img#start {
 	position: fixed;
 	bottom: 40px;
+	right: 40px;
+}
+
+#setup img#load {
+	position: fixed;
+	top: 40px;
 	right: 40px;
 }
 

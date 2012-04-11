@@ -98,7 +98,7 @@ Game._load = function(e) {
 	new Game.Setup();
 }
 
-Game.play = function() {
+Game.play = function(load) {
 	this.background.prepare();
 	document.body.appendChild(this.port.getContainer());
 	document.body.appendChild(this.status.getContainer());
@@ -108,7 +108,13 @@ Game.play = function() {
 
 	OZ.Audio.background.queue = ["G0", "G1", "G2", "G3", "G4", "G5"].randomize();
 	OZ.Audio.background.fadeOut();
-	this.race = Game.Race.createFrom(399);
+	
+	if (load) {
+		this.load();
+	} else {
+		this.race = Game.Race.createFrom(399);
+		this.race.start();
+	}
 }
 
 Game.createPlayer = function(type, name) {
@@ -127,6 +133,46 @@ Game.createPlayer = function(type, name) {
 
 Game.formatMoney = function(money) {
 	return (money < 0 ? "-" : "") + "$" + Math.abs(money).toString().replace(/(\d{1,3}(?=(\d{3})+(?!\d)))/g, "$1.");
+}
+
+Game.save = function() {
+	var data = this.toJSON();
+	localStorage.dragoSave = JSON.stringify(data);
+}
+
+Game.load = function() {
+	var data = localStorage.dragoSave;
+	if (!data) { alert("fixme no data"); }
+	data = JSON.parse(data);
+	
+	var size = this.port.getSize();
+	var offset = [data.center[0]-Math.round(size[0]/2), data.center[1]-Math.round(size[1]/2)];
+	this.port.setOffset(offset);
+	
+	this.month = data.month;
+	this.players = [];
+	for (var i=0;i<data.players.length;i++) {
+		var player = Game.Player.fromJSON(data.players[i]);
+		this.players.push(player);
+	}
+
+	this.race = Game.Race.fromJSON(data.race);
+}
+
+Game.toJSON = function() {
+	var obj = {};
+	obj.month = this.month;
+	obj.race = this.race.toJSON();
+	obj.players = [];
+	for (var i=0;i<this.players.length;i++) {
+		obj.players.push(this.players[i].toJSON());
+	}
+	
+	var offset = this.port.getOffset();
+	var size = this.port.getSize();
+	obj.center = [offset[0]+Math.round(size[0]/2), offset[1]+Math.round(size[1]/2)];
+	
+	return obj;
 }
 
 Game._initAudio = function() {

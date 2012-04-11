@@ -43,9 +43,13 @@ Game.Setup.prototype._build = function() {
 	
 	OZ.Touch.onActivate(this._node, this._click.bind(this));
 	
-	var done = OZ.DOM.elm("img", {src:"img/setup/start.png", title:"Race!", alt:"Race!"});
+	var done = OZ.DOM.elm("img", {id:"start", src:"img/setup/start.png", title:"Race!", alt:"Race!"});
 	this._node.appendChild(done);
 	OZ.Touch.onActivate(done, this._done.bind(this));
+
+	var load = OZ.DOM.elm("img", {id:"load", src:"img/setup/load.png", title:"Load a saved race", alt:"Load a saved race"});
+	this._node.appendChild(load);
+	OZ.Touch.onActivate(load, this._load.bind(this));
 }
 
 Game.Setup.prototype._click = function(e) {
@@ -79,5 +83,10 @@ Game.Setup.prototype._done = function(e) {
 	}
 
 	this._node.parentNode.removeChild(this._node);
-	Game.play();
+	Game.play(false);
+}
+
+Game.Setup.prototype._load = function(e) {
+	this._node.parentNode.removeChild(this._node);
+	Game.play(true);
 }

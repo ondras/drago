@@ -1,5 +1,22 @@
 Game.Player = OZ.Class().extend(Game.Animation).implement(Game.IInputHandler);
 Game.Player.FLIGHT_OFFSET = -24;
+
+Game.Player.fromJSON = function(data) {
+	var result = new this(data.type, data.name);
+
+	result._orientation = data.orientation;
+	result._moves = data.moves;
+	result._path = data.path;
+
+	result.setIndex(data.index);
+	result.setMoney(data.money);
+	for (var i=0;i<data.cards.length;i++) {
+		result.addCard(Game.cards[data.cards[i]]);
+	}
+	
+	return result;	
+}
+
 Game.Player.prototype.init = function(type, name) {
 	this._index = null;
 	this._type = type;
@@ -11,7 +28,6 @@ Game.Player.prototype.init = function(type, name) {
 	this._money = 30000;
 	this._path = [];
 	this._cards = [];
-	this._turnStart = false; /* turn just started */
 	this._speed = 10; /* tiles per second */
 	this._velocity = [
 		[ 0, -1],
@@ -42,6 +58,27 @@ Game.Player.prototype.init = function(type, name) {
 	Game.Animation.prototype.init.call(this, [0, 0], image, o);
 
 	this._animation.frames = 4;
+}
+
+Game.Player.prototype.toJSON = function() {
+	var obj = {
+		type: this._type,
+		name: this._name,
+		orientation: this._orientation,
+		index: this._index,
+		money: this._money,
+		moves: this._moves,
+		path: this._path,
+		cards: []
+	};
+	
+	for (var i=0;i<this._cards.length;i++) {
+		var card = this._cards[i];
+		var index = Game.cards.indexOf(card);
+		obj.cards.push(index);
+	}
+	
+	return obj;
 }
 
 Game.Player.prototype.getCards = function() {
@@ -100,17 +137,20 @@ Game.Player.prototype.getIndex = function() {
 }
 
 Game.Player.prototype.handleInput = function(type, param) {
-	if (this._turnStart) {
+	if (this._moves || this._path.length > 1) { /* already moving */
 		switch (type) {
+			case Game.INPUT_LEFT: this._moveDirection(3); break;
+			case Game.INPUT_RIGHT: this._moveDirection(1); break;	
+			case Game.INPUT_UP: this._moveDirection(0); break;
+			case Game.INPUT_DOWN: this._moveDirection(2); break;
 			case Game.INPUT_ENTER:
-			case Game.INPUT_ESC:
-			case Game.INPUT_LEFT:
-			case Game.INPUT_RIGHT:
-			case Game.INPUT_UP:
-			case Game.INPUT_DOWN:
-				this._disableControl();
-				new Game.Menu(this)
-					.onAbort(this._enableControl.bind(this));
+				if (GRAPH[this._index].type == "view") {
+					this._disableControl();
+					Game.Info.showView(this._index).onDone(this._enableControl.bind(this));
+				} else if (this._moves == 0) {
+					this._disableControl();
+					this._decideTurn();
+				}
 			break;
 			default:
 				return false;
@@ -119,27 +159,16 @@ Game.Player.prototype.handleInput = function(type, param) {
 		return true;
 	}
 	
-	switch (type) {
-		case Game.INPUT_LEFT:
-			this._moveDirection(3);
-		break;
-		case Game.INPUT_RIGHT:
-			this._moveDirection(1);
-		break;	
-		case Game.INPUT_UP:
-			this._moveDirection(0);
-		break;
-		case Game.INPUT_DOWN:
-			this._moveDirection(2);
-		break;
+	switch (type) { /* turn start */
 		case Game.INPUT_ENTER:
-			if (GRAPH[this._index].type == "view") {
-				this._disableControl();
-				Game.Info.showView(this._index).onDone(this._enableControl.bind(this));
-			} else if (this._moves == 0) {
-				this._disableControl();
-				this._decideTurn();
-			}
+		case Game.INPUT_ESC:
+		case Game.INPUT_LEFT:
+		case Game.INPUT_RIGHT:
+		case Game.INPUT_UP:
+		case Game.INPUT_DOWN:
+			this._disableControl();
+			new Game.Menu(this)
+				.onAbort(this._enableControl.bind(this));
 		break;
 		default:
 			return false;
@@ -181,7 +210,6 @@ Game.Player.prototype.turn = function() {
 	Game.engine.removeActor(this, Game.LAYER_PLAYERS);
 	Game.engine.addActor(this, Game.LAYER_PLAYERS);
 	
-	this._turnStart = true;
 	this._path = [this._index];
 
 	this._enableControl();
@@ -211,7 +239,6 @@ Game.Player.prototype.tick = function(dt) {
 }
 
 Game.Player.prototype.moveBy = function(moves) {
-	this._turnStart = false;
 	this._moves = moves;
 	this.dispatch("player-change");
 	
@@ -221,10 +248,10 @@ Game.Player.prototype.moveBy = function(moves) {
 Game.Player.prototype._enableControl = function() {
 	Game.keyboard.push(this);
 	
-	if (this._turnStart) {
-		Game.movement.show(this, null); /* hide arrows */
-	} else {
+	if (this._moves || this._path.length > 1) {
 		Game.movement.show(this, this._index);
+	} else {
+		Game.movement.show(this, null); /* hide arrows */
 	}
 	
 }

@@ -9,6 +9,15 @@ Game.Race.createFrom = function(start, firstPlayer) {
 	return new this(avail.random(), firstPlayer);
 }
 
+Game.Race.fromJSON = function(data) {
+	var race = new this(data.target, data.playerIndex);
+	var player = Game.players[data.playerIndex];
+	player.dispatch("turn");
+	/* FIXME neni nahore */
+	player._enableControl(); /* fixme */
+	return race;
+}
+
 Game.Race.prototype.init = function(target, firstPlayer) {
 	this._target = target;
 	this._playerIndex = firstPlayer || 0;
@@ -17,7 +26,17 @@ Game.Race.prototype.init = function(target, firstPlayer) {
 
 	this._computePath(target);
 	this.dispatch("race-ready");
-	
+}
+
+Game.Race.prototype.toJSON = function() {
+	var obj = {
+		target: this._target,
+		playerIndex: this._playerIndex
+	};
+	return obj;
+}
+
+Game.Race.prototype.start = function() {
 	this._playerTurn();
 }
 
