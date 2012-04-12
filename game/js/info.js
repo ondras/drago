@@ -113,9 +113,10 @@ Game.Info.showBuy = function(player) {
 Game.Info.prototype.init = function(picture, text) {
 	this._cb = {done:null, abort:null};
 	this._node = OZ.DOM.elm("div", {id:"info", position:"absolute"});
+	this._ec = [];
 	
 	var img = OZ.DOM.elm("img", {src:picture});
-	this._event = OZ.Event.add(img, "load", this._load.bind(this));
+	this._ec.push(OZ.Event.add(img, "load", this._load.bind(this)));
 	this._node.appendChild(img);
 	
 	var p = OZ.DOM.elm("p", {innerHTML:text});
@@ -132,6 +133,7 @@ Game.Info.prototype.init = function(picture, text) {
 	this._node.style.top = Math.round((win[1] - h)*0.3) + "px";
 
 	Game.keyboard.push(this);
+	this._ec.push(OZ.Touch.onActivate(this._node, this._activate.bind(this)));
 }
 
 Game.Info.prototype.handleInput = function(type, param) {
@@ -140,6 +142,7 @@ Game.Info.prototype.handleInput = function(type, param) {
 		case Game.INPUT_ESC:
 			Game.keyboard.pop();
 			this._node.parentNode.removeChild(this._node);
+			while (this._ec.length) { OZ.Event.remove(this._ec.pop()); }
 			if (this._cb.done) { this._cb.done(); }
 		break;
 		default:
@@ -147,6 +150,11 @@ Game.Info.prototype.handleInput = function(type, param) {
 		break;
 	}
 	return true;
+}
+
+Game.Info.prototype._activate = function(e) {
+	OZ.Event.stop(e);
+	this.handleInput(Game.INPUT_ENTER);
 }
 
 Game.Info.prototype._load = function() {

@@ -10,7 +10,8 @@ Game.Keyboard.prototype.init = function() {
 	this._codes[13] = Game.INPUT_ENTER;
 	this._codes[27] = Game.INPUT_ESC;
 	
-	OZ.Event.add(window, "keydown", this._keydown.bind(this));
+	OZ.Event.add(window, "keydown", this._keydown.bind(this)); /* FIXME window/document */
+	OZ.Touch.onActivate(document, this._activate.bind(this));
 }
 
 Game.Keyboard.prototype.push = function(handler) {
@@ -23,14 +24,28 @@ Game.Keyboard.prototype.pop = function() {
 	return this;
 }
 
+Game.Keyboard.prototype._process = function(type, code) {
+	var index = this._handlers.length;
+	while (index--) {
+		var result = this._handlers[index].handleInput(type, code);
+		if (result) { return; }
+	}
+}
+
 Game.Keyboard.prototype._keydown = function(e) {
 	var code = e.keyCode;
 	var type = (code in this._codes ? this._codes[code] : Game.INPUT_KEY);
-	
-	var index = this._handlers.length-1;
-	while (index >= 0) {
-		var result = this._handlers[index].handleInput(type, code);
-		if (result) { return; }
-		index--;
+	this._process(type, code);
+}
+
+/* click/touch outside map => escape */
+Game.Keyboard.prototype._activate = function(e) {
+	var node = OZ.Event.target(e);
+	var stop = Game.port.getContainer();
+	while (node) {
+		if (node == stop) { return; }
+		node = node.parentNode;
 	}
+	
+	this._process(Game.INPUT_ESC);
 }

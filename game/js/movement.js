@@ -26,7 +26,7 @@ Game.Movement.prototype.init = function() {
 	}
 
 	OZ.Event.add(null, "port-change", this._updatePosition.bind(this));
-	OZ.Touch.onActivate(this._dom.container, this._touch.bind(this));
+	OZ.Touch.onActivate(this._dom.container, this._activate.bind(this));
 }
 
 /**
@@ -58,7 +58,8 @@ Game.Movement.prototype.hide = function() {
 	this._dom.container.parentNode.removeChild(this._dom.container);
 }
 
-Game.Movement.prototype._touch = function(e) {
+Game.Movement.prototype._activate = function(e) {
+	OZ.Event.stop(e);
 	var node = OZ.Event.target(e);
 	var index = this._dom.dir.indexOf(node);
 	var inputTypes = [Game.INPUT_UP, Game.INPUT_RIGHT, Game.INPUT_DOWN, Game.INPUT_LEFT];

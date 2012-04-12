@@ -10,8 +10,13 @@ body.setup {
 	background-image: url(img/setup/paper.png);
 }
 
+#haf .slot {
+	cursor: pointer;
+}
+
 .card {
 	border: 2px solid transparent;
+	cursor: pointer;
 }
 
 .card.active {
@@ -109,6 +114,7 @@ body.setup {
 	padding: 18px;
 	font-weight: bold;
 	background-image: url(img/paper.png);
+	cursor: pointer;
 }
 
 #info img {

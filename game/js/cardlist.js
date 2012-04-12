@@ -10,6 +10,9 @@ Game.CardList.prototype.init = function(cards, parent) {
 	for (var i=0;i<cards.length;i++) {
 		var card = cards[i];
 		var node = OZ.DOM.elm("img", {className:"card", src:"img/cards/" + card.getImage() +".png"});
+		
+		this._events.push(OZ.Touch.onActivate(node, this._activate.bind(this)));
+		
 		this._cards.push({
 			card: card,
 			node: node
@@ -81,6 +84,18 @@ Game.CardList.prototype._select = function(index) {
 	if (this._current != -1) { OZ.DOM.removeClass(this._cards[this._current].node, "active"); }
 	this._current = index;
 	OZ.DOM.addClass(this._cards[this._current].node, "active");
+}
+
+Game.CardList.prototype._activate = function(e) {
+	OZ.Event.stop(e);
+	var target = OZ.Event.target(e);
+	var card = null;
+	for (var i=0;i<this._cards.length;i++) {
+		var item = this._cards[i];
+		if (item.node == target) { card = item.card; }
+	}
+	this._close();
+	this._cb.done(card);
 }
 
 Game.CardList.prototype._close = function() {

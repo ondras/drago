@@ -22,6 +22,7 @@ OZ.Touch = {
 	touches: function(e) {
 		return (e.touches ? e.touches.length : 0);
 	},
+
 	pos: function(e) {
 		var event = (this.touches(e) ? e.touches[0] : e);
 		return [event.clientX, event.clientY];

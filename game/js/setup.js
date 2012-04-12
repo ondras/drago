@@ -58,6 +58,7 @@ Game.Setup.prototype._build = function() {
 }
 
 Game.Setup.prototype._click = function(e) {
+	OZ.Event.stop(e);
 	var target = OZ.Event.target(e);
 	for (var i=0;i<this._players.length;i++) {
 		var player = this._players[i];
@@ -75,6 +76,7 @@ Game.Setup.prototype._sync = function(player) {
 }
 
 Game.Setup.prototype._done = function(e) {
+	OZ.Event.stop(e);
 	var count = 0;
 	for (var i=0;i<this._players.length;i++) {
 		var p = this._players[i];
@@ -97,6 +99,7 @@ Game.Setup.prototype._close = function() {
 }
 
 Game.Setup.prototype._load = function(e) {
+	OZ.Event.stop(e);
 	this._close();
 	Game.play(true);
 }

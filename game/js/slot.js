@@ -136,6 +136,7 @@ Game.Slot.prototype.init = function(conf) {
 	Game.engine.addActor(this, Game.LAYER_SLOT);
 	
 	Game.keyboard.push(this);
+	this._eventActivate = OZ.Touch.onActivate(layer, this._activate.bind(this));
 }
 
 Game.Slot.prototype.tick = function(dt) {
@@ -191,6 +192,11 @@ Game.Slot.prototype.handleInput = function(type, param) {
 	return true;
 }
 
+Game.Slot.prototype._activate = function(e) {
+	OZ.Event.stop(e);
+	this.handleInput(Game.INPUT_ENTER);
+}
+
 Game.Slot.prototype._handStart = function(e) {
 	OZ.Event.remove(this._event);
 	setTimeout(this._stop.bind(this), 1500);
@@ -232,6 +238,8 @@ Game.Slot.prototype._finish = function() {
 	Game.keyboard.pop();
 	Game.engine.removeActor(this, Game.LAYER_SLOT);
 	Game.engine.setSize([0, 0], Game.LAYER_SLOT);
+	
+	OZ.Event.remove(this._eventActivate);
 	
 	var cb = (this._phase == 0 ? this._cb.abort : this._cb.done);
 	if (cb) { cb(this._score); }

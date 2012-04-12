@@ -110,6 +110,7 @@ Game.Menu.prototype._go = function(id) {
  * Touch/click
  */
 Game.Menu.prototype._activate = function(e) {
+	OZ.Event.stop(e);
 	var id = this._nodeToID(OZ.Event.target(e));
 	if (!id) { return; }
 	this._go(id);
