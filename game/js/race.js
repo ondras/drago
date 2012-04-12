@@ -66,6 +66,7 @@ Game.Race.prototype._computePath = function(index) {
 	
 	var target = GRAPH[index];
 	target.distance = 0;
+	target.path = [false, false, false, false];
 	var TODO = [target];
 	
 	while (TODO.length) { /* there are nodes remaining */

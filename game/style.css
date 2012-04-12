@@ -3,6 +3,11 @@ body {
 	background-image: url(img/wood2.jpg);
 	font-family: sans-serif;
 	color: #3a1600;
+	overflow: hidden;
+}
+
+body.setup {
+	background-image: url(img/setup/paper.png);
 }
 
 .card {
@@ -21,9 +26,13 @@ body {
 }
 
 #setup {
-	width: 961px;
-	height: 580px;
-	background-image: url(img/setup/bg2.png);
+/*	width: 961px;
+	height: 580px; 
+	width: 928px;
+	height: 554px; */
+	width: 943px;
+	height: 562px;
+	background-image: url(img/setup/bg4.png);
 }
 
 #setup div, #setup img {
@@ -42,9 +51,15 @@ body {
 	right: 40px;
 }
 
-#setup img:hover {
+#setup img#start:hover {
 	border: 2px solid red;
 	bottom: 38px;
+	right: 38px;
+}
+
+#setup img#load:hover {
+	border: 2px solid red;
+	top: 38px;
 	right: 38px;
 }
 
@@ -114,9 +129,9 @@ body {
 }
 
 #status #cards {
-	text-align: center;
 	margin-top: 10px;
 	position: relative;
+	text-align: center;
 }
 
 #status #bottom {
@@ -198,4 +213,8 @@ body {
 	color: white;
 	padding-left: 20px;
 	width: 140px;
+}
+
+#menu .item.disabled, #menu .item.disabled.active {
+	color: #630;
 }

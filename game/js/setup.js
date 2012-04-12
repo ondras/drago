@@ -12,6 +12,7 @@ Game.Setup.prototype.init = function() {
 	];
 	
 	this._build();
+//	OZ.DOM.addClass(document.body, "setup");
 	document.body.appendChild(this._node);
 	
 	OZ.Audio.background.queue = ["I"];
@@ -23,6 +24,10 @@ Game.Setup.prototype._build = function() {
 	
 	var offsetX = [112, 548];
 	var offsetY = 33;
+	var offsetX = [94, 530];
+	var offsetY = 21;
+	var offsetX = [94, 530];
+	var offsetY = 19;
 
 	for (var i=0;i<this._players.length;i++) {
 		var p = this._players[i];
@@ -82,11 +87,16 @@ Game.Setup.prototype._done = function(e) {
 		if (p.active && p.name.value) { Game.createPlayer(p.type, p.name.value); }
 	}
 
-	this._node.parentNode.removeChild(this._node);
+	this._close();
 	Game.play(false);
 }
 
-Game.Setup.prototype._load = function(e) {
+Game.Setup.prototype._close = function() {
+	OZ.DOM.removeClass(document.body, "setup");
 	this._node.parentNode.removeChild(this._node);
+}
+
+Game.Setup.prototype._load = function(e) {
+	this._close();
 	Game.play(true);
 }

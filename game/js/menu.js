@@ -13,7 +13,7 @@ Game.Menu.prototype.init = function(player) {
 	
 	this._addItem("slot", "Slot Machine");
 	this._addItem("card", "Use Card", player.getCards().length == 0);
-	this._addItem("save", "Save Game", true);
+	this._addItem("save", "Save Game");
 	this._hover("slot");
 	
 	this._events.push(OZ.Touch.onActivate(this._node, this._activate.bind(this)));
@@ -99,7 +99,9 @@ Game.Menu.prototype._go = function(id) {
 		break;
 		
 		case "save":
-			alert("Not implemented FIXME");
+			Game.save();
+			this._hide();
+			this._destroy();
 		break;
 	}
 }

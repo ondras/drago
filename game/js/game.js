@@ -121,14 +121,7 @@ Game.createPlayer = function(type, name) {
 	var player = new Game.Player(type, name);
 	this.players.push(player);
 	player.setIndex(399);
-	player.addCard(this.cards[0]);
-	player.addCard(this.cards[1]);
-/*	player.addCard(this.cards[2]);
-	player.addCard(this.cards[3]);
-	player.addCard(this.cards[4]);
-	player.addCard(this.cards[5]);
-	player.addCard(this.cards[6]);
-	player.addCard(this.cards[7]); */
+	player.addCard(this.cards.random());
 }
 
 Game.formatMoney = function(money) {
