@@ -3,13 +3,24 @@
 var SBS = require("./lib/sbs");
 var GD = require("gd");
 var FS = require("fs");
+var GO = require("getopt");
 
-if (system.args.length < 2) {
+var options = new GO.GetOpt();
+options.add("transparent", "Transparent byte", 0, "t", "transparent", GO.GetOpt.REQUIRED_ARGUMENT);
+
+try {
+	options.parse(system.args);
+	var args = options.get().slice(1);
+} catch (e) {
+	system.stdout.writeLine(options.help());
+}
+
+if (args.length < 1) {
 	system.stdout.writeLine("no SBS file specified, exitting");
 	exit();
 }
 
-var file = system.args[1];
+var file = args[0];
 var base = file.split(".");
 base.pop();
 base = base.join(".");
@@ -20,7 +31,7 @@ if (dir.exists()) {
 }
 dir.create();
 
-var sbs = new SBS.SBS(file);
+var sbs = new SBS.SBS(file, options.get("transparent"));
 
 var records = sbs.getRecords();
 for (var i=0;i<records.length;i++) {

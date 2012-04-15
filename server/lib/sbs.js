@@ -22,10 +22,11 @@ var FS = require("fs");
 var File = require("./file");
 var GD = require("gd");
 
-var SBS = function(file) {
+var SBS = function(file, transparentByte) {
 	this._data = new File.File(file);
 	this._records = [];
 	this._palette = [];
+	this._transparent = transparentByte || 0;
 	
 	var palName = module.id.split("/");
 	palName.pop();
@@ -48,7 +49,7 @@ var SBS = function(file) {
 	for (var i=0;i<count;i++) {
 		var str = this._data.getString(10);
 		var offset = this._data.getBytes(4);
-		var record = new Record(this._data, this._palette, str, offset);
+		var record = new Record(this._data, this._palette, str, offset, this._transparent);
 		this._records.push(record);
 	}
 	
@@ -61,12 +62,13 @@ SBS.prototype.getRecords = function() {
 	return this._records;
 }
 
-var Record = function(data, palette, name, offset) {
+var Record = function(data, palette, name, offset, transparent) {
 	this._data = data;
 	this._name = name;
 	this._image = null;
 	this._offset = offset;
 	this._palette = palette;
+	this._transparent = transparent;
 }
 
 Record.prototype.getName = function() {
@@ -100,12 +102,13 @@ Record.prototype.parse = function() {
 	
 	var padding = (4-(width%4)) % 4;
 	
+	var transparent = this._
 	for (var j=0;j<height;j++) {
 		for (var i=0;i<width;i++) {
 			var byte = this._data.getByte();
 			/* 0 = transparent */
 			
-			if (!byte) { continue; }
+			if (byte == this._transparent) { continue; }
 			
 			this._image.setPixel(i, height-j-1, colors[byte]);
 			
