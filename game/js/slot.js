@@ -130,10 +130,11 @@ Game.Slot.prototype.init = function(conf) {
 	this._digitSizeBig = [22, 32];
 	this._digitsBig = HAF.Sprite.get("img/slot/digits-big.png", [this._digitSizeBig[0], 10*this._digitSizeBig[1]], 0, true);
 
-	var layer = Game.engine.getLayer(Game.LAYER_SLOT);
+	var layer = Game.engine.getLayer(Game.LAYER_WIN);
+	layer.style.top = "0px";
 	layer.style.left = (Game.port.getSize()[0] - conf.size[0])/2 + "px";
-	Game.engine.setSize(conf.size, Game.LAYER_SLOT);
-	Game.engine.addActor(this, Game.LAYER_SLOT);
+	Game.engine.setSize(conf.size, Game.LAYER_WIN);
+	Game.engine.addActor(this, Game.LAYER_WIN);
 	
 	Game.keyboard.push(this);
 	this._eventActivate = OZ.Touch.onActivate(layer, this._activate.bind(this));
@@ -224,10 +225,10 @@ Game.Slot.prototype._stop = function() {
 	if (this._conf.counters.length) {
 		setTimeout(this._stop.bind(this), 500);
 	} else {
-		Game.engine.removeActor(this._blur, Game.LAYER_SLOT);
+		Game.engine.removeActor(this._blur, Game.LAYER_WIN);
 		if (this._audio) { this._audio.pause(); }
 		while (this._animations.length) {
-			Game.engine.removeActor(this._animations.pop(), Game.LAYER_SLOT);
+			Game.engine.removeActor(this._animations.pop(), Game.LAYER_WIN);
 		}
 		this._phase = 2;
 		/* fixme mouse, touch */
@@ -236,8 +237,8 @@ Game.Slot.prototype._stop = function() {
 
 Game.Slot.prototype._finish = function() {
 	Game.keyboard.pop();
-	Game.engine.removeActor(this, Game.LAYER_SLOT);
-	Game.engine.setSize([0, 0], Game.LAYER_SLOT);
+	Game.engine.removeActor(this, Game.LAYER_WIN);
+	Game.engine.setSize([0, 0], Game.LAYER_WIN);
 	
 	OZ.Event.remove(this._eventActivate);
 	

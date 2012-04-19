@@ -22,7 +22,7 @@ var Game = {
 	LAYER_BG		: "bg",
 	LAYER_PLAYERS	: "players",
 	LAYER_TOP		: "top",
-	LAYER_SLOT		: "slot",
+	LAYER_WIN		: "win",
 	TILE			: 16,
 
 	INPUT_KEY		: 0,
@@ -177,8 +177,8 @@ Game._initEngine = function() {
 	this.engine.addLayer(this.LAYER_BG, {clear:HAF.CLEAR_NONE, dirty:HAF.DIRTY_CHANGED});
 	this.engine.addLayer(this.LAYER_PLAYERS, {clear:HAF.CLEAR_ACTORS, dirty:HAF.DIRTY_CHANGED});
 	this.engine.addLayer(this.LAYER_TOP, {clear:HAF.CLEAR_ACTORS, dirty:HAF.DIRTY_CHANGED});
-	this.engine.addLayer(this.LAYER_SLOT, {clear:HAF.CLEAR_NONE, dirty:HAF.DIRTY_ALL, sync:false});
-	this.engine.setSize([0, 0,], this.LAYER_SLOT);
+	this.engine.addLayer(this.LAYER_WIN, {clear:HAF.CLEAR_NONE, dirty:HAF.DIRTY_ALL, sync:false});
+	this.engine.setSize([0, 0,], this.LAYER_WIN);
 }
 
 Game._initDebug = function() {

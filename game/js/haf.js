@@ -538,7 +538,6 @@ HAF.Sprite.prototype.draw = function(context) {
 	var position = this._getSourceImagePosition();
 	position[0] *= this._sprite.size[0];
 	position[1] *= this._sprite.size[1];
-
 	context.drawImage(
 		this._sprite.image, 
 		position[0], position[1], this._sprite.size[0], this._sprite.size[1], 
@@ -550,6 +549,10 @@ HAF.Sprite.prototype.getBox = function() {
 		[this._sprite.position[0]-this._sprite.size[0]/2, this._sprite.position[1]-this._sprite.size[1]/2],
 		this._sprite.size
 	];
+}
+HAF.Sprite.prototype.setPosition = function(position) {
+	this._sprite.position = position;
+	return this;
 }
 HAF.Sprite.prototype._getSourceImagePosition = function() {
 	return [0, 0];

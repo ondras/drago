@@ -8,7 +8,7 @@ Game.Slot.Hand.prototype.init = function() {
 	HAF.AnimatedSprite.prototype.init.call(this, image, size, {frames:frames, loop:false, fps:14});
 	this._sprite.position = [size[0]/2 + 22, size[1]/2 + 112];
 
-	Game.engine.addActor(this, Game.LAYER_SLOT);
+	Game.engine.addActor(this, Game.LAYER_WIN);
 }
 Game.Slot.Hand.prototype.tick = function(dt) {
 	var oldFrame = this._animation.frame;
@@ -24,5 +24,5 @@ Game.Slot.Hand.prototype._getSourceImagePosition = function() {
 }
 Game.Slot.Hand.prototype._stop = function() {
 	HAF.AnimatedSprite.prototype._stop.call(this);
-	Game.engine.removeActor(this, Game.LAYER_SLOT);
+	Game.engine.removeActor(this, Game.LAYER_WIN);
 }
