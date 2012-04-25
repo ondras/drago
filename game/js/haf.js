@@ -649,6 +649,9 @@ HAF.AnimatedSprite.prototype._stop = function() {
 	this._animation.frame = this._animation.frames - 1;
 	this.dispatch("stop");
 }
+HAF.AnimatedSprite.prototype._getSourceImagePosition = function() {
+	return [0, this._animation.frame];
+}
 
 /**
  * Particle, suitable for particle fx

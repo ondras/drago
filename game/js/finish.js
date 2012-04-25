@@ -39,22 +39,74 @@ Game.Finish.prototype.init = function(player) {
 			frames: 1
 		}, 
 		{
+			name: "DUO",
+			size: [64, 66],
+			pos: [339, 221],
+			frames: 12
+		},
+		{
+			name: "FL",
+			size: [50, 81],
+			pos: [130, 206],
+			frames: 9
+		},
+		{
+			name: "GE",
+			size: [29, 69],
+			pos: [25, 214],
+			frames: 15
+		},
+		{
+			name: "HA",
+			size: [48, 104],
+			pos: [79, 182],
+			frames: 12
+		},
+		{
+			name: "JZ",
+			size: [34, 93],
+			pos: [180, 189],
+			frames: 11
+		},
+		{
+			name: "PA",
+			size: [69, 34],
+			pos: [405, 175],
+			frames: 12
+		},
+
+
+
+		{
 			name: "BAL",
 			size: [78, 80],
 			pos: [175, 280],
 			frames: 12
 		},
+		{
+			name: "FR",
+			size: [37, 64],
+			pos: [78, 296],
+			frames: 10
+		},
+		{
+			name: "HUT",
+			size: [54, 56],
+			pos: [269, 304],
+			frames: 12
+		}
+
 	];
 	for (var i=0;i<sprites.length;i++) {
 		var def = sprites[i];
 		var path = "img/finish/" + (def.frames == 1 ? "static" : "sprites") + "/" + def.name + ".png";
 		var size = [def.size[0], def.size[1]*def.frames];
 		var image = HAF.Sprite.get(path, size, 0, true);
-		def.pos[0] += def.size[0]/2;
+		image.getContext("2d").globalAlpha = 0.5;
+		def.pos[0] += def.size[0]/2
 		def.pos[1] += def.size[1]/2;
 		
 		var sprite = (def.frames == 1 ? new HAF.Sprite(image, def.size) : new HAF.AnimatedSprite(image, def.size, {frames:def.frames}));
-		if (sprite instanceof HAF.AnimatedSprite) { sprite._getSourceImagePosition = function() { return [0, this._animation.frame]; }; }
 
 		sprite.setPosition(def.pos);
 		this._sprites.push(sprite);
