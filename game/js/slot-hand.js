@@ -19,9 +19,6 @@ Game.Slot.Hand.prototype.tick = function(dt) {
 	
 	return changed;
 }
-Game.Slot.Hand.prototype._getSourceImagePosition = function() {
-	return [0, this._animation.frame];
-}
 Game.Slot.Hand.prototype._stop = function() {
 	HAF.AnimatedSprite.prototype._stop.call(this);
 	Game.engine.removeActor(this, Game.LAYER_WIN);

@@ -11,7 +11,7 @@ Game.Finish.prototype.init = function(player) {
 	var border = 8;
 	this._size[0] += 2*border;
 	this._size[1] += 2*border;
-	
+
 	var parent = OZ.DOM.elm("div", {position:"absolute", width:this._size[0]+"px", height:this._size[1]+"px"});
 	layer.parentNode.appendChild(parent);
 	parent.appendChild(layer);
@@ -26,18 +26,12 @@ Game.Finish.prototype.init = function(player) {
 	Game.engine.addActor(this, Game.LAYER_WIN);
 	this._sprites = [];
 	var sprites = [
-/*		{
+		{
 			name: "main",
 			size: [480, 360],
 			pos: [0, 0],
 			frames: 1
-		}, */
-		{
-			name: "debug",
-			size: [480, 360],
-			pos: [0, 0],
-			frames: 1
-		}, 
+		},
 		{
 			name: "DUO",
 			size: [64, 66],
@@ -74,7 +68,30 @@ Game.Finish.prototype.init = function(player) {
 			pos: [405, 175],
 			frames: 12
 		},
+		{
+			name: "PAUKE",
+			size: [76, 103],
+			pos: [209, 182],
+			frames: 4
+		},
+		{
+			name: "TUBA",
+			size: [72, 78],
+			pos: [267, 209],
+			frames: 4
+		},
+		{
+			name: "banner",
+			size: [65, 95],
+			pos: [6, 117],
+			frames: 1
+		},
 
+		{ /* player */
+			size: [195, 96],
+			pos: [480, 246],
+			frames: 3
+		},
 
 
 		{
@@ -94,20 +111,47 @@ Game.Finish.prototype.init = function(player) {
 			size: [54, 56],
 			pos: [269, 304],
 			frames: 12
+		},
+		{
+			name: "WI",
+			size: [49, 66],
+			pos: [29, 294],
+			frames: 12
+		},
+		{
+			name: "ZP",
+			size: [84, 60],
+			pos: [347, 300],
+			frames: 12
+		},
+		{
+			name: "pfahl",
+			size: [37, 278],
+			pos: [0, 82],
+			frames: 1
+		},
+		{
+			name: "lampe",
+			size: [31, 231],
+			pos: [117, 129],
+			frames: 1
 		}
 
 	];
 	for (var i=0;i<sprites.length;i++) {
 		var def = sprites[i];
-		var path = "img/finish/" + (def.frames == 1 ? "static" : "sprites") + "/" + def.name + ".png";
-		var size = [def.size[0], def.size[1]*def.frames];
-		var image = HAF.Sprite.get(path, size, 0, true);
-		image.getContext("2d").globalAlpha = 0.5;
+		
+		if (def.name) { /* sprite */
+			var path = "img/finish/" + (def.frames == 1 ? "static" : "sprites") + "/" + def.name + ".png";
+			var size = [def.size[0], def.size[1]*def.frames];
+			var image = HAF.Sprite.get(path, size, 0, true);
+			var sprite = (def.frames == 1 ? new HAF.Sprite(image, def.size) : new HAF.AnimatedSprite(image, def.size, {fps:8, frames:def.frames}));
+		} else { /* player */
+			var sprite = new Game.Finish.Player(player, def);
+		}
+		
 		def.pos[0] += def.size[0]/2
 		def.pos[1] += def.size[1]/2;
-		
-		var sprite = (def.frames == 1 ? new HAF.Sprite(image, def.size) : new HAF.AnimatedSprite(image, def.size, {frames:def.frames}));
-
 		sprite.setPosition(def.pos);
 		this._sprites.push(sprite);
 		Game.engine.addActor(sprite, Game.LAYER_WIN);
@@ -115,7 +159,6 @@ Game.Finish.prototype.init = function(player) {
 
 	Game.keyboard.push(this);
 	this._eventActivate = OZ.Touch.onActivate(layer, this._activate.bind(this));
-	window.s = this._sprites;
 }
 
 Game.Finish.prototype.tick = function(dt) {
@@ -123,7 +166,7 @@ Game.Finish.prototype.tick = function(dt) {
 }
 
 Game.Finish.prototype.draw = function(ctx) {
-//	ctx.drawImage(this._bg, 0, 0);
+	ctx.drawImage(this._bg, 0, 0);
 }
 
 Game.Finish.prototype.handleInput = function(type, param) {
@@ -146,11 +189,12 @@ Game.Finish.prototype._finish = function() {
 	while (this._sprites.length) { Game.engine.removeActor(this._sprites.shift(), Game.LAYER_WIN); }
 	
 	Game.engine.setSize([0, 0], Game.LAYER_WIN);
-
 	var layer = Game.engine.getLayer(Game.LAYER_WIN);
 	var parent = layer.parentNode;
 	parent.parentNode.appendChild(layer);
 	parent.parentNode.removeChild(parent);
+
+	OZ.Event.remove(this._eventActivate);
 
 	if (this._cb.done) { this._cb.done(); }
 }
