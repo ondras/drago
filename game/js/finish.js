@@ -1,4 +1,5 @@
 /* fixme audio */
+/* fixme obrazek mesta */
 Game.Finish = OZ.Class().extend(HAF.Actor).implement(Game.IInputHandler).implement(Game.IAsync);
 Game.Finish.prototype.init = function(player) {
 	this._cb = {done:null, abort:null};
