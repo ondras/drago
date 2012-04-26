@@ -110,6 +110,12 @@ Game.Info.showBuy = function(player) {
 	return new this("img/reporter.png", text);
 }
 
+Game.Info.showFinish = function(player) {
+	player.setMoney(player.getMoney() + 100000);
+	var text = "Winner is " + player.getName();
+	return new this("img/reporter.png", text);
+}
+
 Game.Info.prototype.init = function(picture, text) {
 	this._cb = {done:null, abort:null};
 	this._node = OZ.DOM.elm("div", {id:"info", position:"absolute"});

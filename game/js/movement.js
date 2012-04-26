@@ -31,24 +31,20 @@ Game.Movement.prototype.init = function() {
 
 /**
  * @param {Game.Player} player Where to show
- * @param {int || null} index Graph index; null = no arrows
+ * @param {int} index Graph index
  */
 Game.Movement.prototype.show = function(player, index) {
 	this._player = player;
 	Game.engine.getContainer().appendChild(this._dom.container);
 	this._updatePosition();
 	
-	if (index === null) {
-		for (var i=0;i<4;i++) { this._dom.dir[i].style.display = "none"; }
-	} else {
-		var node = GRAPH[index];
-		for (var i=0;i<4;i++) {
-			this._dom.dir[i].style.display = (node.neighbors[i] === null ? "none" : "");
-			if (node.path) {
-				this._dom.dir[i].style.opacity = (node.path[i] ? 1 : 0.5);
-			} else {
-				this._dom.dir[i].style.opacity = 1;
-			}
+	var node = GRAPH[index];
+	for (var i=0;i<4;i++) {
+		this._dom.dir[i].style.display = (node.neighbors[i] === null ? "none" : "");
+		if (node.path) {
+			this._dom.dir[i].style.opacity = (node.path[i] ? 1 : 0.5);
+		} else {
+			this._dom.dir[i].style.opacity = 1;
 		}
 	}
 }

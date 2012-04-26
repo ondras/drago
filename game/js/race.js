@@ -22,7 +22,7 @@ Game.Race.prototype.init = function(target, firstPlayer) {
 	this._target = target;
 	this._playerIndex = firstPlayer || 0;
 
-	OZ.Event.add(null, "turn-end", this._turnEnd.bind(this));
+	this._event = OZ.Event.add(null, "turn-end", this._turnEnd.bind(this));
 
 	this._computePath(target);
 	this.dispatch("race-ready");
@@ -38,6 +38,10 @@ Game.Race.prototype.toJSON = function() {
 
 Game.Race.prototype.start = function() {
 	this._playerTurn();
+}
+
+Game.Race.prototype.stop = function() {
+	OZ.Event.remove(this._event);
 }
 
 Game.Race.prototype.getTarget = function(index) {

@@ -1,7 +1,9 @@
+/* fixme audio */
 Game.Finish = OZ.Class().extend(HAF.Actor).implement(Game.IInputHandler).implement(Game.IAsync);
 Game.Finish.prototype.init = function(player) {
 	this._cb = {done:null, abort:null};
 	
+	this._player = player;
 	this._size = [480, 360];
 	this._bg = HAF.Sprite.get("img/finish/capitals/prague.png", [480, 240], 0, true);
 
@@ -195,8 +197,8 @@ Game.Finish.prototype._finish = function() {
 	parent.parentNode.removeChild(parent);
 
 	OZ.Event.remove(this._eventActivate);
-
-	if (this._cb.done) { this._cb.done(); }
+	
+	Game.Info.showFinish(this._player).onDone(this._cb.done);
 }
 
 Game.Finish.prototype._activate = function(e) {

@@ -247,13 +247,7 @@ Game.Player.prototype.moveBy = function(moves) {
 
 Game.Player.prototype._enableControl = function() {
 	Game.keyboard.push(this);
-	
-	if (this._moves || this._path.length > 1) {
-		Game.movement.show(this, this._index);
-	} else {
-		Game.movement.show(this, null); /* hide arrows */
-	}
-	
+	Game.movement.show(this, this._index);	
 }
 
 Game.Player.prototype._disableControl = function() {
@@ -366,8 +360,9 @@ Game.Player.prototype._isVisible = function(size) {
 }
 
 Game.Player.prototype._decideTurn = function() {
-	if (this._index == Game.race.getTarget()) {
-		/* FIXME won race! */
+
+	if (this._index == Game.race.getTarget()) { /* won race */
+		new Game.Finish(this).onDone(this._endRace.bind(this));
 		return;
 	}
 	
@@ -399,4 +394,14 @@ Game.Player.prototype._decideTurn = function() {
 
 Game.Player.prototype._endTurn = function() {
 	this.dispatch("turn-end");
+}
+
+Game.Player.prototype._endRace = function() {
+	Game.race.stop();
+	
+	var index = Game.players.indexOf(this);
+	
+	/* next player will start race */
+	Game.race = Game.Race.createFrom(this._index, (index+1) % Game.players.length);
+	Game.race.start();
 }
