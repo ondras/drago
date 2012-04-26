@@ -137,7 +137,6 @@ Game.save = function() {
 
 Game.load = function() {
 	var data = localStorage.dragoSave;
-	if (!data) { alert("fixme no data"); }
 	data = JSON.parse(data);
 	
 	var size = this.port.getSize();
@@ -181,6 +180,9 @@ Game._initEngine = function() {
 	this.engine.addLayer(this.LAYER_TOP, {clear:HAF.CLEAR_ACTORS, dirty:HAF.DIRTY_CHANGED});
 	this.engine.addLayer(this.LAYER_WIN, {clear:HAF.CLEAR_NONE, dirty:HAF.DIRTY_ALL, sync:false});
 	this.engine.setSize([0, 0,], this.LAYER_WIN);
+	
+	var layer = this.engine.getLayer(this.LAYER_WIN);
+	OZ.Touch.onStart(layer, OZ.Event.stop);
 }
 
 Game._initDebug = function() {

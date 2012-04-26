@@ -162,6 +162,10 @@ Game.Finish.prototype.init = function(player) {
 
 	Game.keyboard.push(this);
 	this._eventActivate = OZ.Touch.onActivate(layer, this._activate.bind(this));
+
+	this._oldQueue = OZ.Audio.background.queue;
+	OZ.Audio.background.queue = ["Z1"]; /* fixme Z2 je co? */
+	OZ.Audio.background.next();
 }
 
 Game.Finish.prototype.tick = function(dt) {
@@ -199,10 +203,16 @@ Game.Finish.prototype._finish = function() {
 
 	OZ.Event.remove(this._eventActivate);
 	
-	Game.Info.showFinish(this._player).onDone(this._cb.done);
+	Game.Info.showFinish(this._player).onDone(this._afterInfo.bind(this));
 }
 
 Game.Finish.prototype._activate = function(e) {
 	OZ.Event.stop(e);
 	this.handleInput(Game.INPUT_ENTER);
+}
+
+Game.Finish.prototype._afterInfo = function() {
+	OZ.Audio.background.queue = this._oldQueue;
+	OZ.Audio.background.fadeOut();
+	if (this._cb.done) { this._cb.done(); }
 }

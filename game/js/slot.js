@@ -231,7 +231,6 @@ Game.Slot.prototype._stop = function() {
 			Game.engine.removeActor(this._animations.pop(), Game.LAYER_WIN);
 		}
 		this._phase = 2;
-		/* fixme mouse, touch */
 	}
 }
 

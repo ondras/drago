@@ -104,7 +104,6 @@ Game.Status.prototype._setCards = function(player) {
 	OZ.DOM.clear(this._dom.cards);
 	for (var i=0;i<cards.length;i++) {
 		var img = OZ.DOM.elm("img", {position:"absolute", src:"img/cards/" + cards[i].getImage() + ".png"});
-		/* fixme position */
 		this._dom.cards.appendChild(img);
 		img.style.top = (3*i) + "px";
 		img.style.left = (img.offsetLeft - 65 - 3*i) + "px";

@@ -52,9 +52,11 @@ Game.Setup.prototype._build = function() {
 	this._node.appendChild(done);
 	OZ.Touch.onActivate(done, this._done.bind(this));
 
-	var load = OZ.DOM.elm("img", {id:"load", src:"img/setup/load.png", title:"Load a saved race", alt:"Load a saved race"});
-	this._node.appendChild(load);
-	OZ.Touch.onActivate(load, this._load.bind(this));
+	if (localStorage.dragoSave) {
+		var load = OZ.DOM.elm("img", {id:"load", src:"img/setup/load.png", title:"Load a saved race", alt:"Load a saved race"});
+		this._node.appendChild(load);
+		OZ.Touch.onActivate(load, this._load.bind(this));
+	}
 }
 
 Game.Setup.prototype._click = function(e) {
