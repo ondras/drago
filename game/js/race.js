@@ -6,11 +6,11 @@ Game.Race.createFrom = function(start, firstPlayer) {
 		var node = GRAPH[i];
 		if (node.type == "capital" && i != start) { avail.push(i); }
 	}
-	return new this(avail.random(), firstPlayer);
+	return new this(start, avail.random(), firstPlayer);
 }
 
 Game.Race.fromJSON = function(data) {
-	var race = new this(data.target, data.playerIndex);
+	var race = new this(data.start, data.target, data.playerIndex);
 	var player = Game.players[data.playerIndex];
 	player.dispatch("turn");
 	/* FIXME neni nahore */
@@ -18,7 +18,8 @@ Game.Race.fromJSON = function(data) {
 	return race;
 }
 
-Game.Race.prototype.init = function(target, firstPlayer) {
+Game.Race.prototype.init = function(start, target, firstPlayer) {
+	this._start = start;
 	this._target = target;
 	this._playerIndex = firstPlayer || 0;
 
@@ -30,6 +31,7 @@ Game.Race.prototype.init = function(target, firstPlayer) {
 
 Game.Race.prototype.toJSON = function() {
 	var obj = {
+		start: this._start,
 		target: this._target,
 		playerIndex: this._playerIndex
 	};
@@ -44,7 +46,11 @@ Game.Race.prototype.stop = function() {
 	OZ.Event.remove(this._event);
 }
 
-Game.Race.prototype.getTarget = function(index) {
+Game.Race.prototype.getStart = function() {
+	return this._start;
+}
+
+Game.Race.prototype.getTarget = function() {
 	return this._target;
 }
 

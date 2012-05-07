@@ -112,8 +112,7 @@ Game.play = function(load) {
 	if (load) {
 		this.load();
 	} else {
-	//	this.race = Game.Race.createFrom(399);
-		this.race = new Game.Race(401);
+		this.race = Game.Race.createFrom(399);
 		this.race.start();
 	}
 }

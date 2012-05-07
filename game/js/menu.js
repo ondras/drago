@@ -13,6 +13,7 @@ Game.Menu.prototype.init = function(player) {
 	
 	this._addItem("slot", "Slot Machine");
 	this._addItem("card", "Use Card", player.getCards().length == 0);
+	this._addItem("overview", "Show Map");
 	this._addItem("save", "Save Game");
 	this._hover("slot");
 	
@@ -96,6 +97,12 @@ Game.Menu.prototype._go = function(id) {
 			new Game.CardList(cards)
 				.onDone(this._card.bind(this))
 				.onAbort(this._restore.bind(this));
+		break;
+		
+		case "overview":
+			this._hide();
+			new Game.Overview(this._player)
+				.onDone(this._restore.bind(this));
 		break;
 		
 		case "save":
