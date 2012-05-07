@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Help :: Drago</title>
+		<link rel="stylesheet" href="../style.css" />
+	</head>
+	<body>
+		<div id="help">
+			<h1>Drago &ndash; Help</h1>
+			<p>This game is a browser-based re-creation of Blue Byte Software's 1997 hit 
+			<em>Dr. Drago's Madcap Chase</em> (or <em>Die total verrückte Rallye</em> in Germany). 
+			While the main gameplay principles remain the same, there is a number of smaller and larger differences 
+			between the original game and this version.</p>
+			
+			<h2>Goal</h2>
+			<p>In Drago, several players compete against each other, trying to earn the most money. Up to eight human players can participate; 
+			the gameplay is hotseat-based.</p>
+			<p>Money is won primarily by winning races (for winning a race, you earn $100.000), 
+			although there are additional ways to get richer (or poorer). The game never ends; as soon as a race is finished, new destination is 
+			picked and a new race starts.</p>
+			
+			<h2>Implementation status</h2>
+			<p>A large portion of the original game is completed. These features are missing, either by design or because of lack of time:</p>
+			<ol>
+				<li>The whole Real estate aspect of the game</li>
+				<li>Dr. Drago</li>
+				<li>Bots / AI</li>
+				<li>Several cards</li>
+			</ol>
+			<p>At any time, the whole game map can be inspected by moving it with mouse.</p>
+			
+			<h2>Gameplay</h2>
+			<p>Drago can be played using a keyboard, a mouse or a touch device. A reasonably modern web browser is also necessary ☺</p>
+			<p>Players take turns moving their vehicles across Europe in order to get first to a target capital city. Once the city is reached, 
+			the race is completed and winner receives $100.000. A new destination is immediately automatically picked and the game continues.</p>
+			
+			<p>During a turn, a player can use a <em>slot machine</em> (game equivalent of a throwing dice) or <em>play a card</em> (if he or she has one). 
+			These are used to increase available <em>movement points</em> and advance towards the target destination.</p>
+			<p>Once a nonzero amount of moves is available, player can start driving (arrow keys, arrow icons next to player's portrait) in arbitrary direction. 
+			It is possible to travel backwards and change directions as requested, but the player must spend all his/hers moves in order to end the turn. The arrow images show the shortest path towards the current target town.</p>
+			<p>When there are no moves remaining, player's position must be confirmed (Enter / click/touch player). The turn's outcome is decided based on the 
+			color of the square at player's position.</p>
+			
+			<h2>Squares</h2>
+			<ul>
+				<li>Blue square: a random amount of money is won!</li>
+				<li>Red square: a random amount of money is lost!</li>
+				<li>Yellow square: player gets a random card!</li>
+				<li>Purple square: player can buy and sell cards.</li>
+				<li>Gray/White square: a town. Nothing happens in towns for now.</li>
+			</ul>
+			
+			<p>During a turn, players also pass through red round markers. These serve educational purposes, as pressing Enter on them opens a box with 
+			local historical/architectural information.</p>
+			
+			<h2>Cards</h2>
+			<p>A player can own up to eight cards. Using a card often results in skipping the slot machine; movement points are gained from the card. 
+			The following list shows all available card types:</p>
+			<ul>
+				<li>2..5 reels: improved versions of the slot machine for more movement points</li>
+				<li>1..6 spaces: gain the given amount of movement points</li>
+			</ul>
+			
+			<h2>Credits</h2>
+			<p>All artwork is &copy; Blue Byte Software. All coding, reverse-engineering and related tasks were done by <a href="http://ondras.zarovi.cz/">Ondřej Žára</a>, &copy; 2012.</p>
+			
+		</div>
+	</body>
+</html>

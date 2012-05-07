@@ -100,6 +100,7 @@ Game.Status.prototype._playerChange = function(e) {
 }
 
 Game.Status.prototype._setCards = function(player) {
+	/* fixme blbne v opere */
 	var cards = player.getCards();
 	OZ.DOM.clear(this._dom.cards);
 	for (var i=0;i<cards.length;i++) {

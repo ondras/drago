@@ -205,12 +205,15 @@ Game.Player.prototype.makeCentered = function() {
 	Game.port.setOffset(offset);
 }
 
-Game.Player.prototype.turn = function() {
+/**
+ * @param {bool} noResetPath Do not reset path; used only when turn started after game load
+ */
+Game.Player.prototype.turn = function(noResetPath) {
 	/* add to top */
 	Game.engine.removeActor(this, Game.LAYER_PLAYERS);
 	Game.engine.addActor(this, Game.LAYER_PLAYERS);
 	
-	this._path = [this._index];
+	if (!noResetPath) { this._path = [this._index]; }
 
 	this._enableControl();
 	this.dispatch("turn");

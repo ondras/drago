@@ -3,11 +3,19 @@ body {
 	background-image: url(img/wood2.jpg);
 	font-family: sans-serif;
 	color: #3a1600;
-	overflow: hidden;
 }
 
 body.setup {
 	background-image: url(img/setup/paper.png);
+}
+
+body #help {
+	margin: auto;
+	border-radius: 5px;
+	width: 70%;
+	padding: 1em;
+	margin-top: 1em;
+	background-image: url(img/paper.png);
 }
 
 #haf .slot {

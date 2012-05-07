@@ -10,7 +10,7 @@ Game.Keyboard.prototype.init = function() {
 	this._codes[13] = Game.INPUT_ENTER;
 	this._codes[27] = Game.INPUT_ESC;
 	
-	OZ.Event.add(window, "keydown", this._keydown.bind(this)); /* FIXME window/document */
+	OZ.Event.add(document, "keydown", this._keydown.bind(this));
 	OZ.Touch.onActivate(document, this._activate.bind(this));
 }
 

@@ -1,5 +1,5 @@
 /* fixme obrazek mesta */
-Game.Finish = OZ.Class().extend(HAF.Actor).implement(Game.IWindow);
+Game.Finish = OZ.Class().extend(HAF.Actor).implement(Game.IAsync).implement(Game.IInputHandler);
 Game.Finish.prototype.init = function(player) {
 	this._cb = {done:null, abort:null};
 	
@@ -163,7 +163,7 @@ Game.Finish.prototype.init = function(player) {
 	this._eventActivate = OZ.Touch.onActivate(layer, this._activate.bind(this));
 
 	this._oldQueue = OZ.Audio.background.queue;
-	OZ.Audio.background.queue = ["Z1"]; /* fixme Z2 je co? */
+	OZ.Audio.background.queue = ["Z1"];
 	OZ.Audio.background.next();
 }
 

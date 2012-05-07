@@ -12,9 +12,7 @@ Game.Race.createFrom = function(start, firstPlayer) {
 Game.Race.fromJSON = function(data) {
 	var race = new this(data.start, data.target, data.playerIndex);
 	var player = Game.players[data.playerIndex];
-	player.dispatch("turn");
-	/* FIXME neni nahore */
-	player._enableControl(); /* fixme */
+	player.turn(true);
 	return race;
 }
 

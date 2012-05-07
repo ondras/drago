@@ -104,7 +104,6 @@ Game.play = function(load) {
 	document.body.appendChild(this.status.getContainer());
 	this.port.sync();
 	//this._initDebug();
-	this.engine.start();
 
 	OZ.Audio.background.queue = ["G0", "G1", "G2", "G3", "G4", "G5"].randomize();
 	OZ.Audio.background.fadeOut();
@@ -115,14 +114,15 @@ Game.play = function(load) {
 		this.race = Game.Race.createFrom(399);
 		this.race.start();
 	}
+
+	this.engine.start();
 }
 
 Game.createPlayer = function(type, name) {
 	var player = new Game.Player(type, name);
 	this.players.push(player);
 	player.setIndex(399);
-//	player.addCard(this.cards.random());
-	player.addCard(this.cards[this.cards.length-1]);
+	player.addCard(this.cards.random());
 }
 
 Game.formatMoney = function(money) {
