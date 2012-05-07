@@ -125,5 +125,6 @@ Game.Overview.prototype._drawPlayer = function(player) {
 Game.Overview.prototype._close = function() {
 	Game.keyboard.pop();
 	this._node.parentNode.removeChild(this._node);
+	OZ.Event.remove(this._event);
 	if (this._cb.done) { this._cb.done(); }
 }
