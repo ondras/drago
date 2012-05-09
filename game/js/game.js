@@ -95,7 +95,9 @@ Game._load = function(e) {
 	if (this._remain) { return; }
 	document.body.innerHTML = "";
 	
-	new Game.Setup();
+	OZ.Audio.background.queue = ["I"];
+	OZ.Audio.background.play();
+	new Game.Menu.Main();
 }
 
 Game.play = function(load) {

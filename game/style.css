@@ -5,10 +5,6 @@ body {
 	color: #3a1600;
 }
 
-body.setup {
-	background-image: url(img/setup/paper.png);
-}
-
 body #help {
 	margin: auto;
 	border-radius: 5px;
@@ -59,45 +55,9 @@ body #help {
 }
 
 #setup #start:hover {
+	border: 2px solid red;
 	bottom: 38px;
 	right: 38px;
-}
-
-#setup #start span {
-	visibility: hidden;
-	color: white;
-	position: absolute;
-	right: 5px;
-	bottom: 85px;
-	font-size: 200%;
-}
-
-#setup #load {
-	position: fixed;
-	top: 40px;
-	right: 40px;
-}
-
-#setup #load:hover {
-	top: 38px;
-	right: 38px;
-}
-
-#setup #load span {
-	visibility: hidden;
-	color: white;
-	position: absolute;
-	right: 15px;
-	top: 80px;
-	font-size: 200%;
-}
-
-#setup #start:hover img, #setup #load:hover img {
-	border: 2px solid red;
-}
-
-#setup #start:hover span, #setup #load:hover span {
-	visibility: visible;
 }
 
 #setup input {

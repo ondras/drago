@@ -1,6 +1,5 @@
 Game.Menu = OZ.Class().implement(Game.IInputHandler).implement(Game.IAsync);
-Game.Menu.prototype.init = function(player) {
-	this._player = player;
+Game.Menu.prototype.init = function() {
 	this._cb = {done: null, abort: null};
 
 	this._node = OZ.DOM.elm("div", {id:"menu", position:"absolute"});
@@ -10,21 +9,11 @@ Game.Menu.prototype.init = function(player) {
 	this._items = {};
 	this._events = [];
 	this._current = null; /* id of current item */
-	
-	this._addItem("slot", "Slot Machine");
-	this._addItem("card", "Use Card", player.getCards().length == 0);
-	this._addItem("overview", "Show Map");
-	this._addItem("save", "Save Game");
-	this._hover("slot");
-	
+	this._border = new Game.Border(this._node, "BS", 16);
 	this._events.push(OZ.Touch.onActivate(this._node, this._activate.bind(this)));
 	
 	this._restore();
-
-	var win = OZ.DOM.win(true);
-	this._node.style.left = Math.round((win[0]-this._node.offsetWidth)/2) + "px";
-	this._node.style.top = Math.round((win[1]-this._node.offsetHeight)/2) + "px";
-	new Game.Border(this._node, "BS", 16);
+	this._center();
 }
 
 Game.Menu.prototype.handleInput = function(type, param) {
@@ -35,6 +24,8 @@ Game.Menu.prototype.handleInput = function(type, param) {
 			if (this._cb.abort) { this._cb.abort(); }
 		break;
 		case Game.INPUT_ENTER:
+			var item = this._items[this._current];
+			if (item.disabled) { return; }
 			this._go(this._current);
 		break;
 		case Game.INPUT_UP:
@@ -61,6 +52,12 @@ Game.Menu.prototype.handleInput = function(type, param) {
 	
 }
 
+Game.Menu.prototype._center = function() {
+	var win = OZ.DOM.win(true);
+	this._node.style.left = Math.round((win[0]-this._node.offsetWidth)/2) + "px";
+	this._node.style.top = Math.round((win[1]-this._node.offsetHeight)/2) + "px";
+}
+
 Game.Menu.prototype._addItem = function(id, label, disabled) {
 	var item = OZ.DOM.elm("div", {className:"item", innerHTML:label});
 	if (disabled) { OZ.DOM.addClass(item, "disabled"); }
@@ -71,46 +68,7 @@ Game.Menu.prototype._addItem = function(id, label, disabled) {
 	};
 	
 	this._events.push(OZ.Event.add(item, "mouseover", this._over.bind(this)));
-}
-
-/**
- * Confirm an item
- */
-Game.Menu.prototype._go = function(id) {
-	var item = this._items[id];
-	if (item.disabled) { return; }
-
-	switch (id) {
-		case "slot":
-			this._hide();
-
-			Game.Slot.roll1()
-				.onDone(this._slot.bind(this)) 
-				.onAbort(this._restore.bind(this));
-		break;
-		
-		case "card":
-			var cards = this._player.getCards();
-			if (!cards.length) { return; }
-			
-			this._hide();
-			new Game.CardList(cards)
-				.onDone(this._card.bind(this))
-				.onAbort(this._restore.bind(this));
-		break;
-		
-		case "overview":
-			this._hide();
-			new Game.Overview(this._player)
-				.onDone(this._restore.bind(this));
-		break;
-		
-		case "save":
-			Game.save();
-			this._hide();
-			this._destroy();
-		break;
-	}
+	this._border.update();
 }
 
 /**
@@ -120,6 +78,9 @@ Game.Menu.prototype._activate = function(e) {
 	OZ.Event.stop(e);
 	var id = this._nodeToID(OZ.Event.target(e));
 	if (!id) { return; }
+
+	var item = this._items[id];
+	if (item.disabled) { return; }
 	this._go(id);
 }
 
@@ -156,13 +117,7 @@ Game.Menu.prototype._restore = function() {
 	Game.keyboard.push(this);
 }
 
-Game.Menu.prototype._slot = function(result) {
-	this._destroy();
-	this._player.moveBy(result);
-}
-
-Game.Menu.prototype._card = function(card) {
-	this._destroy();
-	this._player.removeCard(card);
-	card.play(this._player);
-}
+/**
+ * Confirm an item
+ */
+Game.Menu.prototype._go = function(id) {}

@@ -14,9 +14,6 @@ Game.Setup.prototype.init = function() {
 	this._build();
 //	OZ.DOM.addClass(document.body, "setup");
 	document.body.appendChild(this._node);
-	
-	OZ.Audio.background.queue = ["I"];
-	OZ.Audio.background.play();
 }
 
 Game.Setup.prototype._build = function() {
@@ -48,19 +45,9 @@ Game.Setup.prototype._build = function() {
 	
 	OZ.Touch.onActivate(this._node, this._click.bind(this));
 	
-	var done = OZ.DOM.elm("div", {id:"start", innerHTML:"<span>Race!</span>"});
-	var img = OZ.DOM.elm("img", {src:"img/setup/start.png", title:"Race!", alt:"Race!"});
-	done.appendChild(img);
+	var done = OZ.DOM.elm("img", {id:"start", src:"img/setup/start.png", title:"Race!", alt:"Race!"});
 	this._node.appendChild(done);
 	OZ.Touch.onActivate(done, this._done.bind(this));
-
-	if (localStorage.dragoSave) {
-		var load = OZ.DOM.elm("div", {id:"load", innerHTML:"<span>Load</span>"});
-		var img = OZ.DOM.elm("img", {src:"img/setup/load.png", title:"Load a saved race", alt:"Load a saved race"});
-		load.appendChild(img);
-		this._node.appendChild(load);
-		OZ.Touch.onActivate(load, this._load.bind(this));
-	}
 }
 
 Game.Setup.prototype._click = function(e) {

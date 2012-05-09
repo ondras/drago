@@ -167,7 +167,7 @@ Game.Player.prototype.handleInput = function(type, param) {
 		case Game.INPUT_UP:
 		case Game.INPUT_DOWN:
 			this._disableControl();
-			new Game.Menu(this)
+			new Game.Menu.Player(this)
 				.onAbort(this._enableControl.bind(this));
 		break;
 		default:
