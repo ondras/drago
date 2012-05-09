@@ -93,7 +93,7 @@ Game.handleInput = function(input, param) {
 Game._load = function(e) {
 	this._remain--;
 	if (this._remain) { return; }
-	document.body.innerHTML = "";
+	document.body.innerHTML = "<h1>Drago</h1><h2><abbr title='previously known as'>pka</abbr> Dr. Drago's Madcap Chase</h2>";
 	
 	OZ.Audio.background.queue = ["I"];
 	OZ.Audio.background.play();
@@ -101,6 +101,7 @@ Game._load = function(e) {
 }
 
 Game.play = function(load) {
+	document.body.innerHTML = "";
 	this.background.prepare();
 	document.body.appendChild(this.port.getContainer());
 	document.body.appendChild(this.status.getContainer());

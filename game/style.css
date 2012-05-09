@@ -5,6 +5,22 @@ body {
 	color: #3a1600;
 }
 
+body > h1 {
+	text-align: center;
+	width: 70%;
+	margin: auto;
+	font-size: 600%;
+	color: orange;
+}
+
+body > h2 {
+	text-align: center;
+	width: 70%;
+	margin: auto;
+	font-size: 200%;
+	color: orange;
+}
+
 body #help {
 	margin: auto;
 	border-radius: 5px;

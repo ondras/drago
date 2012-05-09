@@ -142,7 +142,7 @@ var OZ = {
 			var arr = (cn ? cn.split(" ") : []);
 			return (arr.indexOf(className) != -1);
 		},
-		addClass:function(node,className) {
+		addClass:function(node, className) {
 			if (OZ.DOM.hasClass(node, className)) { return; }
 			var cn = OZ.$(node).className;
 			var arr = (cn ? cn.split(" ") : []);

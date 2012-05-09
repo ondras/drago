@@ -1,5 +1,6 @@
 Game.Setup = OZ.Class();
 Game.Setup.prototype.init = function() {
+	document.body.innerHTML = "";
 	this._players = [
 		{type:"D", active:true,  name:"Helmut Pohl"},
 		{type:"U", active:true,  name:"Jane Blonda"},
@@ -12,7 +13,6 @@ Game.Setup.prototype.init = function() {
 	];
 	
 	this._build();
-//	OZ.DOM.addClass(document.body, "setup");
 	document.body.appendChild(this._node);
 }
 
