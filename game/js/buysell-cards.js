@@ -58,6 +58,7 @@ Game.BuySell.Cards.prototype._use = function(index, card) {
 		var index = cards.indexOf(card);
 		if (index == -1) { index = 0; }
 	}
+	if (!cards.length) { index = -1; }
 	this._cardListOptions.select = index;
 	
 	this._cardList = new Game.CardList(cards, this._cardListOptions);
@@ -73,18 +74,32 @@ Game.BuySell.Cards.prototype._cardListAbort = function() {
 }
 
 Game.BuySell.Cards.prototype._cardListDone = function(card) {
-	console.log("picked card ", card);
-	/* FIXME buy/sell card */
+	if (this._index == 0) { /* buy */
+		var cards = this._player.getCards();
+		var money = this._player.getMoney();
+		if (money >= card.getPrice() && cards.length < 8) {
+			this._player.addCard(card);
+			this._player.setMoney(money - card.getPrice());
+		}
+	} else if (card) { /* sell */
+		this._player.removeCard(card);
+		this._player.setMoney(this._player.getMoney() + 0.5*card.getPrice());
+	}
 	
 	this._cardList = null; /* it was already destroyed */
 	Game.keyboard.push(this); /* we listen */
-
-	this._use(this._index, card); /* FIXME select correct card */
 	
+	/* player has no more cards */
+	this._use(this._index, card); /* select correct card */
 }
 
 Game.BuySell.Cards.prototype._select = function(e) {
 	var card = e.data.card;
+	var price = card.getPrice();
+	
+	if (this._index == 1) { price *= 0.5; }
+	
+	this._info.innerHTML = card.getName() + "&nbsp;&nbsp;&nbsp;" + Game.formatMoney(price);
 	
 }
 

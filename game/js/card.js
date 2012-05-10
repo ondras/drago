@@ -2,6 +2,7 @@ Game.Card = OZ.Class();
 Game.Card.prototype.play = function(owner) {};
 Game.Card.prototype.getImage = function() {};
 Game.Card.prototype.getPrice = function() {};
+Game.Card.prototype.getName = function() {};
 
 Game.Card.Slot = OZ.Class().extend(Game.Card);
 Game.Card.Slot.prototype.init = function(count) {
@@ -10,6 +11,10 @@ Game.Card.Slot.prototype.init = function(count) {
 
 Game.Card.Slot.prototype.getImage = function() {
 	return "slot" + this._count;
+}
+
+Game.Card.Slot.prototype.getName = function() {
+	return this._count + " Reels";
 }
 
 Game.Card.Slot.prototype.getPrice = function() {
@@ -26,6 +31,10 @@ Game.Card.Slot.prototype.play = function(owner) {
 Game.Card.Move = OZ.Class().extend(Game.Card);
 Game.Card.Move.prototype.init = function(count) {
 	this._count = count;
+}
+
+Game.Card.Move.prototype.getName = function() {
+	return this._count + " Space" + (this._count > 1 ? "s" : "");
 }
 
 Game.Card.Move.prototype.getImage = function() {

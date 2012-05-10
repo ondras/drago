@@ -90,6 +90,7 @@ Game.Menu.prototype._over = function(e) {
 }
 
 Game.Menu.prototype._hover = function(id) { 
+	OZ.Audio.play("plop");
 	if (this._current) { OZ.DOM.removeClass(this._items[this._current].node, "active"); }
 	this._current = id;
 	OZ.DOM.addClass(this._items[id].node, "active");

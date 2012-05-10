@@ -69,15 +69,20 @@ Game.CardList.prototype.handleInput = function(type, param) {
 		break;
 		case Game.INPUT_ENTER:
 			this.destroy();
-			if (this._cb.done) { this._cb.done(this._cards[this._current].card); }
+			if (this._cb.done) { 
+				var card = (this._current == -1 ? null : this._cards[this._current].card);
+				this._cb.done(card); 
+			}
 		break;
 		case Game.INPUT_UP:
 		case Game.INPUT_LEFT:
+			if (this._current == -1) { break; }
 			var index = (this._current ? this._current-1 : this._cards.length-1);
 			this._select(index);
 		break;
 		case Game.INPUT_DOWN:
 		case Game.INPUT_RIGHT:
+			if (this._current == -1) { break; }
 			var index = (this._current+1 < this._cards.length ? this._current+1 : 0);
 			this._select(index);
 		break;
@@ -93,7 +98,7 @@ Game.CardList.prototype._select = function(index) {
 	if (this._current != -1) { OZ.DOM.removeClass(this._cards[this._current].node, "active"); }
 	this._current = index;
 	OZ.DOM.addClass(this._cards[this._current].node, "active");
-	this.dispatch("select", {card:this._cards[this._current]});
+	this.dispatch("select", {card:this._cards[this._current].card});
 }
 
 Game.CardList.prototype._activate = function(e) {
