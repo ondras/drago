@@ -13,8 +13,10 @@ Game.BuySell.Cards.prototype.init = function(player) {
 	this._ec.push(OZ.Event.add(player, "player-change", this._playerChange.bind(this)));
 	this._cardListOptions = {parent:this._body, keyboard:false, path:"small/", autoSelect:false};
 	
-	this._prepare(0);
 	this._playerChange();
+
+	this._prepare(0);
+	this._center();
 }
 
 Game.BuySell.Cards.prototype._prepare = function(index) {
@@ -32,8 +34,6 @@ Game.BuySell.Cards.prototype._prepare = function(index) {
 	this._cardListOptions.select = -1;
 	this._cardList = new Game.CardList(cards, this._cardListOptions);
 	this._cardList.onDone(this._cardListDone.bind(this));
-	
-	if (!this._body.style.height) { this._body.style.height = this._body.offsetHeight + "px" ;}
 }
 
 Game.BuySell.Cards.prototype._clear = function(index) {

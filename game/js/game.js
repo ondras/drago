@@ -62,6 +62,7 @@ Game.init = function() {
 	this._initAudio();
 	this._initEngine();
 	this._initCards();
+	this._initCards();
 	this._initGraph();
 	
 	this.keyboard.push(this);

@@ -274,7 +274,14 @@ body #help {
 	color: #630;
 }
 
+#buysell .body {
+	padding-left: 8px;
+	padding-top: 6px;
+	height: 234px;
+}
+
 #buysell .card {
 	width: 44px;
 	height: 63px;
+	margin: 1px 7px 6px 5px;
 }

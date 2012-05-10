@@ -9,9 +9,7 @@ Game.BuySell.prototype.init = function() {
 	
 	this._build();
 	
-	
 	document.body.appendChild(this._node);
-	this._center();
 	this._ec.push(OZ.Touch.onActivate(this._header, this._activate.bind(this)));
 	Game.keyboard.push(this);
 }
