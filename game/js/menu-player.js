@@ -29,7 +29,7 @@ Game.Menu.Player.prototype._go = function(id) {
 			if (!cards.length) { return; }
 			
 			this._hide();
-			new Game.CardList(cards)
+			new Game.CardList(cards, {parent:null, keyboard:true, select:0})
 				.onDone(this._card.bind(this))
 				.onAbort(this._restore.bind(this));
 		break;

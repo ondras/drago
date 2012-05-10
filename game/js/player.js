@@ -372,6 +372,10 @@ Game.Player.prototype._decideTurn = function() {
 	var type = GRAPH[this._index].type;
 	var bound = this._endTurn.bind(this);
 	
+	new Game.BuySell.Cards(this)
+		.onDone(bound);
+	return;
+
 	switch (type) {
 		case "blue":
 			Game.Info.showWin(this).onDone(bound);

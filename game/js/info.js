@@ -31,6 +31,7 @@ Game.Info.showWin = function(player) {
 	var text = texts.random();
 	text = text.replace("%s", player.getName());
 	text = text.replace("%s", Game.formatMoney(amount));
+	OZ.Audio.play("win");
 	return new this("img/reporter.png", text);
 }
 
@@ -58,6 +59,7 @@ Game.Info.showLose = function(player, amount) {
 	var text = texts.random();
 	text = text.replace("%s", player.getName());
 	text = text.replace("%s", Game.formatMoney(amount));
+	OZ.Audio.play("lose");
 	return new this("img/reporter.png", text);
 }
 
@@ -80,6 +82,9 @@ Game.Info.showCard = function(player) {
 	];
 	var text = texts.random();
 	text = text.replace("%s", player.getName());
+	
+	var cards = player.getCards();
+	if (cards.length == 8) { cards.shift(); }
 	
 	var card = Game.cards.random();
 	player.addCard(card);
@@ -112,6 +117,7 @@ Game.Info.showBuy = function(player) {
 
 Game.Info.showFinish = function(player) {
 	player.setMoney(player.getMoney() + 100000);
+	/* FIXME */
 	var text = "Winner is " + player.getName();
 	return new this("img/reporter.png", text);
 }

@@ -1,15 +1,24 @@
 Game.CardList = OZ.Class().implement(Game.IInputHandler).implement(Game.IAsync);
-Game.CardList.prototype.init = function(cards, parent) {
+Game.CardList.prototype.init = function(cards, options) {
 	this._cards = [];
 	this._cb = {done: null, abort: null};
 	this._current = -1;
 	this._events = [];
+	this._options = {
+		parent: null, /* node */
+		keyboard: true, /* use keyboard navigation */
+		path: "", /* path to images */
+		select: -1, /* pre-select? */
+		autoSelect: true /* onactivate => done? if false, onactivate => select */
+	}
+	for (var p in options) { this._options[p] = options[p]; }
+	
 	var size = [130, 187];
 	var padding = 10;
 	
 	for (var i=0;i<cards.length;i++) {
 		var card = cards[i];
-		var node = OZ.DOM.elm("img", {className:"card", src:"img/cards/" + card.getImage() +".png"});
+		var node = OZ.DOM.elm("img", {className:"card", src:"img/cards/" + this._options.path + card.getImage() +".png"});
 		
 		this._events.push(OZ.Touch.onActivate(node, this._activate.bind(this)));
 		
@@ -18,7 +27,7 @@ Game.CardList.prototype.init = function(cards, parent) {
 			node: node
 		});
 		
-		if (!parent) { /* position within body */
+		if (!this._options.parent) { /* position within body */
 			node.style.position = "absolute";
 			var pos = OZ.DOM.pos(Game.port.getContainer());
 			var port = Game.port.getSize();
@@ -43,24 +52,24 @@ Game.CardList.prototype.init = function(cards, parent) {
 			node.style.top = Math.round(pos[1]) + "px";
 		}
 		
-		(parent || document.body).appendChild(node);
+		(this._options.parent || document.body).appendChild(node);
 	}
 	
-	Game.keyboard.push(this);
-	this._select(0);
+	if (this._options.select != -1) { this._select(this._options.select); }
+	if (this._options.keyboard) { Game.keyboard.push(this); }
 }
 
 Game.CardList.prototype.handleInput = function(type, param) {
 	switch (type) {
 		case Game.INPUT_ESC:
 			if (this._cb.abort) {
-				this._close();
+				this.destroy();
 				this._cb.abort();
 			}
 		break;
 		case Game.INPUT_ENTER:
-			this._close();
-			this._cb.done(this._cards[this._current].card);
+			this.destroy();
+			if (this._cb.done) { this._cb.done(this._cards[this._current].card); }
 		break;
 		case Game.INPUT_UP:
 		case Game.INPUT_LEFT:
@@ -84,22 +93,33 @@ Game.CardList.prototype._select = function(index) {
 	if (this._current != -1) { OZ.DOM.removeClass(this._cards[this._current].node, "active"); }
 	this._current = index;
 	OZ.DOM.addClass(this._cards[this._current].node, "active");
+	this.dispatch("select", {card:this._cards[this._current]});
 }
 
 Game.CardList.prototype._activate = function(e) {
 	OZ.Event.stop(e);
 	var target = OZ.Event.target(e);
 	var card = null;
+	var index = -1;
+	
 	for (var i=0;i<this._cards.length;i++) {
 		var item = this._cards[i];
-		if (item.node == target) { card = item.card; }
+		if (item.node == target) { 
+			card = item.card; 
+			index = i;
+		}
 	}
-	this._close();
-	this._cb.done(card);
+	
+	if (this._options.autoSelect || index == this._current) {
+		this.destroy();
+		this._cb.done(card);
+	} else {
+		this._select(index);
+	}
 }
 
-Game.CardList.prototype._close = function() {
-	Game.keyboard.pop();
+Game.CardList.prototype.destroy = function() {
+	if (this._options.keyboard) { Game.keyboard.pop(); }
 	while (this._events.length) { OZ.Event.remove(this._events.pop()); }
 	for (var i=0;i<this._cards.length;i++) { this._cards[i].node.parentNode.removeChild(this._cards[i].node); }
 }

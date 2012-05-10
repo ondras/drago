@@ -232,3 +232,49 @@ body #help {
 #menu .item.disabled, #menu .item.disabled.active {
 	color: #630;
 }
+
+#buysell {
+	width: 558px;
+	background-image: url(img/buysell/body-light.png);
+}
+
+#buysell.active {
+	background-image: url(img/buysell/body-dark.png);
+}
+
+#buysell .header, #buysell .footer {
+	text-align: center;
+	line-height: 42px;
+	height: 42px;
+	background-image: url(img/buysell/header-dark.png);
+}
+
+#buysell.active .header, #buysell.active .footer {
+	background-image: url(img/buysell/header-light.png);
+}
+
+#buysell .header span, #buysell .footer span {
+	padding: 0 0.5em;
+	font-size: 120%;
+}
+
+#buysell .header span {
+	cursor: pointer;
+}
+
+#buysell .header .prepared {
+	color: white;
+}
+
+#buysell .header .active {
+	color: yellow;
+}
+
+#buysell .header .disabled {
+	color: #630;
+}
+
+#buysell .card {
+	width: 44px;
+	height: 63px;
+}
