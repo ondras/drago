@@ -93,6 +93,7 @@ Game.Info.showCard = function(player) {
 }
 
 Game.Info.showBuy = function(player) {
+	/* FIXME not used */
 	var texts = [
 		"Hi there, %s! We're open for business &ndash; you can buy some cards if you like!",
 		"Got plenty of bread on you, %s? You have? Good, treat yourself to some cards! I kneed the dough.",
