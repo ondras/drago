@@ -1,2 +1,17 @@
 fixmez
-vic karet
+karty:
+  debts - vyber hrace, dialog o presunu dluhu (0 = noop), vynulovani, skip
+  account - dialog o vyrovnani, skip
+  zero - dialog o nulovani, skip
+  block - vyber osoby, slot
+  conference - "you felt lonely", skip
+  flight - dialog vyber mesta, presunout tam balonem a korektne skoncit kolo
+  1or2 - slot 1/2
+  double - optat se na kartu, zduplikovat a aktivovat ji
+
+advanced karty:
+  no steering - vyber hrace, jeho tah je automove FIXME co kdyz nehraje?
+  sugar
+  sleep
+  goodbye
+  gamble - slot, gamble, infodialog
