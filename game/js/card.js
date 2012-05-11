@@ -80,3 +80,29 @@ Game.Card.Zero.prototype.play = function(owner) {
 	text = text.replace("%s", owner.getName());
 	new Game.Info(Game.Info.REPORTER, text).onDone(cb);
 }
+
+Game.Card.Account = OZ.Class().extend(Game.Card);
+Game.Card.Account.prototype.init = function(count) {
+	Game.Card.prototype.init.call(this);
+	this._name = "Account";
+	this._image = "account";
+	this._price = 100000;
+}
+Game.Card.Account.prototype.play = function(owner) {
+	var total = 0;
+
+	for (var i=0;i<Game.players.length;i++) {
+		var player = Game.players[i];
+		total += player.getMoney();
+	}
+
+	var money = Math.round(total/Game.players.length);
+	for (var i=0;i<Game.players.length;i++) {
+		var player = Game.players[i];
+		player.setMoney(money);
+	}
+
+	var cb = function() { owner.endTurn(); }
+	var text = "Account: The balance of your accounts has been fairly divided. Everybody now has " + Game.formatMoney(money) + ".";
+	new Game.Info(Game.Info.REPORTER, text).onDone(cb);
+}

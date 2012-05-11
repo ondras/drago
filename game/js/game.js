@@ -114,7 +114,8 @@ Game.play = function(load) {
 	if (load) {
 		this.load();
 	} else {
-		this.race = Game.Race.createFrom(399);
+//		this.race = Game.Race.createFrom(399);
+		this.race = new Game.Race(399, 401);
 		this.race.start();
 	}
 
@@ -126,7 +127,7 @@ Game.createPlayer = function(type, name) {
 	this.players.push(player);
 	player.setIndex(399);
 //	player.addCard(this.cards.random());
-	player.addCard(this.cards[0]);
+	player.addCard(this.cards[this.cards.length-1]);
 }
 
 Game.formatMoney = function(money) {
@@ -203,6 +204,7 @@ Game._initDebug = function() {
 }
 
 Game._initCards = function() {
+	this.cards.push(new Game.Card.Account());
 	this.cards.push(new Game.Card.Zero());
 	this.cards.push(new Game.Card.Conference());
 	this.cards.push(new Game.Card.OneTwo());

@@ -94,8 +94,7 @@ Game.Info.showCard = function(player) {
 	return new this("img/cards/" + card.getImage() + ".png", text);
 }
 
-Game.Info.showBuy = function(player) {
-	/* FIXME not used */
+Game.Info.showBuy = function(player) { /* not used */
 	var texts = [
 		"Hi there, %s! We're open for business &ndash; you can buy some cards if you like!",
 		"Got plenty of bread on you, %s? You have? Good, treat yourself to some cards! I kneed the dough.",
@@ -119,9 +118,14 @@ Game.Info.showBuy = function(player) {
 }
 
 Game.Info.showFinish = function(player) {
-	player.setMoney(player.getMoney() + 100000);
-	/* FIXME */
-	var text = "Winner is " + player.getName();
+	var money = 100000;
+	player.setMoney(player.getMoney() + money);
+	
+	var text = "Congratulations, %s! You win the race! For your efforts you get a reward of " + Game.formatMoney(money) + "!";
+	text = text.replace("%s", player.getName());
+	text += "<br/><br/>";
+	text += "We start a new race immediately!";
+	
 	return new this(Game.Info.REPORTER, text);
 }
 
