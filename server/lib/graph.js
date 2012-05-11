@@ -44,6 +44,26 @@ QQ: pouze hodnoty 00 a 40
 var File = require("./file");
 var FS = require("fs");
 
+var TR = {
+	"Lissabon": "Lisbon",
+	"Algier": "Algiers",
+	"Brüssel": "Brussels",
+	"Luxemburg": "Luxembourg",
+	"Rom": "Rome",
+	"Kopenhagen": "Copenhagen",
+	"Prag": "Prague",
+	"Wien": "Vienna",
+	"Pressburg": "Bratislava",
+	"Belgrad": "Belgrade",
+	"Warschau": "Warsaw",
+	"Athen": "Athens",
+	"Bukarest": "Bucharest",
+	"Kischinjow": "Kishinev",
+	"Kiew": "Kiev",
+	"Moskau": "Moscow",
+	"Nikosia": "Nicosia"
+};
+
 var CP850 = {};
 var data = new FS.File("CP850.TXT").open("r").read().toString("ascii").split("\n");
 for (var i=0;i<data.length;i++) {
@@ -107,6 +127,9 @@ var Node = function(data, index) {
 			var byte = data.getByte();
 			if (byte) { this._name += String.fromCharCode(CP850[byte]); }
 		}
+		
+		if (this._name in TR) { this._name = TR[this._name]; }
+		
 		var count = data.getBytes(2);
 		for (var i=0;i<count;i++) {
 			this._nameData.push(data.getBytes(2));

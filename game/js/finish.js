@@ -1,11 +1,12 @@
-/* fixme obrazek mesta */
 Game.Finish = OZ.Class().extend(HAF.Actor).implement(Game.IAsync).implement(Game.IInputHandler);
 Game.Finish.prototype.init = function(player) {
 	this._cb = {done:null, abort:null};
 	
 	this._player = player;
 	this._size = [480, 360];
-	this._bg = HAF.Sprite.get("img/finish/capitals/prague.png", [480, 240], 0, true);
+	
+	var name = GRAPH[player.getIndex()].name.toLowerCase().replace(/ /g, "_");
+	this._bg = HAF.Sprite.get("img/finish/capitals/" + name + ".png", [480, 240], 0, true);
 
 	var layer = Game.engine.getLayer(Game.LAYER_WIN);
 	Game.engine.setSize(this._size, Game.LAYER_WIN);

@@ -310,7 +310,7 @@ var GRAPH = [
 			0
 		],
 		"type": "capital",
-		"name": "Lissabon",
+		"name": "Lisbon",
 		"nameData": [
 			0,
 			4,
@@ -3815,7 +3815,7 @@ var GRAPH = [
 			0
 		],
 		"type": "capital",
-		"name": "Algier",
+		"name": "Algiers",
 		"nameData": [
 			424,
 			428,
@@ -5253,7 +5253,7 @@ var GRAPH = [
 			0
 		],
 		"type": "capital",
-		"name": "Brüssel",
+		"name": "Brussels",
 		"nameData": [
 			744,
 			748,
@@ -5470,7 +5470,7 @@ var GRAPH = [
 			0
 		],
 		"type": "capital",
-		"name": "Luxemburg",
+		"name": "Luxembourg",
 		"nameData": [
 			768,
 			772,
@@ -7920,7 +7920,7 @@ var GRAPH = [
 			0
 		],
 		"type": "capital",
-		"name": "Rom",
+		"name": "Rome",
 		"nameData": [
 			1536,
 			1540,
@@ -7970,7 +7970,7 @@ var GRAPH = [
 			1
 		],
 		"type": "capital",
-		"name": "Kopenhagen",
+		"name": "Copenhagen",
 		"nameData": [
 			1564,
 			1568,
@@ -8920,7 +8920,7 @@ var GRAPH = [
 			0
 		],
 		"type": "capital",
-		"name": "Prag",
+		"name": "Prague",
 		"nameData": [
 			1796,
 			1800,
@@ -9515,7 +9515,7 @@ var GRAPH = [
 			0
 		],
 		"type": "capital",
-		"name": "Wien",
+		"name": "Vienna",
 		"nameData": [
 			1892,
 			1896,
@@ -10244,7 +10244,7 @@ var GRAPH = [
 			0
 		],
 		"type": "capital",
-		"name": "Pressburg",
+		"name": "Bratislava",
 		"nameData": [
 			2016,
 			2020,
@@ -10907,7 +10907,7 @@ var GRAPH = [
 			0
 		],
 		"type": "capital",
-		"name": "Belgrad",
+		"name": "Belgrade",
 		"nameData": [
 			2128,
 			2132,
@@ -10956,7 +10956,7 @@ var GRAPH = [
 			0
 		],
 		"type": "capital",
-		"name": "Warschau",
+		"name": "Warsaw",
 		"nameData": [
 			2152,
 			2156,
@@ -11583,7 +11583,7 @@ var GRAPH = [
 			0
 		],
 		"type": "capital",
-		"name": "Athen",
+		"name": "Athens",
 		"nameData": [
 			2284,
 			2288,
@@ -12568,7 +12568,7 @@ var GRAPH = [
 			0
 		],
 		"type": "capital",
-		"name": "Bukarest",
+		"name": "Bucharest",
 		"nameData": [
 			2420,
 			2424,
@@ -12700,7 +12700,7 @@ var GRAPH = [
 			0
 		],
 		"type": "capital",
-		"name": "Kischinjow",
+		"name": "Kishinev",
 		"nameData": [
 			2440,
 			2444,
@@ -13029,7 +13029,7 @@ var GRAPH = [
 			0
 		],
 		"type": "capital",
-		"name": "Kiew",
+		"name": "Kiev",
 		"nameData": [
 			2560,
 			2564,
@@ -14379,7 +14379,7 @@ var GRAPH = [
 			0
 		],
 		"type": "capital",
-		"name": "Moskau",
+		"name": "Moscow",
 		"nameData": [
 			2652,
 			2656,
@@ -14577,7 +14577,7 @@ var GRAPH = [
 			0
 		],
 		"type": "capital",
-		"name": "Nikosia",
+		"name": "Nicosia",
 		"nameData": [
 			2684,
 			2688,
