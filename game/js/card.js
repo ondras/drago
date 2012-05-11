@@ -106,3 +106,29 @@ Game.Card.Account.prototype.play = function(owner) {
 	var text = "Account: The balance of your accounts has been fairly divided. Everybody now has " + Game.formatMoney(money) + ".";
 	new Game.Info(Game.Info.REPORTER, text).onDone(cb);
 }
+
+Game.Card.Double = OZ.Class().extend(Game.Card);
+Game.Card.Double.prototype.init = function(count) {
+	Game.Card.prototype.init.call(this);
+	this._name = "Double";
+	this._image = "double";
+	this._price = 75000;
+}
+Game.Card.Double.prototype.play = function(owner) {
+	var total = 0;
+
+	for (var i=0;i<Game.players.length;i++) {
+		var player = Game.players[i];
+		total += player.getMoney();
+	}
+
+	var money = Math.round(total/Game.players.length);
+	for (var i=0;i<Game.players.length;i++) {
+		var player = Game.players[i];
+		player.setMoney(money);
+	}
+
+	var cb = function() { owner.endTurn(); }
+	var text = "Account: The balance of your accounts has been fairly divided. Everybody now has " + Game.formatMoney(money) + ".";
+	new Game.Info(Game.Info.REPORTER, text).onDone(cb);
+}

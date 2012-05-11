@@ -204,6 +204,7 @@ Game._initDebug = function() {
 }
 
 Game._initCards = function() {
+	this.cards.push(new Game.Card.Double());
 	this.cards.push(new Game.Card.Account());
 	this.cards.push(new Game.Card.Zero());
 	this.cards.push(new Game.Card.Conference());

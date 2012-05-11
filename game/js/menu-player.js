@@ -28,8 +28,23 @@ Game.Menu.Player.prototype._go = function(id) {
 			var cards = this._player.getCards();
 			if (!cards.length) { return; }
 			
+			var locked = [];
+			var nonDoubleCount = 0;
+			var hasDouble = false;
+			for (var i=0;i<cards.length;i++) {
+				var card = cards[i];
+				if (card instanceof Game.Card.Double) {
+					hasDouble = card;
+				} else {
+					nonDoubleCount++;
+				}
+			}
+			
+			if (hasDouble && !nonDoubleCount) { locked.push(hasDouble); } /* lock doubles */
+			
 			this._hide();
 			new Game.CardList(cards, {parent:null, keyboard:true, select:0})
+				.lock(locked)
 				.onDone(this._card.bind(this))
 				.onAbort(this._restore.bind(this));
 		break;

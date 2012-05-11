@@ -24,7 +24,8 @@ Game.CardList.prototype.init = function(cards, options) {
 		
 		this._cards.push({
 			card: card,
-			node: node
+			node: node,
+			locked: false
 		});
 		
 		if (!this._options.parent) { /* position within body */
@@ -59,6 +60,21 @@ Game.CardList.prototype.init = function(cards, options) {
 	if (this._options.keyboard) { Game.keyboard.push(this); }
 }
 
+Game.CardList.prototype.lock = function(cards) {
+	for (var i=0;i<this._cards.length;i++) {
+		var item = this._cards[i];
+		if (cards.indexOf(item.card) != -1) {
+			item.locked = true;
+			item.lock = OZ.DOM.elm("img", {src:"img/cards/locked.png", position:"absolute"});
+			item.lock.style.left = (item.node.offsetLeft + item.node.clientLeft) + "px";
+			item.lock.style.top = (item.node.offsetTop + item.node.clientTop) + "px";
+			item.node.parentNode.appendChild(item.lock);
+		}
+	}
+	
+	return this;
+}
+
 Game.CardList.prototype.handleInput = function(type, param) {
 	switch (type) {
 		case Game.INPUT_ESC:
@@ -68,6 +84,7 @@ Game.CardList.prototype.handleInput = function(type, param) {
 			}
 		break;
 		case Game.INPUT_ENTER:
+			if (this._cards[this._current].locked) { break; }
 			this.destroy();
 			if (this._cb.done) { 
 				var card = (this._current == -1 ? null : this._cards[this._current].card);
@@ -106,16 +123,18 @@ Game.CardList.prototype._activate = function(e) {
 	var target = OZ.Event.target(e);
 	var card = null;
 	var index = -1;
+	var locked = false;
 	
 	for (var i=0;i<this._cards.length;i++) {
 		var item = this._cards[i];
 		if (item.node == target) { 
 			card = item.card; 
 			index = i;
+			locked = item.locked;
 		}
 	}
 	
-	if (this._options.autoSelect || index == this._current) {
+	if ((this._options.autoSelect || index == this._current) && !locked) {
 		this.destroy();
 		this._cb.done(card);
 	} else {
@@ -126,5 +145,9 @@ Game.CardList.prototype._activate = function(e) {
 Game.CardList.prototype.destroy = function() {
 	if (this._options.keyboard) { Game.keyboard.pop(); }
 	while (this._events.length) { OZ.Event.remove(this._events.pop()); }
-	for (var i=0;i<this._cards.length;i++) { this._cards[i].node.parentNode.removeChild(this._cards[i].node); }
+	for (var i=0;i<this._cards.length;i++) { 
+		var item = this._cards[i];
+		item.node.parentNode.removeChild(item.node); 
+		if (item.lock) { item.lock.parentNode.removeChild(item.lock); }
+	}
 }
