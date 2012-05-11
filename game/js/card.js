@@ -51,7 +51,7 @@ Game.Card.Conference.prototype.init = function(count) {
 	Game.Card.prototype.init.call(this);
 	this._name = "Conference";
 	this._image = "conference";
-	this._price = 10000; /* FIXME */
+	this._price = 100000;
 }
 Game.Card.Conference.prototype.play = function(owner) {
 	var index = owner.getIndex();
@@ -63,5 +63,20 @@ Game.Card.Conference.prototype.play = function(owner) {
 
 	var cb = function() { owner.endTurn(); }
 	var text = "You felt lonely, so you called all the other players to have a meeting!";
+	new Game.Info(Game.Info.REPORTER, text).onDone(cb);
+}
+
+Game.Card.Zero = OZ.Class().extend(Game.Card);
+Game.Card.Zero.prototype.init = function(count) {
+	Game.Card.prototype.init.call(this);
+	this._name = "Zero";
+	this._image = "zero";
+	this._price = 50000;
+}
+Game.Card.Zero.prototype.play = function(owner) {
+	owner.setMoney(0);
+	var cb = function() { owner.endTurn(); }
+	var text = "%s, your account balance has been set to 0."	
+	text = text.replace("%s", owner.getName());
 	new Game.Info(Game.Info.REPORTER, text).onDone(cb);
 }

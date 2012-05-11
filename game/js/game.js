@@ -203,6 +203,7 @@ Game._initDebug = function() {
 }
 
 Game._initCards = function() {
+	this.cards.push(new Game.Card.Zero());
 	this.cards.push(new Game.Card.Conference());
 	this.cards.push(new Game.Card.OneTwo());
 	
