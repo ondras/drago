@@ -145,7 +145,11 @@ body #help {
 #status #cards {
 	margin-top: 10px;
 	position: relative;
-	text-align: center;
+}
+
+#status #cards img {
+	width: 130px;
+	height: 187px;
 }
 
 #status #bottom {
@@ -162,6 +166,7 @@ body #help {
 	text-align: center;
 	font-style: italic;
 	text-shadow: -0.08em -0.08em 0px #000; 
+	filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=-2, OffY=-2, Color=#000000, Positive=true);
 	margin: 0px;
 }
 
@@ -204,8 +209,12 @@ body #help {
 	background-image: url(img/status/name.png);
 	margin: auto;
 	text-align: center;
+}
+
+#status #name div {
 	color: white;
 	text-shadow: -0.08em -0.08em 0px #000; 
+	filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=-1, OffY=-1, Color=#000000, Positive=true);
 	font-weight: bold;
 	font-size: 94%;
 }

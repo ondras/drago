@@ -85,7 +85,7 @@ Game.Status.prototype._turn = function(e) {
 	var name = player.getName();
 
 	this._dom.portrait.style.backgroundImage = "url(img/player/portrait/" + type + ".png)";
-	this._dom.name.innerHTML = name;
+	this._dom.name.innerHTML = "<div>" + name + "</div>"; /* IE shadow */
 	
 	this._playerChange(e);
 }
@@ -100,14 +100,15 @@ Game.Status.prototype._playerChange = function(e) {
 }
 
 Game.Status.prototype._setCards = function(player) {
-	/* fixme blbne v opere */
 	var cards = player.getCards();
 	OZ.DOM.clear(this._dom.cards);
 	for (var i=0;i<cards.length;i++) {
 		var img = OZ.DOM.elm("img", {position:"absolute", src:"img/cards/" + cards[i].getImage() + ".png"});
 		this._dom.cards.appendChild(img);
 		img.style.top = (3*i) + "px";
-		img.style.left = (img.offsetLeft - 65 - 3*i) + "px";
+		var left = this._dom.cards.offsetWidth/2 - img.offsetWidth/2;
+		left -= 3*i;
+		img.style.left = left + "px";
 	}
 }
 

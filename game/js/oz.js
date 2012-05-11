@@ -197,16 +197,28 @@ var OZ = {
 		for (var p in options) { o[p] = options[p]; }
 		o.method = o.method.toUpperCase();
 		
-		var xhr = false;
+		var xhr;
 		if (window.XMLHttpRequest) { xhr = new XMLHttpRequest(); }
 		else if (window.ActiveXObject) { xhr = new ActiveXObject("Microsoft.XMLHTTP"); }
 		else { return false; }
 		xhr.open(o.method, url, true);
-		if (o.binary) { xhr.overrideMimeType("text/plain; charset=x-user-defined"); }
+		if (o.binary && xhr.overrideMimeType) { xhr.overrideMimeType("text/plain; charset=x-user-defined"); }
 		xhr.onreadystatechange = function() {
 			if (xhr.readyState != 4) { return; }
 			if (!callback) { return; }
-			var data = (o.xml ? xhr.responseXML : xhr.responseText);
+			var data = "";
+			if (o.binary) {
+				if ("responseBody" in xhr) {
+					data = xhr.responseBody.toArray();
+				} else {
+					data = xhr.responseText;
+					var d = [];
+					for (var i=0;i<data.length;i++) { d.push(data.charCodeAt(i) & 0xFF); }
+					data = d;
+				}
+			} else {
+				data = (o.xml ? xhr.responseXML : xhr.responseText);
+			}
 			var headers = {};
 			var h = xhr.getAllResponseHeaders();
 			if (h) {

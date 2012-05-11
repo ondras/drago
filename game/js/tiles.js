@@ -7,21 +7,6 @@ Game.Tiles.prototype.init = function() {
 		tiles: {},
 		animations: {}
 	};
-/*
-	this._images = [];
-	this._remain = 0;
-
-	for (var i=0;i<18;i++) { 
-		this._remain++;
-		var name = i + "";
-		if (name.length < 2) { name = "0"+name; }
-		name = "map/" + type + "/PART00" + name + ".gif";
-		var img = OZ.DOM.elm("img");
-		OZ.Event.add(img, "load", this._load.bind(this));
-		this._images.push(img); 
-		img.src = name;
-	}
-*/
 
 	for (var i=0;i<4;i++) {
 		this._remaining++;
@@ -53,18 +38,6 @@ Game.Tiles.prototype.render = function(index, context, offset, mirror) {
 		context.scale(-1, 1); 
 	}
 
-/*
-	var image = this._images[Math.floor(index / cellsPerImage)];
-	var imageOffset = index % cellsPerImage;
-	
-	context.drawImage(
-		image,
-		0, imageOffset*tile, tile, tile, 
-		offset[0], offset[1], tile, tile
-	);
-*/
-	
-/**/
 	var column = Math.floor(index / cellsPerImage);
 	var imageOffset = index % cellsPerImage;
 	
@@ -73,7 +46,6 @@ Game.Tiles.prototype.render = function(index, context, offset, mirror) {
 		column*tile, imageOffset*tile, tile, tile, 
 		offset[0], offset[1], tile, tile
 	);
-/**/
 
 	if (mirror) { context.restore(); }
 }

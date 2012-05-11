@@ -12,10 +12,7 @@ Game.Map.prototype.getData = function() {
 	return this._data;
 }
 
-Game.Map.prototype._response = function(data) {
-	var input = [];
-	for (var i=0;i<data.length;i++) { input.push(data.charCodeAt(i) & 0xFF); }
-
+Game.Map.prototype._response = function(input) {
 	var bpt = 2;
 	var N = 256;
 	var offsets = [0, N*N*bpt];
