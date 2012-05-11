@@ -1,6 +1,6 @@
 Game.Slot = OZ.Class().extend(HAF.Actor).implement(Game.IInputHandler).implement(Game.IAsync);
 
-Game.Slot.roll1 = function() {
+Game.Slot.roll1 = function(max) {
 	var conf = {
 		size: [256, 265],
 		bg: "img/slot/bg1.png",
@@ -8,7 +8,8 @@ Game.Slot.roll1 = function() {
 		counters: [
 			[150, 146]
 		],
-		animations: []
+		animations: [],
+		max: max
 	};
 	return new this(conf);
 }
@@ -216,7 +217,8 @@ Game.Slot.prototype._handStart = function(e) {
 Game.Slot.prototype._stop = function() {
 	OZ.Audio.play("slot-stop");
 	var counter = this._conf.counters.shift();
-	var score = Math.floor(Math.random()*6) + 1;
+	var max = this._conf.max || 6;
+	var score = Math.floor(Math.random()*max) + 1;
 	this._score += score;
 	
 	this._counters.push(counter);

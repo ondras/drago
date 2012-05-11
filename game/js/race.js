@@ -12,7 +12,7 @@ Game.Race.createFrom = function(start, firstPlayer) {
 Game.Race.fromJSON = function(data) {
 	var race = new this(data.start, data.target, data.playerIndex);
 	var player = Game.players[data.playerIndex];
-	player.turn(true);
+	player.startTurn(true);
 	return race;
 }
 
@@ -60,7 +60,7 @@ Game.Race.prototype._turnEnd = function(e) {
 Game.Race.prototype._playerTurn = function() {
 	var player = Game.players[this._playerIndex];
 	player.makeCentered();
-	player.turn();
+	player.startTurn();
 }
 
 /**

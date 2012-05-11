@@ -208,7 +208,7 @@ Game.Player.prototype.makeCentered = function() {
 /**
  * @param {bool} noResetPath Do not reset path; used only when turn started after game load
  */
-Game.Player.prototype.turn = function(noResetPath) {
+Game.Player.prototype.startTurn = function(noResetPath) {
 	/* add to top */
 	Game.engine.removeActor(this, Game.LAYER_PLAYERS);
 	Game.engine.addActor(this, Game.LAYER_PLAYERS);
@@ -247,6 +247,11 @@ Game.Player.prototype.moveBy = function(moves) {
 	
 	this._enableControl();
 }
+
+Game.Player.prototype.endTurn = function() {
+	this.dispatch("turn-end");
+}
+
 
 Game.Player.prototype._enableControl = function() {
 	Game.keyboard.push(this);
@@ -370,7 +375,7 @@ Game.Player.prototype._decideTurn = function() {
 	}
 	
 	var type = GRAPH[this._index].type;
-	var bound = this._endTurn.bind(this);
+	var bound = this.endTurn.bind(this);
 	
 	switch (type) {
 		case "blue":
@@ -393,10 +398,6 @@ Game.Player.prototype._decideTurn = function() {
 			bound();
 		break;
 	}
-}
-
-Game.Player.prototype._endTurn = function() {
-	this.dispatch("turn-end");
 }
 
 Game.Player.prototype._endRace = function() {

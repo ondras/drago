@@ -1,5 +1,7 @@
 Game.Info = OZ.Class().implement(Game.IInputHandler).implement(Game.IAsync);
 
+Game.Info.REPORTER = "img/reporter.png";
+
 Game.Info.showView = function(index) {
 	var viewNode = GRAPH[index];
 	var path = viewNode.x + "_" + viewNode.y;
@@ -32,7 +34,7 @@ Game.Info.showWin = function(player) {
 	text = text.replace("%s", player.getName());
 	text = text.replace("%s", Game.formatMoney(amount));
 	OZ.Audio.play("win");
-	return new this("img/reporter.png", text);
+	return new this(Game.Info.REPORTER, text);
 }
 
 Game.Info.showLose = function(player, amount) {
@@ -60,7 +62,7 @@ Game.Info.showLose = function(player, amount) {
 	text = text.replace("%s", player.getName());
 	text = text.replace("%s", Game.formatMoney(amount));
 	OZ.Audio.play("lose");
-	return new this("img/reporter.png", text);
+	return new this(Game.Info.REPORTER, text);
 }
 
 Game.Info.showCard = function(player) {
@@ -113,14 +115,14 @@ Game.Info.showBuy = function(player) {
 	var text = texts.random();
 	text = text.replace("%s", player.getName());
 	
-	return new this("img/reporter.png", text);
+	return new this(Game.Info.REPORTER, text);
 }
 
 Game.Info.showFinish = function(player) {
 	player.setMoney(player.getMoney() + 100000);
 	/* FIXME */
 	var text = "Winner is " + player.getName();
-	return new this("img/reporter.png", text);
+	return new this(Game.Info.REPORTER, text);
 }
 
 Game.Info.prototype.init = function(picture, text) {

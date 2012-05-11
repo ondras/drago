@@ -62,7 +62,6 @@ Game.init = function() {
 	this._initAudio();
 	this._initEngine();
 	this._initCards();
-	this._initCards();
 	this._initGraph();
 	
 	this.keyboard.push(this);
@@ -126,7 +125,8 @@ Game.createPlayer = function(type, name) {
 	var player = new Game.Player(type, name);
 	this.players.push(player);
 	player.setIndex(399);
-	player.addCard(this.cards.random());
+//	player.addCard(this.cards.random());
+	player.addCard(this.cards[0]);
 }
 
 Game.formatMoney = function(money) {
@@ -203,6 +203,9 @@ Game._initDebug = function() {
 }
 
 Game._initCards = function() {
+	this.cards.push(new Game.Card.Conference());
+	this.cards.push(new Game.Card.OneTwo());
+	
 	this.cards.push(new Game.Card.Slot(2));
 	this.cards.push(new Game.Card.Slot(3));
 	this.cards.push(new Game.Card.Slot(4));
