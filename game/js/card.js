@@ -130,3 +130,30 @@ Game.Card.Double.prototype.play = function(owner) {
 Game.Card.Double.prototype._card = function(owner, card) {
 	card.play(owner);
 }
+
+Game.Card.Debts = OZ.Class().extend(Game.Card);
+Game.Card.Debts.prototype.init = function(count) {
+	Game.Card.prototype.init.call(this);
+	this._name = "Debts";
+	this._image = "debts";
+	this._price = 50000;
+}
+Game.Card.Debts.prototype.play = function(owner) {
+	new Game.PlayerList(owner)
+		.onDone(this._player.bind(this, owner));
+
+}
+Game.Card.Debts.prototype._player = function(owner, player) {
+	var debt = -owner.getMoney();
+	debt = Math.max(debt, 0);
+	
+	owner.setMoney(owner.getMoney() + debt);
+	player.setMoney(player.getMoney() - debt);
+	
+	var cb = function() { owner.endTurn(); }
+	
+	var text = player.getName() + ", you have just inherited debts from ";
+	text += owner.getName() + " in total of " + Game.formatMoney(debt) + ". ";
+	text += "That's quite generous of " + owner.getName() + ", isn't it?";
+	new Game.Info(Game.Info.REPORTER, text).onDone(cb);
+}

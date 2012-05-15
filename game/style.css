@@ -294,3 +294,27 @@ body #help {
 	height: 63px;
 	margin: 1px 7px 6px 5px;
 }
+
+#players {
+	padding: 20px;
+	background-image: url(img/paper.png);
+}
+
+#players .player {
+	border: 2px solid transparent;
+	cursor: pointer;
+	width: 102px;
+	height: 102px;
+	margin: 2px;
+	vertical-align: middle;
+}
+
+#players .player.active {
+	border: 2px solid red;
+}
+
+#players div {
+	text-align: center;
+	font-weight: bold;
+	margin-top: 5px;
+}

@@ -2,6 +2,7 @@ Game.Status = OZ.Class();
 Game.Status.prototype.init = function() {
 	this._months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 	this._turns = 0;
+	this._player = null;
 
 	this._dom = {
 		container: OZ.DOM.elm("div", {id:"status"}),
@@ -64,6 +65,7 @@ Game.Status.prototype._buildBottom = function() {
  * Change player
  */
 Game.Status.prototype._turn = function(e) {
+	this._player = e.target;
 	var months = this._months.length;
 	this._turns++;
 	if (this._turns > Game.players.length) {
@@ -92,6 +94,8 @@ Game.Status.prototype._turn = function(e) {
 
 Game.Status.prototype._playerChange = function(e) {
 	var player = e.target;
+	if (player != this._player) { return; }
+
 	this._setMoney(player);
 	this._setMoves(player);
 	this._setRemain(player);

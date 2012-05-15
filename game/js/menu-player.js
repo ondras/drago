@@ -57,8 +57,7 @@ Game.Menu.Player.prototype._go = function(id) {
 		
 		case "save":
 			Game.save();
-			this._hide();
-			this._destroy();
+			this.handleInput(Game.INPUT_ESC);
 		break;
 	}
 }
