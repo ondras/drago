@@ -115,20 +115,18 @@ Game.Card.Double.prototype.init = function(count) {
 	this._price = 75000;
 }
 Game.Card.Double.prototype.play = function(owner) {
-	var total = 0;
-
-	for (var i=0;i<Game.players.length;i++) {
-		var player = Game.players[i];
-		total += player.getMoney();
+	var cards = owner.getCards();
+	var locked = [];
+	for (var i=0;i<cards.length;i++) {
+		var card = cards[i];
+		if (card instanceof this.constructor) { locked.push(card); }
 	}
+	
+	new Game.CardList(cards, {parent:null, keyboard:true, select:0})
+		.lock(locked)
+		.onDone(this._card.bind(this, owner));
 
-	var money = Math.round(total/Game.players.length);
-	for (var i=0;i<Game.players.length;i++) {
-		var player = Game.players[i];
-		player.setMoney(money);
-	}
-
-	var cb = function() { owner.endTurn(); }
-	var text = "Account: The balance of your accounts has been fairly divided. Everybody now has " + Game.formatMoney(money) + ".";
-	new Game.Info(Game.Info.REPORTER, text).onDone(cb);
+}
+Game.Card.Double.prototype._card = function(owner, card) {
+	card.play(owner);
 }

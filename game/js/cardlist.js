@@ -25,7 +25,8 @@ Game.CardList.prototype.init = function(cards, options) {
 		this._cards.push({
 			card: card,
 			node: node,
-			locked: false
+			locked: false,
+			lock: null
 		});
 		
 		if (!this._options.parent) { /* position within body */
@@ -63,7 +64,7 @@ Game.CardList.prototype.init = function(cards, options) {
 Game.CardList.prototype.lock = function(cards) {
 	for (var i=0;i<this._cards.length;i++) {
 		var item = this._cards[i];
-		if (cards.indexOf(item.card) != -1) {
+		if (cards.indexOf(item.card) != -1 && !item.locked) {
 			item.locked = true;
 			item.lock = OZ.DOM.elm("img", {src:"img/cards/locked.png", position:"absolute"});
 			item.lock.style.left = (item.node.offsetLeft + item.node.clientLeft) + "px";
