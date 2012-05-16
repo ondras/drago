@@ -25,6 +25,7 @@ Game.Player.prototype.init = function(type, name) {
 	this._flags = {
 		block: false,
 		sleep: false,
+		sugar: false,
 		noSteering: false
 	}
 
@@ -230,8 +231,18 @@ Game.Player.prototype.startTurn = function(noResetPath) {
 	
 	if (!noResetPath) { this._path = [this._index]; }
 
-	this._enableControl();
 	this.dispatch("turn");
+
+	if (this.getFlags().sleep) {
+		Game.Info.showSleep(this)
+			.onDone(this.endTurn.bind(this));
+	} else if (this.getFlags().sugar) {
+		Game.Info.showSugar(this)
+			.onDone(this.endTurn.bind(this));
+	} else {
+		this._enableControl();
+	}
+
 }
 
 Game.Player.prototype.tick = function(dt) {
@@ -267,7 +278,7 @@ Game.Player.prototype.endTurn = function() {
 	this.setFlags({
 		block: false,
 		sleep: false,
-		noSteering: false
+		sugar: false
 	});
 	this.dispatch("turn-end");
 }

@@ -200,7 +200,7 @@ Game.Card.Sleep.prototype.init = function(count) {
 	Game.Card.prototype.init.call(this);
 	this._name = "Sleep";
 	this._image = "sleep";
-	this._price = 20000; /* FIXME */
+	this._price = 30000;
 }
 Game.Card.Sleep.prototype.play = function(owner) {
 	new Game.PlayerList(owner)
@@ -208,5 +208,21 @@ Game.Card.Sleep.prototype.play = function(owner) {
 }
 Game.Card.Sleep.prototype._player = function(owner, player) {
 	player.setFlags({sleep:true});
+	this._roll1(owner);
+}
+
+Game.Card.Sugar = OZ.Class().extend(Game.Card);
+Game.Card.Sugar.prototype.init = function(count) {
+	Game.Card.prototype.init.call(this);
+	this._name = "Sugar";
+	this._image = "sugar";
+	this._price = 30000;
+}
+Game.Card.Sugar.prototype.play = function(owner) {
+	new Game.PlayerList(owner)
+		.onDone(this._player.bind(this, owner));
+}
+Game.Card.Sugar.prototype._player = function(owner, player) {
+	player.setFlags({sugar:true});
 	this._roll1(owner);
 }

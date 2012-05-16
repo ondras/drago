@@ -206,6 +206,7 @@ Game._initDebug = function() {
 }
 
 Game._initCards = function() {
+	this.cards.push(new Game.Card.Sugar());
 	this.cards.push(new Game.Card.Sleep());
 	this.cards.push(new Game.Card.Block());
 	this.cards.push(new Game.Card.NoSteering());

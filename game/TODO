@@ -1,12 +1,10 @@
 karty:
-  block 20k - vyber osoby, slot
   no steering 20k - vyber hrace, jeho pristi pohyb tah je automove
-  sleep ?k - vyber hrace, jeho pristi kolo neni
   taxes 50k - ?
 
 advanced karty:
-  sugar - anim?
-  sleep - anim?
+  sugar anim
+  sleep anim
   flight 50k - dialog vyber mesta, presunout tam balonem a korektne skoncit kolo
   goodbye 50k - vyber hrace, nahodny presun balonem
   gamble 15k - slot, gamble, infodialog

@@ -9,13 +9,34 @@ Game.Info.showView = function(index) {
 }
 
 Game.Info.showBlock = function(player) {
-	var amount = 2000 + Math.round(Math.random()*8000); /* 2k-10k */
-	player.setMoney(player.getMoney() + amount);
-
 	var texts = [
 		"Your cards are blocked, %s. You can't use them.",
 		"You can't use your cards because they're blocked, %s!",
 		"Somebody has blocked your cards, %s. Tough luck!"
+	];
+	
+	var text = texts.random();
+	text = text.replace("%s", player.getName());
+	return new this(Game.Info.REPORTER, text);
+}
+
+Game.Info.showSleep = function(player) {
+	var texts = [
+		"We don't want to wake you up, %s. So sleep another round!",
+		"Sleep through this round, %s. Sweet dreams!",
+		"You are dreaming of better times, %s. Maybe next round..."
+	];
+	
+	var text = texts.random();
+	text = text.replace("%s", player.getName());
+	return new this(Game.Info.REPORTER, text);
+}
+
+Game.Info.showSugar = function(player) {
+	var texts = [
+		"Being that your engine is damaged, %s, I'm afraid you lose a turn.",
+		"With so much sugar in your tank you'll have to miss a round, %s.",
+		"%s, I'm afraid you'll need the next round to get the sugar out of your tank. You'll have to miss a round!"
 	];
 	
 	var text = texts.random();
