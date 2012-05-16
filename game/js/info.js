@@ -8,6 +8,21 @@ Game.Info.showView = function(index) {
 	return new this("img/views/"+path+".png", viewNode.text);
 }
 
+Game.Info.showBlock = function(player) {
+	var amount = 2000 + Math.round(Math.random()*8000); /* 2k-10k */
+	player.setMoney(player.getMoney() + amount);
+
+	var texts = [
+		"Your cards are blocked, %s. You can't use them.",
+		"You can't use your cards because they're blocked, %s!",
+		"Somebody has blocked your cards, %s. Tough luck!"
+	];
+	
+	var text = texts.random();
+	text = text.replace("%s", player.getName());
+	return new this(Game.Info.REPORTER, text);
+}
+
 Game.Info.showWin = function(player) {
 	var amount = 2000 + Math.round(Math.random()*8000); /* 2k-10k */
 	player.setMoney(player.getMoney() + amount);

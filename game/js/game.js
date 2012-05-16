@@ -126,8 +126,10 @@ Game.createPlayer = function(type, name) {
 	var player = new Game.Player(type, name);
 	this.players.push(player);
 	player.setIndex(399);
-	player.addCard(this.cards.random());
+//	player.addCard(this.cards.random());
 	player.addCard(this.cards[0]);
+	player.addCard(this.cards[1]);
+	player.addCard(this.cards[2]);
 }
 
 Game.formatMoney = function(money) {
@@ -204,6 +206,9 @@ Game._initDebug = function() {
 }
 
 Game._initCards = function() {
+	this.cards.push(new Game.Card.Sleep());
+	this.cards.push(new Game.Card.Block());
+	this.cards.push(new Game.Card.NoSteering());
 	this.cards.push(new Game.Card.Debts());
 	this.cards.push(new Game.Card.Double());
 	this.cards.push(new Game.Card.Account());

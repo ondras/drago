@@ -124,6 +124,7 @@ Game.Slot.prototype.init = function(conf) {
 	this._counters = [];
 	this._animations = [];
 	this._phase = 0; /* 0 start, 1 running, 2 done */
+	this._event = null; /* hand start */
 
 	this._digitSize = [32, 32];
 	this._digits = HAF.Sprite.get("img/slot/digits.png", [this._digitSize[0], 6*this._digitSize[1]], 0, true);
@@ -178,7 +179,7 @@ Game.Slot.prototype.draw = function(ctx) {
 Game.Slot.prototype.handleInput = function(type, param) {
 	switch (type) {
 		case Game.INPUT_ENTER:
-			if (this._phase == 0) { 
+			if (this._phase == 0 && !this._event) { 
 				var hand = new Game.Slot.Hand();
 				this._event = OZ.Event.add(hand, "start", this._handStart.bind(this));
 			}

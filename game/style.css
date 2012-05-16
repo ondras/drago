@@ -307,6 +307,7 @@ body #help {
 	height: 102px;
 	margin: 2px;
 	vertical-align: middle;
+	margin-bottom: 5px;
 }
 
 #players .player.active {
@@ -316,5 +317,4 @@ body #help {
 #players div {
 	text-align: center;
 	font-weight: bold;
-	margin-top: 5px;
 }

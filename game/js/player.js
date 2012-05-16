@@ -8,6 +8,7 @@ Game.Player.fromJSON = function(data) {
 	result._moves = data.moves;
 	result._path = data.path;
 
+	result.setFlags(data.flags);
 	result.setIndex(data.index);
 	result.setMoney(data.money);
 	for (var i=0;i<data.cards.length;i++) {
@@ -21,6 +22,11 @@ Game.Player.prototype.init = function(type, name) {
 	this._index = null;
 	this._type = type;
 	this._name = name;
+	this._flags = {
+		block: false,
+		sleep: false,
+		noSteering: false
+	}
 
 	this._flight = false;
 	this._orientation = 1;
@@ -69,6 +75,7 @@ Game.Player.prototype.toJSON = function() {
 		money: this._money,
 		moves: this._moves,
 		path: this._path,
+		flags: this._flags,
 		cards: []
 	};
 	
@@ -79,6 +86,14 @@ Game.Player.prototype.toJSON = function() {
 	}
 	
 	return obj;
+}
+
+Game.Player.prototype.getFlags = function() {
+	return this._flags;
+}
+
+Game.Player.prototype.setFlags = function(flags) {
+	for (var p in flags) { this._flags[p] = flags[p]; }
 }
 
 Game.Player.prototype.getCards = function() {
@@ -249,6 +264,11 @@ Game.Player.prototype.moveBy = function(moves) {
 }
 
 Game.Player.prototype.endTurn = function() {
+	this.setFlags({
+		block: false,
+		sleep: false,
+		noSteering: false
+	});
 	this.dispatch("turn-end");
 }
 

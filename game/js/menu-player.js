@@ -28,6 +28,14 @@ Game.Menu.Player.prototype._go = function(id) {
 			var cards = this._player.getCards();
 			if (!cards.length) { return; }
 			
+			var flags = this._player.getFlags();
+			if (flags.block) { /* cards are blocked */
+				this._hide();
+				Game.Info.showBlock(this._player)
+					.onDone(this._restore.bind(this));
+				return;
+			}
+			
 			var locked = [];
 			var nonDoubleCount = 0;
 			var hasDouble = false;

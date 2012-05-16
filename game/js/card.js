@@ -8,6 +8,12 @@ Game.Card.prototype.play = function(owner) {};
 Game.Card.prototype.getImage = function()  { return this._image; };
 Game.Card.prototype.getPrice = function()  { return this._price; };
 Game.Card.prototype.getName = function()   { return this._name; };
+Game.Card.prototype._roll1 = function(owner) {
+	Game.Slot.roll1().onDone(this._slot.bind(this, owner)); 
+}
+Game.Card.prototype._slot = function(owner, result) {
+	owner.moveBy(result);
+}
 
 Game.Card.Slot = OZ.Class().extend(Game.Card);
 Game.Card.Slot.prototype.init = function(count) {
@@ -141,7 +147,6 @@ Game.Card.Debts.prototype.init = function(count) {
 Game.Card.Debts.prototype.play = function(owner) {
 	new Game.PlayerList(owner)
 		.onDone(this._player.bind(this, owner));
-
 }
 Game.Card.Debts.prototype._player = function(owner, player) {
 	var debt = -owner.getMoney();
@@ -156,4 +161,52 @@ Game.Card.Debts.prototype._player = function(owner, player) {
 	text += owner.getName() + " in total of " + Game.formatMoney(debt) + ". ";
 	text += "That's quite generous of " + owner.getName() + ", isn't it?";
 	new Game.Info(Game.Info.REPORTER, text).onDone(cb);
+}
+
+Game.Card.NoSteering = OZ.Class().extend(Game.Card);
+Game.Card.NoSteering.prototype.init = function(count) {
+	Game.Card.prototype.init.call(this);
+	this._name = "No Steering";
+	this._image = "nosteering";
+	this._price = 20000;
+}
+Game.Card.NoSteering.prototype.play = function(owner) {
+	new Game.PlayerList(owner)
+		.onDone(this._player.bind(this, owner));
+}
+Game.Card.NoSteering.prototype._player = function(owner, player) {
+	player.setFlags({noSteering:true});
+	this._roll1(owner);
+}
+
+Game.Card.Block = OZ.Class().extend(Game.Card);
+Game.Card.Block.prototype.init = function(count) {
+	Game.Card.prototype.init.call(this);
+	this._name = "Block";
+	this._image = "block";
+	this._price = 20000;
+}
+Game.Card.Block.prototype.play = function(owner) {
+	new Game.PlayerList(owner)
+		.onDone(this._player.bind(this, owner));
+}
+Game.Card.Block.prototype._player = function(owner, player) {
+	player.setFlags({block:true});
+	this._roll1(owner);
+}
+
+Game.Card.Sleep = OZ.Class().extend(Game.Card);
+Game.Card.Sleep.prototype.init = function(count) {
+	Game.Card.prototype.init.call(this);
+	this._name = "Sleep";
+	this._image = "sleep";
+	this._price = 20000; /* FIXME */
+}
+Game.Card.Sleep.prototype.play = function(owner) {
+	new Game.PlayerList(owner)
+		.onDone(this._player.bind(this, owner));
+}
+Game.Card.Sleep.prototype._player = function(owner, player) {
+	player.setFlags({sleep:true});
+	this._roll1(owner);
 }
