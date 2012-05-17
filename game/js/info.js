@@ -127,6 +127,7 @@ Game.Info.showCard = function(player) {
 	var card = Game.cards.random();
 	player.addCard(card);
 	
+	OZ.Audio.play("card");
 	return new this("img/cards/" + card.getImage() + ".png", text);
 }
 
