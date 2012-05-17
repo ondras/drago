@@ -33,7 +33,7 @@ Game.Player.prototype.init = function(type, name) {
 	this._orientation = 1;
 	this._moves = 0;
 	this._money = 30000;
-	this._path = [];
+	this._path = []; /* list of node indexes visited during current turn. when moving, always contains at least the starting node */
 	this._cards = [];
 	this._speed = 10; /* tiles per second */
 	this._velocity = [
@@ -287,11 +287,44 @@ Game.Player.prototype.endTurn = function() {
 Game.Player.prototype._enableControl = function() {
 	Game.keyboard.push(this);
 	Game.movement.show(this, this._index);	
+	
+	/* activate autopilot! */
+	if (this.getFlags().noSteering && (this._moves || this._path.length > 1)) { this._autoPilot(); }
 }
 
 Game.Player.prototype._disableControl = function() {
 	Game.keyboard.pop();
 	Game.movement.hide();
+}
+
+Game.Player.prototype._autoPilot = function() {
+	if (!this._moves) { /* end this */
+		this.setFlags({noSteering:false});
+		this._decideTurn();
+		return;
+	}
+	
+	/* pick some good direction */
+	var availableDirections = [];
+	var node = GRAPH[this._index];
+	for (var i=0;i<node.neighbors.length;i++) {
+		var n = node.neighbors[i];
+		if (n === null) { continue; }
+		
+		if (node.type == "view") { /* we are on a view; do not go to last path node */
+			if (n == this._path[this._path.length-1]) { continue; }
+		} else if (this._path.length > 1) { /* we are on a normal node; do not go to previous path node or a view between */
+			var previousIndex = this._path[this._path.length-2];
+			if (n == previousIndex) { continue; } /* do not return to node */
+
+			var targetNode = GRAPH[n];
+			if (targetNode.neighbors[i] == previousIndex) { continue; } /* do not return through view */
+		}
+		
+		availableDirections.push(i);
+	}
+	
+	this._moveDirection(availableDirections.random());
 }
 
 Game.Player.prototype._moveDirection = function(direction) {
@@ -399,7 +432,6 @@ Game.Player.prototype._isVisible = function(size) {
 }
 
 Game.Player.prototype._decideTurn = function() {
-
 	if (this._index == Game.race.getTarget()) { /* won race */
 		new Game.Finish(this).onDone(this._endRace.bind(this));
 		return;
