@@ -3,11 +3,13 @@ Game.Card.prototype.init = function() {
 	this._image = "";
 	this._price = 0;
 	this._name = "";
+	this._description = "";
 };
 Game.Card.prototype.play = function(owner) {};
-Game.Card.prototype.getImage = function()  { return this._image; };
-Game.Card.prototype.getPrice = function()  { return this._price; };
-Game.Card.prototype.getName = function()   { return this._name; };
+Game.Card.prototype.getImage = function()		{ return this._image; };
+Game.Card.prototype.getPrice = function()		{ return this._price; };
+Game.Card.prototype.getName = function()		{ return this._name; };
+Game.Card.prototype.getDescription = function()	{ return this._description; };
 Game.Card.prototype._roll1 = function(owner) {
 	Game.Slot.roll1().onDone(this._slot.bind(this, owner)); 
 }
@@ -22,6 +24,7 @@ Game.Card.Slot.prototype.init = function(count) {
 	this._image = "slot" + this._count;
 	this._name = this._count + " Reels";
 	this._price = this._count * 10000;
+	this._description = "An improved version of the slot machine for more movement points";
 }
 Game.Card.Slot.prototype.play = function(owner) {
 	var cb = function(turns) { owner.moveBy(turns); }
@@ -35,6 +38,7 @@ Game.Card.Move.prototype.init = function(count) {
 	this._name = this._count + " Space" + (this._count > 1 ? "s" : "");
 	this._image = "move" + this._count;
 	this._price = (this._count > 3 ? 15000 : 10000);
+	this._description = "Gain exactly " + this._count + " movement points";
 }
 Game.Card.Move.prototype.play = function(owner) {
 	owner.moveBy(this._count);
@@ -46,6 +50,7 @@ Game.Card.OneTwo.prototype.init = function(count) {
 	this._name = "1 or 2";
 	this._image = "onetwo";
 	this._price = 10000;
+	this._description = "Slot machine which rolls only one or two moves";
 }
 Game.Card.OneTwo.prototype.play = function(owner) {
 	var cb = function(turns) { owner.moveBy(turns); }
@@ -58,6 +63,7 @@ Game.Card.Conference.prototype.init = function(count) {
 	this._name = "Conference";
 	this._image = "conference";
 	this._price = 100000;
+	this._description = "Bring all players to your position";
 }
 Game.Card.Conference.prototype.play = function(owner) {
 	var index = owner.getIndex();
@@ -78,6 +84,7 @@ Game.Card.Zero.prototype.init = function(count) {
 	this._name = "Zero";
 	this._image = "zero";
 	this._price = 50000;
+	this._description = "Set your account to zero";
 }
 Game.Card.Zero.prototype.play = function(owner) {
 	owner.setMoney(0);
@@ -93,6 +100,7 @@ Game.Card.Account.prototype.init = function(count) {
 	this._name = "Account";
 	this._image = "account";
 	this._price = 100000;
+	this._description = "Equalize money across all players";
 }
 Game.Card.Account.prototype.play = function(owner) {
 	var total = 0;
@@ -119,6 +127,7 @@ Game.Card.Double.prototype.init = function(count) {
 	this._name = "Double";
 	this._image = "double";
 	this._price = 75000;
+	this._description = "Play another card without losing it";
 }
 Game.Card.Double.prototype.play = function(owner) {
 	var cards = owner.getCards();
@@ -143,6 +152,7 @@ Game.Card.Debts.prototype.init = function(count) {
 	this._name = "Debts";
 	this._image = "debts";
 	this._price = 50000;
+	this._description = "Transfer your debts to another player";
 }
 Game.Card.Debts.prototype.play = function(owner) {
 	new Game.PlayerList(owner)
@@ -169,6 +179,7 @@ Game.Card.NoSteering.prototype.init = function(count) {
 	this._name = "No Steering";
 	this._image = "nosteering";
 	this._price = 20000;
+	this._description = "Auto-pilot for another player";
 }
 Game.Card.NoSteering.prototype.play = function(owner) {
 	new Game.PlayerList(owner)
@@ -185,6 +196,7 @@ Game.Card.Block.prototype.init = function(count) {
 	this._name = "Block";
 	this._image = "block";
 	this._price = 20000;
+	this._description = "Another player cannot use his/her cards during next turn";
 }
 Game.Card.Block.prototype.play = function(owner) {
 	new Game.PlayerList(owner)
@@ -201,6 +213,7 @@ Game.Card.Sleep.prototype.init = function(count) {
 	this._name = "Sleep";
 	this._image = "sleep";
 	this._price = 30000;
+	this._description = "Another player misses a turn";
 }
 Game.Card.Sleep.prototype.play = function(owner) {
 	new Game.PlayerList(owner)
@@ -217,6 +230,7 @@ Game.Card.Sugar.prototype.init = function(count) {
 	this._name = "Sugar";
 	this._image = "sugar";
 	this._price = 30000;
+	this._description = "Another player misses a turn";
 }
 Game.Card.Sugar.prototype.play = function(owner) {
 	new Game.PlayerList(owner)

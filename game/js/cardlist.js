@@ -19,6 +19,7 @@ Game.CardList.prototype.init = function(cards, options) {
 	for (var i=0;i<cards.length;i++) {
 		var card = cards[i];
 		var node = OZ.DOM.elm("img", {className:"card", src:"img/cards/" + this._options.path + card.getImage() +".png"});
+		node.title = card.getName() + ": " + card.getDescription() + ".";
 		
 		this._events.push(OZ.Touch.onActivate(node, this._activate.bind(this)));
 		

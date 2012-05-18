@@ -121,12 +121,16 @@ Game.Info.showCard = function(player) {
 	var text = texts.random();
 	text = text.replace("%s", player.getName());
 	
+	
 	var cards = player.getCards();
 	if (cards.length == 8) { cards.shift(); }
 	
 	var card = Game.cards.random();
 	player.addCard(card);
 	
+	text += "<br/><br/>";
+	text += card.getName() + ": " + card.getDescription() + ".";
+
 	OZ.Audio.play("card");
 	return new this("img/cards/" + card.getImage() + ".png", text);
 }

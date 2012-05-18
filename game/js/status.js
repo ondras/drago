@@ -107,7 +107,9 @@ Game.Status.prototype._setCards = function(player) {
 	var cards = player.getCards();
 	OZ.DOM.clear(this._dom.cards);
 	for (var i=0;i<cards.length;i++) {
-		var img = OZ.DOM.elm("img", {position:"absolute", src:"img/cards/" + cards[i].getImage() + ".png"});
+		var card = cards[i];
+		var img = OZ.DOM.elm("img", {position:"absolute", src:"img/cards/" + card.getImage() + ".png"});
+		img.title = card.getName() + ": " + card.getDescription() + ".";
 		this._dom.cards.appendChild(img);
 		img.style.top = (3*i) + "px";
 		var left = this._dom.cards.offsetWidth/2 - img.offsetWidth/2;
