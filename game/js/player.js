@@ -304,6 +304,7 @@ Game.Player.prototype._autoPilot = function() {
 		return;
 	}
 	
+	
 	/* pick some good direction */
 	var availableDirections = [];
 	var node = GRAPH[this._index];
@@ -322,6 +323,17 @@ Game.Player.prototype._autoPilot = function() {
 		}
 		
 		availableDirections.push(i);
+	}
+	
+	if (!availableDirections.length) { /* no available directions, road has ended */
+		var previousIndex = this._path[this._path.length-2];
+		var direction = node.neighbors.indexOf(previousIndex); /* direction to previous node */
+		if (direction == -1) { /* previous node not available, just pick first available direction */
+			for (var i=0;i<node.neighbors.length;i++) {
+				if (node.neighbors[i] !== null) { direction = i; }
+			}
+		}
+		availableDirections.push(direction);
 	}
 	
 	this._moveDirection(availableDirections.random());

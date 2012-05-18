@@ -50,6 +50,7 @@ Game.Movement.prototype.show = function(player, index) {
 }
 	
 Game.Movement.prototype.hide = function() {
+	if (!this._player) { return; }
 	this._player = null;
 	this._dom.container.parentNode.removeChild(this._dom.container);
 }

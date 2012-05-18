@@ -91,7 +91,6 @@ Game.Finish.prototype.init = function(player) {
 		},
 
 		{ /* player */
-			size: [195, 96],
 			pos: [480, 246],
 			frames: 3
 		},
@@ -139,8 +138,19 @@ Game.Finish.prototype.init = function(player) {
 			pos: [117, 129],
 			frames: 1
 		}
-
 	];
+	
+	var playerSizes = {
+		D: [195, 96],
+		E: [187, 97],
+		F: [193, 99],
+		I: [178, 103],
+		J: [179, 102],
+		M: [189, 99],
+		U: [186, 98],
+		V: [188, 97]
+	}
+	
 	for (var i=0;i<sprites.length;i++) {
 		var def = sprites[i];
 		
@@ -150,6 +160,7 @@ Game.Finish.prototype.init = function(player) {
 			var image = HAF.Sprite.get(path, size, 0, true);
 			var sprite = (def.frames == 1 ? new HAF.Sprite(image, def.size) : new HAF.AnimatedSprite(image, def.size, {fps:8, frames:def.frames}));
 		} else { /* player */
+			def.size = playerSizes[player.getType()];
 			var sprite = new Game.Finish.Player(player, def);
 		}
 		
