@@ -3,9 +3,6 @@
 	<head>
 		<title>Drago</title>
 		<meta charset="utf-8" />
-		<meta property="og:title" content="Drago"/>
-		<meta property="og:image" content="img/drago.png"/>
-		<meta property="og:description" content="HTML5 implementation of Dr. Drago's Madcap Chase game"/>
 		<script src="js/oz.js"></script>
 		<script src="js/audio.oz.js"></script>
 		<script src="js/touch.oz.js"></script>
@@ -48,8 +45,8 @@
 		<script src="data/views.js"></script>
 		<link rel="stylesheet" href="style.css" />
 	</head>
-	<body onload="Game.init()">
-		<img itemprop="image" src="img/drago.png" />
+	<body onload="Game.init()" itemscope itemtype="http://schema.org/Article">
+		<img itemprop="image" src="img/drago.png" style="display:none" />
 		<div id="loading">Loading&hellip;</div>
 	</body>
 </html>
