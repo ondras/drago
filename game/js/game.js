@@ -96,7 +96,6 @@ Game._load = function(e) {
 	document.body.innerHTML = "<h1>Drago</h1><h2><abbr title='previously known as'>pka</abbr> Dr. Drago's Madcap Chase</h2>";
 	
 	OZ.Audio.background.queue = ["I"];
-	OZ.Audio.background.play();
 	new Game.Menu.Main();
 }
 

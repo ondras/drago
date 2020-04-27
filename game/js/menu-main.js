@@ -24,6 +24,7 @@ Game.Menu.Main.prototype._go = function(id) {
 		break;
 		
 		case "new":
+			OZ.Audio.background.play();
 			this._hide();
 			new Game.Setup();
 		break;
