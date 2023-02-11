@@ -1,20 +1,20 @@
 /*
 
-Struktura SBS:
+Structure of SBS:
 
-hlavicka (6B)
-pocet zaznamu (1-2B?)
-sracky (12B)
+header (6B)
+record count (1-2B?)
+garbage (12B)
 
-Xkrat:
-nazev zaznamu (10B)
-offset k datum (4B)
+Times:
+record name (10B)
+offset to date (4B)
 
-Xkrat:
-sirka (2B)
-vyska (2B)
-cosi (4B)
-data; u kazdeho radku padding na nasobek 4
+Times:
+match (2B)
+high (2B)
+something (4B)
+data; for each row, padding is multiplied by 4
 
 */
 
