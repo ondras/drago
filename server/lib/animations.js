@@ -1,21 +1,21 @@
 /*
-struktura animaci (zacinaji na 2 a5f8, konci na af64):
+animation structure (starting at 2 a5f8, ending at af64):
 
-2B pozice dlazdice
-2B nuly - pozor, ryba tam ma 01 00
-1B sirka oblasti
-1B vyska oblasti
-7B neznamo (
-				deda: 		04 FF 00 00 00 00 00 repeat
-				majak: 		06 14 00 00 1A 00 06 repeat?
-				mlyn: 		04 FF 0A 00 00 00 00 repeat
-				velbloud: 	03 00 C8 00 00 00 00
-				ryba: 		04 00 F4 01 00 00 00 not repeat, random
+2B tile position
+2B zeros - watch out, the fish has 01 00 there
+1B area width
+1B area height
+7B unknown (
+				grandfather:	04 FF 00 00 00 00 00 repeat
+				beacon:		06 14 00 00 1A 00 06 repeat?
+				mill: 		04 FF 0A 00 00 00 00 repeat
+				camel:	 	03 00 C8 00 00 00 00
+				fish: 		04 00 F4 01 00 00 00 not repeat, random
 			)
 
-Xkrat 2B pozice nasledne sady dlazdic
+Times 2B position next set of tiles
 2B 0
-1B 0 padding na nasobek 2B
+1B 0 padding per multiple of 2B
 */
 
 var File = require("./file");
