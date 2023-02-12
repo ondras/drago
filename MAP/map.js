@@ -1,23 +1,23 @@
 /*
-Mapa ma 256x256 (65536) dlazdic. V souboru je mapa dvakrat za sebou (dve vrstvy).
-Kazda dlazdice ma 2 byty - soubor ma tedy 2*2*256*256 bytu.
+The map has 256x256 (65536) tiles. The file contains the map twice in a row (two layers).
+Each tile has 2 bytes - so the file has 2*2*256*256 bytes.
 
-Analyza 2 bytu dlazdice:
+Analysis of 2 flat tiles:
 
   0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-  ---------------         ------- 8 + 4 bity => 12ti bitove cislo (low endian) urcujici poradi obrazku dlazdice v souborech 
-                  -               nejvyssi bit druheho bajtu = vykresluje se PRES hrace
-                    -             druhy nejvyssi bit druheho bajtu = zrcadleni dle svisle osy
-                      -           treti nejvyssi bit druheho bajtu = vzdy 0
-                        -         ctvrty nejvyssi bit druheho bajtu = uzel ve vychodni casti, tj. za hranici
+  ---------------         ------- 8 + 4 bit => 12-bit number (low endian) determining the order of the tile image in the files 
+                  -               highest bit of the second byte = something, animation?
+                    -             second highest byte of the second byte = mirroring along the vertical axis
+                      -           third most significant bit of the second byte = ?
+                        -         fourth most significant bit of the second byte = ?
 
-Normalni dlazdice jsou v prvnich 14 souborech. Posledni 4 soubory (a 6 poslednich dlazdic z 14. souboru) 
-jsou jednotlive kroky animaci.
+Normal tiles are in the first 14 files. Last 4 files (and last 6 tiles from 14th file)
+are the individual steps of the animation.
 
-Poucne bude prozkoumat majak (zapadni cip Francie), jehoz animace je jasne videt na zacatku 15. souboru. 
-Dale prvni animace vubec (oblast 3x2 dlazdice) je typek na Sicilii.
+PIt will be instructive to examine the lighthouse (western chip of France), whose animation can be clearly seen at the beginning of the 15th file.
+Also the very first animation (3x2 tile area) is a type in Sicily.
 
-Overlay "ryba" ma cislo 0x85 0x0B, tj. 16. soubor a 69. obrazek. Tam zacina cela jeji animace.
+Overlay "fish" has the number 0x85 0x0B, i.e. the 16th file and the 69th picture. That's where her entire animation begins.
 */
 
 String.prototype.lpad = function(l) {
