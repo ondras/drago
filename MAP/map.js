@@ -5,19 +5,19 @@ Each tile has 2 bytes - so the file has 2*2*256*256 bytes.
 Analysis of 2 flat tiles:
 
   0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-  ---------------         ------- 8 + 4 bit => 12-bit number (low endian) determining the order of the tile image in the files 
-                  -               highest bit of the second byte = something, animation?
+  ---------------         ------- 8 + 4 bits => 12-bit number (low endian) determining the order of the tile image in the files
+                  -               highest bit of the second byte = drawing OVER players
                     -             second highest byte of the second byte = mirroring along the vertical axis
-                      -           third most significant bit of the second byte = ?
-                        -         fourth most significant bit of the second byte = ?
+                      -           third most significant bit of the second byte = always zero
+                        -         fourth most significant bit of the second byte = node in the easter map part (behind border)
 
 Normal tiles are in the first 14 files. Last 4 files (and last 6 tiles from 14th file)
 are the individual steps of the animation.
 
-PIt will be instructive to examine the lighthouse (western chip of France), whose animation can be clearly seen at the beginning of the 15th file.
-Also the very first animation (3x2 tile area) is a type in Sicily.
+It will be instructive to examine the lighthouse (western corner of France), whose animation can be clearly seen at the beginning of the 15th file.
+Also the very first animation (3x2 tile area) is a bloke in Sicily.
 
-Overlay "fish" has the number 0x85 0x0B, i.e. the 16th file and the 69th picture. That's where her entire animation begins.
+Overlay "fish" has the number 0x85 0x0B, i.e. the 16th file and the 69th picture. That's where its entire animation begins.
 */
 
 String.prototype.lpad = function(l) {
@@ -32,15 +32,15 @@ Drago.prototype.init = function() {
 	this._images = [];
 	this._remain = 0;
 	this._data = [];
-	
-	for (var i=0;i<18;i++) { 
+
+	for (var i=0;i<18;i++) {
 		this._remain++;
 		var name = i + "";
 		if (name.length < 2) { name = "0"+name; }
 		name = "3/PART00" + name + ".gif";
 		var img = OZ.DOM.elm("img");
 		OZ.Event.add(img, "load", this._load.bind(this));
-		this._images.push(img); 
+		this._images.push(img);
 		img.src = name;
 	}
 }
@@ -59,7 +59,7 @@ Drago.prototype._response = function(data) {
 	var bpt = 2;
 	var N = 256;
 	var offsets = [0, N*N*bpt];
-	
+
 	for (var i=0;i<N;i++) {
 		this._data.push([]);
 		for (var j=0;j<N;j++) {
@@ -70,7 +70,7 @@ Drago.prototype._response = function(data) {
 				locked: []
 			};
 			this._data[i].push(obj);
-			
+
 			for (var k=0;k<offsets.length;k++) {
 				var offset = (j * N + i) * bpt + offsets[k];
 				var byte1 = input[offset];
@@ -83,36 +83,36 @@ Drago.prototype._response = function(data) {
 			}
 		}
 	}
-	
+
 	this._canvas = OZ.DOM.elm("canvas");
 	this._ctx = this._canvas.getContext("2d");
 	this._draw();
 	document.body.appendChild(this._canvas);
-	
+
 	this._debug = OZ.DOM.elm("div", {position:"fixed", top:"0px", right:"0px", fontFamily:"monospace", backgroundColor:"white", border:"1px solid black", padding:"5px"});
 	this._cursor = OZ.DOM.elm("div", {position:"absolute", width:"16px", height:"16px", border:"2px solid red"});
 	document.body.appendChild(this._debug);
 	document.body.appendChild(this._cursor);
-	
+
 	OZ.Event.add(document.body, "mousemove", this._move.bind(this));
-	
-	
+
+
 	/*
 	for (var i=0;i<GRAPH.length;i++) {
 		var node = GRAPH[i];
 		var x = 16*node.x;
 		var y = 16*node.y;
-		
+
 		if (node.locked) {
 			this._ctx.fillStyle = "yellow";
 		} else {
 			this._ctx.fillStyle = "green";
 		}
-		
+
 		this._ctx.fillRect(x, y, 16, 16);
 	}
 	*/
-	
+
 	for (var i=0;i<this._data.length;i++) {
 		for (var j=0;j<this._data[i].length;j++) {
 			var obj = this._data[i][j];
@@ -128,7 +128,7 @@ Drago.prototype._response = function(data) {
 			}
 		}
 	}
-	
+
 }
 
 Drago.prototype._draw = function() {
@@ -146,9 +146,9 @@ Drago.prototype._draw = function() {
 				var image = this._images[Math.floor(index / cellsPerImage)];
 				var imageOffset = index % cellsPerImage;
 				this._ctx.save();
-				if (obj.mirror[k]) { 
+				if (obj.mirror[k]) {
 					this._ctx.translate((2*i + 1)*px, 0);
-					this._ctx.scale(-1, 1); 
+					this._ctx.scale(-1, 1);
 				}
 				this._ctx.drawImage(image, 0, imageOffset*px, px, px, i*px, j*px, px, px);
 				this._ctx.restore();
@@ -164,10 +164,10 @@ Drago.prototype._move = function(e) {
 	pos[1] += e.clientY;
 	pos[0] = Math.floor(pos[0]/16);
 	pos[1] = Math.floor(pos[1]/16);
-	
+
 	this._cursor.style.left = (16*pos[0]-2) + "px";
 	this._cursor.style.top = (16*pos[1]-2) + "px";
-	
+
 	var cellsPerImage = 192;
 	this._debug.innerHTML = "Pos: " + pos + "<br/>";
 
