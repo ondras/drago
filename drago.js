@@ -1,81 +1,82 @@
 /*
+The map has 256x256 (65536) tiles. The file contains the map twice in a row (two layers).
+Each tile has 2 bytes - so the file has 2*2*256*256 bytes.
 
-Mapa ma 256x256 (65536) dlazdic. V souboru je mapa dvakrat za sebou (dve vrstvy).
-Kazda dlazdice ma 2 byty - soubor ma tedy 2*2*256*256 bytu.
-
-Analyza 2 bytu dlazdice:
+Analysis of 2 flat tiles:
 
   0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-  ---------------         ------- 8 + 4 bity => 12ti bitove cislo (low endian) urcujici poradi obrazku dlazdice v souborech 
-                  -               nejvyssi bit druheho bajtu = cosi, animace?
-                    -             druhy nejvyssi bit druheho bajtu = zrcadleni dle svisle osy
-                      -           treti nejvyssi bit druheho bajtu = ?
-                        -         ctvrty nejvyssi bit druheho bajtu = ?
+  ---------------         ------- 8 + 4 bits => 12-bit number (low endian) determining the order of the tile image in the files
+                  -               highest bit of the second byte = drawing OVER players
+                    -             second highest byte of the second byte = mirroring along the vertical axis
+                      -           third most significant bit of the second byte = always zero
+                        -         fourth most significant bit of the second byte = node in the easter map part (behind border)
 
-Normalni dlazdice jsou v prvnich 14 souborech. Posledni 4 soubory (a 6 poslednich dlazdic z 14. souboru) 
-jsou jednotlive kroky animaci.
+Normal tiles are in the first 14 files. Last 4 files (and last 6 tiles from 14th file)
+are the individual steps of the animation.
 
-Zajimave je, ze 15., 16. a 18. soubor (vse animace) se v adresarich 1/ a 3/ nelisi (jsou duplicitni), 
-zatimco 17. soubor (animace) se v 1/ a 3/ nejak (FIXME) lisi.
+-Interesting: 15th, 16th and 18th file (all animations) do not differ in subdirectories 1/ and 3/ (dupes),
+-but 17th file (animations) differs in 1/ and 3/ somewhat (FIXME).
 
-Poucne bude prozkoumat majak (zapadni cip Francie), jehoz animace je jasne videt na zacatku 15. souboru. 
-Dale prvni animace vubec (oblast 3x2 dlazdice) je typek na Sicilii.
+It will be instructive to examine the lighthouse (western corner of France), whose animation can be clearly seen at the beginning of the 15th file.
+Also the very first animation (3x2 tile area) is a bloke in Sicily.
 
-Dalsi soubory:
- * .TOW - asi soupis nemovitosti
- * .STR - graf sousednosti, na konci nazvy mest + cosi
- * .PIT - skoro same nuly
- * .OIT - skoro animace, ale pomerne malo dat a ukazuje do nizkych souboru
- * .IND - zajimava struktura, velikost 256x256 bytu - ze by nahledova mapka?
- * .EIT - malo hustych dat
- * .EDT - plno nemeckych retezcu
- * .CVC - 1024 bajtu (32x32?), plnene vzorem 256,256,256,0
- * .CAR - divne nazvy; mesta ale i Fuckopolis
+Overlay "fish" has the number 0x85 0x0B, i.e. the 16th file and the 69th picture. That's where its entire animation begins.
+
+
+Other files:
+ * .TOW - about the real estate inventory
+ * .STR - neighborhood graph, city names at the end + something
+ * .PIT - almost all zeros
+ * .OIT - almost an animation, but relatively little data and points to a low file
+ * .IND - interesting structure, size 256x256 bytes - perhaps an overview map?
+ * .EIT - little dense data
+ * .EDT - full of German strings
+ * .CVC - 1024 bytes (32x32?), filled with the pattern 256,256,256,0
+ * .CAR - strange names; cities but also Fuckopolis
  * .C88 - ?
  * .001 - ?
 
 
+Analysis of a row of a .STR file (graph has 700 nodes)
 
-Analyza radku souboru .STR (graf ma 700 uzlu)
+05 05 FF FF  08 00 01 00  FF FF 01 00  00 00 00 00 - blue top left, record #0
+05 0B 00 00  09 00 02 00  FF FF 01 00  00 00 04 00 - blue under previous, entry #1; has a car-plane downwards
+0A 0B FF FF  FF FF 0A 00  01 00 01 00  00 00 00 00 - blue to the right of the previous one, entry #9
+0A 0F 09 00  12 00 FF FF  FF FF 01 00  00 00 00 00 - blue under the previous one, entry #10
+0A 05 FF FF  10 00 FF FF  00 00 02 00  00 00 00 00 - red one to the right of the first one, record #8
+20 0B FF FF  55 00 FF FF  24 00 02 00  00 00 1A 00 - red to the right of the previous one; left and right plane
+0F 0B 10 00  24 00 12 00  FF FF 05 00  DC 2B 00 00 - purples over a city in Iceland, entry #17
+15 0B 23 00  3E 00 FF FF  11 00 03 00  00 00 02 00 - yellow to right of purple, entry #36 (0x24); it has car-plane to the right
+0F 0F 11 00  FF FF 13 00  0A 00 06 00  DC 2B 04 00 - city in Iceland, record #18 (0x12); it has a car-plane downwards
+0F 14 12 00  28 00 FF FF  FF FF 02 00  00 00 13 00 - red under Iceland; has plane upwards and to the right
+19 14 FF FF  3F 00 29 00  13 00 02 00  00 00 1E 00 - red to the right of the previous one; has plane to the left, right and downwards
 
-05 05 FF FF  08 00 01 00  FF FF 01 00  00 00 00 00 - modry vlevo nahore, zaznam #0
-05 0B 00 00  09 00 02 00  FF FF 01 00  00 00 04 00 - modry pod predchozim, zaznam #1; ma dolu auto-letadlo
-0A 0B FF FF  FF FF 0A 00  01 00 01 00  00 00 00 00 - modry vpravo od predchoziho, zaznam #9
-0A 0F 09 00  12 00 FF FF  FF FF 01 00  00 00 00 00 - modry pod predchozim, zaznam #10
-0A 05 FF FF  10 00 FF FF  00 00 02 00  00 00 00 00 - cerveny vpravo od prvniho, zaznam #8
-20 0B FF FF  55 00 FF FF  24 00 02 00  00 00 1A 00 - cerveny vpravo od predchoziho; doleva i doprava letadlo
-0F 0B 10 00  24 00 12 00  FF FF 05 00  DC 2B 00 00 - fialovy nad mestem na islandu, zaznam #17
-15 0B 23 00  3E 00 FF FF  11 00 03 00  00 00 02 00 - zluty vpravo od fialoveho, zaznam #36 (0x24); ma vpravo auto-letadlo
-0F 0F 11 00  FF FF 13 00  0A 00 06 00  DC 2B 04 00 - mesto na islandu, zaznam #18 (0x12); ma dolu auto-letadlo
-0F 14 12 00  28 00 FF FF  FF FF 02 00  00 00 13 00 - cervena pod islandem; ma letadlo nahoru a doprava
-19 14 FF FF  3F 00 29 00  13 00 02 00  00 00 1E 00 - cervena vpravo od predchozi; ma letadlo doleva, doprava a dolu
-
-X  Y  UP     RIGHT DOWN   LEFT  TYPE   O1 O2 PP QQ - O1+O2 offset v ramci souboru na info o meste, PP typ dopr. prostredku, QQ?
+X  Y  UP     RIGHT DOWN   LEFT  TYPE   O1 O2 PP QQ - O1+O2 offset within the file on city info, PP transport type, QQ?
 
 TYPE:
-  01 modry
-  02 cerveny
-  03 zluty
+  01 blue
+  02 red
+  03 golden
   04
-  05 fialovy
-  06 mesto
+  05 purple
+  06 city
 
-PP (DOPRAVNI PROSTREDKY):
-02: 0000 0010 vpravo auto-letadlo
-04: 0000 0100 dolu auto-letadlo
-13: 0001 0011 nahoru letadlo-auto, doprava letadlo
-1A: 0001 1010 doleva letadlo, doprava letadlo
-1E: 0001 1110 doleva letadlo, doprava letadlo, dolu letadlo
-            | nahoru letet
-           | vpravo letet
-          | dolu letet
-         | vlevo letet
-       | na zemi (0), ve vzduchu (1)
-      | vzdy 0
-     | vzdy 0 
-    | vzdy 0
+PP (MEANS OF TRANSPORTATION):
+02: 0000 0010 right car-plane
+04: 0000 0100 car-plane down
+13: 0001 0011 up plane-car, right plane
+1A: 0001 1010 left plane, right plane
+1E: 0001 1110 left plane, right plane, down plane
+            | fly up
+           | fly right
+          | fly down
+         | fly left
+       | on the ground (0), in the air (1)
+      | always 0
+     | always 0
+    | always 0
 
-QQ: pouze hodnoty 00 a 40 
+QQ: only values 00 and 40
 */
 
 
@@ -84,22 +85,22 @@ var Drago = OZ.Class();
 Drago.prototype.init = function() {
 	this._images = [];
 	this._remain = 0;
-	
-	for (var i=0;i<18;i++) { 
+
+	for (var i=0;i<18;i++) {
 		this._remain++;
 		var name = i + "";
 		if (name.length < 2) { name = "0"+name; }
 		name = "1/PART00" + name + ".gif";
 		var img = OZ.DOM.elm("img");
 		OZ.Event.add(img, "load", this._load.bind(this));
-		this._images.push(img); 
+		this._images.push(img);
 		img.src = name;
 	}
-	
+
 	this._canvas = OZ.DOM.elm("canvas");
 	this._ctx = this._canvas.getContext("2d");
 	document.body.appendChild(this._canvas);
-	
+
 }
 
 Drago.prototype._load = function() {
@@ -116,12 +117,12 @@ Drago.prototype._response = function(data) {
 	var size = 256;
 	var bpc = 2;
 	var half = size*size*bpc;
-	
+
 	var N = size;
 	var px = 16;
 	this._canvas.width = px * N;
 	this._canvas.height = px * N;
-	
+
 	for (var i=0;i<N;i++) {
 		for (var j=0;j<N;j++) {
 			var offset = (j * size + i) * bpc;
@@ -134,7 +135,7 @@ Drago.prototype._response = function(data) {
 			document.body.appendChild(div2);
 */
 		}
-	}	
+	}
 }
 
 Drago.prototype._draw = function(input, x, y, offset) {
@@ -143,13 +144,13 @@ Drago.prototype._draw = function(input, x, y, offset) {
 
 	var cellsPerImage = 192;
 	var image = this._images[Math.floor(index / cellsPerImage)];
-	
+
 	var imageOffset = index % cellsPerImage;
-	
+
 	this._ctx.save();
-	if (input[offset+1] & 64) { 
+	if (input[offset+1] & 64) {
 		this._ctx.translate((2*x + 1)*px, 0);
-		this._ctx.scale(-1, 1); 
+		this._ctx.scale(-1, 1);
 	}
 
 	this._ctx.drawImage(image, 0, imageOffset*px, px, px, x*px, y*px, px, px);
@@ -163,13 +164,13 @@ Drago.prototype._div = function(input, x, y, offset) {
 	div.style.left = (x*px) + "px";
 	div.style.top = (y*px) + "px";
 	var index = input[offset] + 256*(input[offset+1] & 0xF);
-	
+
 	if (x == 9 && (y == 2 || y == 3)) { console.log(x, y, input[offset], input[offset+1]); }
 
 	if (input[offset+1] & 128) { console.log("bit 128", div); }
 	if (input[offset+1] & 32) { console.log("bit 32", div); }
 	if (input[offset+1] & 16) { console.log("bit 16", div); }
-	
+
 	if (input[offset+1] & 64) { div.style.MozTransform = "scaleX(-1)"; }
 
 	this._background(div, index);
@@ -180,14 +181,14 @@ Drago.prototype._div = function(input, x, y, offset) {
 Drago.prototype._background = function(elm, index) {
 	var px = 16;
 	var cellsPerImage = 192;
-	
+
 	var image = Math.floor(index / cellsPerImage) + "";
 	dir = "1";
-	
+
 	if (image.length < 2) { image = "0" + image; }
 	image = dir + "/PART00" + image + ".gif";
 	elm.style.backgroundImage = "url(" + image + ")";
-	
+
 	var imageOffset = index % cellsPerImage;
 	elm.style.backgroundPosition = "0px -" + (imageOffset*px) + "px";
 }

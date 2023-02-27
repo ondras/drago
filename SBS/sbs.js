@@ -1,21 +1,20 @@
 /*
 
-Struktura SBS:
+Structure of SBS:
 
-hlavicka (6B)
-pocet zaznamu (1-2B?)
-sracky (12B)
+header (6B)
+record count (1-2B?)
+garbage (12B)
 
-Xkrat:
-nazev zaznamu (10B)
-offset k datum (4B)
+X-times:
+record name (10B)
+offset to date (4B)
 
-Xkrat:
-sirka (2B)
-vyska (2B)
-cosi (4B)
-data; u kazdeho radku padding na nasobek 4
-
+X-times:
+width (2B)
+height (2B)
+something (4B)
+data; for each row, padded to multiple of 4
 
 
 */
@@ -42,8 +41,8 @@ SBS.prototype.responsePalette = function(data) {
 	var canvas = OZ.DOM.elm("canvas", {width:16*cell, height:16*cell});
 	document.body.appendChild(canvas);
 	var ctx = canvas.getContext("2d");
-	
-	
+
+
 	for (var i=0;i<256;i++) {
 		var r = data.charCodeAt(4*i+2) & 0xFF;
 		var g = data.charCodeAt(4*i+1) & 0xFF;
@@ -52,7 +51,7 @@ SBS.prototype.responsePalette = function(data) {
 		var gg = g.toString(16).lpad(2);
 		var bb = b.toString(16).lpad(2);
 		this._palette.push(rr+gg+bb);
-		
+
 		var x = i % 16;
 		var y = Math.floor(i / 16);
 		ctx.fillStyle = "#" + rr +gg +bb;
@@ -65,17 +64,17 @@ SBS.prototype.responsePalette = function(data) {
 SBS.prototype.response = function(data) {
 	for (var i=0;i<data.length;i++) { this._data.push(data.charCodeAt(i) & 0xFF); }
 	this.rewind(6);
-	
+
 	var count = this.getBytes(2);
 	this.advance(12);
-	
+
 	for (var i=0;i<count;i++) {
 		var str = this.getString(10);
 		var offset = this.getBytes(4);
 		var record = new SBS.Record(this, this._palette, str, offset);
 		this._records.push(record);
 	}
-	
+
 	for (var i=0;i<this._records.length;i++) {
 		this._records[i].parse();
 	}
@@ -130,26 +129,26 @@ SBS.Record.prototype.parse = function() {
 	var height = this._data.getBytes(2);
 	var tmp = this._data.getBytes(4);
 	var cell = 1;
-	
+
 	var canvas = OZ.DOM.elm("canvas", {width:cell*width, height:cell*height});
 	this._div.appendChild(canvas);
-	
+
 	var ctx = canvas.getContext("2d");
 	var padding = (4-(width%4)) % 4;
-	
+
 	var stats = {};
 	var min = Infinity;
 	var max = -Infinity;
-	
+
 	var paddings = [];
 
 	for (var j=0;j<height;j++) {
 		for (var i=0;i<width;i++) {
 			var byte = this._data.getByte();
 			/* 0 = transparent */
-			
+
 			if (!byte) { continue; }
-			
+
 			if (!(byte in stats)) { stats[byte] = 0; }
 			stats[byte]++;
 			min = Math.min(min, byte);
@@ -157,14 +156,14 @@ SBS.Record.prototype.parse = function() {
 
 			ctx.fillStyle = "#" + this._palette[byte];
 			ctx.fillRect(i*cell, (height-j-1)*cell, cell, cell);
-			
+
 		}
 		var tmp = this._data.getBytes(padding);
 		paddings.push(tmp);
 	}
-	
+
 //	console.log(this._name, paddings);
-/*	
+/*
 	this._div.appendChild(OZ.DOM.elm("br"));
 	this._div.appendChild(OZ.DOM.text("MAX: " + max + ", MIN: " + min));
 	this._div.appendChild(OZ.DOM.elm("br"));

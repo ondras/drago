@@ -1,7 +1,7 @@
-advanced karty:
+advanced cards:
   taxes 50k - ?
   sugar anim
   sleep anim
-  flight 50k - dialog vyber mesta, presunout tam balonem a korektne skoncit kolo
-  goodbye 50k - vyber hrace, nahodny presun balonem
+  flight 50k - select a city dialog, move there with a balloon and finish the round correctly
+  goodbye 50k - choose a player, random move by balloon
   gamble 15k - slot, gamble, infodialog

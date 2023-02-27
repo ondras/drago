@@ -1,15 +1,15 @@
-Nutne pro beh:
+Required for running:
 .MAP, .STR
 
-Dalsi soubory:
-! * .TOW - asi soupis nemovitosti
-! * .PIT - skoro same nuly
-! * .CAR - divne nazvy; mesta ale i Fuckopolis
- * .EDT - plno nemeckych retezcu
- * .CVC - 256 (16x16?) ctveric [255,255,255,0]
+Other files:
+! * .TOW - about the real estate inventory
+! * .PIT - almost all zeros
+! * .CAR - strange names; cities but also Fuckopolis
+  * .EDT - full of German strings
+  * .CVC - 256 (16x16?) quads [255,255,255,0]
 
-Zbyva rozlustit (nejsou treba!):
- * .001 - zrejme dvojice bajtu; je jich tam 1716; vizualne nic moc
- * .C88 - zrejme dvojice bajtu; je jich tam 7072
- * .OIT - bloky 16x8 bajtu; je jich tam 80
- * .EIT - zrejme ctverice bajtu, jsou rostouci
+What remains to be solved (they are not necessary!):
+  * .001 - apparently a byte pair; there are 1716 of them; not much visually
+  * .C88 - apparently a byte pair; there are 7072 of them
+  * .OIT - 16x8 byte blocks; there are 80 of them
+  * .EIT - apparently four bytes, they are increasing
